@@ -54,6 +54,9 @@ const Button = styled.button`
   &:not(:last-child) {
     margin-right: 20px;
   }
+  &:active {
+    background-color: #6600cc;
+  }
 `;
 
 const Header: React.FC = () => {
