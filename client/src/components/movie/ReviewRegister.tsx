@@ -18,25 +18,29 @@ import closeButton from '../../assets/closeButton.svg';
 interface IReviewRegister {
   movie: IMovie;
   review?: IReview;
-  reviewScore: number;
-  setReviewScore: React.Dispatch<React.SetStateAction<number>>;
+  rating: number;
+  setRating: React.Dispatch<React.SetStateAction<number>>;
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ReviewRegister({
   movie,
   review,
-  reviewScore,
-  setReviewScore,
+  rating,
+  setRating,
   setIsOpenModal,
 }: IReviewRegister) {
   const [comment, setComment] = useState(review ? review.comment : '');
 
   const handleClickBackground = () => {
+    if (review) setRating(review.rating);
+    else setRating(0);
     setIsOpenModal(false);
   };
 
   const handleClickCloseButton = () => {
+    if (review) setRating(review.rating);
+    else setRating(0);
     setIsOpenModal(false);
   };
 
@@ -65,7 +69,7 @@ export default function ReviewRegister({
             </StyledCloseButton>
           </StyledHeader>
           <StyledForm onSubmit={handleSubmitForm}>
-            <Stars reviewScore={reviewScore} setReviewScore={setReviewScore} />
+            <Stars rating={rating} setRating={setRating} />
             <StyledCommentTextarea
               placeholder="이 영화 어떠셨나요?"
               value={comment}

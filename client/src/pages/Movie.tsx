@@ -8,7 +8,7 @@ import { StyledStarsContainer } from './styles/Movie.styled';
 export default function Movie() {
   // 더미데이터 사용
   const loggedInUser = {
-    nickname: '짜장면',
+    nickname: '맛있는짜장면',
   };
   const movie = dummyMovie;
   const review = dummyReviews.filter(
@@ -18,25 +18,24 @@ export default function Movie() {
   )[0];
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [reviewScore, setReviewScore] = useState(review ? review.score : 0);
+  const [rating, setRating] = useState(review ? review.rating : 0);
 
   const handleClickStars = () => {
-    setReviewScore(10);
     setIsOpenModal(true);
   };
 
   return (
     <>
       <StyledStarsContainer onClick={handleClickStars}>
-        <Stars reviewScore={reviewScore} setReviewScore={setReviewScore} />
+        <Stars rating={rating} setRating={setRating} />
       </StyledStarsContainer>
 
       {isOpenModal && (
         <ReviewRegister
           movie={movie}
           review={review}
-          reviewScore={reviewScore}
-          setReviewScore={setReviewScore}
+          rating={rating}
+          setRating={setRating}
           setIsOpenModal={setIsOpenModal}
         />
       )}
