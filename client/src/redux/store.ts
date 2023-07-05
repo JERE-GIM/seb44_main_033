@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import isLoginReducer from './reducers/isLogin';
 
 const store = configureStore({
-  reducer: {},
+  reducer: {
+    isLogin: isLoginReducer,
+  },
 });
 
 // custom dispatch
