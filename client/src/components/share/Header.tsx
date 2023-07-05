@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { login, logout } from '../../redux/reducers/isLogin';
