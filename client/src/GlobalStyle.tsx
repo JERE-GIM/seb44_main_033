@@ -45,6 +45,13 @@ table {
 	border-spacing: 0;
 }
 
+* {
+	box-sizing:border-box;
+}
+
+a, button {
+	cursor: pointer;
+}
 `;
 
 export default GlobalStyle;
