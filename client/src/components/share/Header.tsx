@@ -1,4 +1,5 @@
 import React from 'react';
+import Searchbar from '../share/Searchbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { login, logout } from '../../redux/reducers/isLogin';
@@ -34,6 +35,7 @@ const Header: React.FC = () => {
         />
         CINEMA PRINCESS
       </HeaderTitle>
+      <Searchbar></Searchbar>
       {isLoggedIn ? (
         <ButtonContainer>
           <MypageContainer>
