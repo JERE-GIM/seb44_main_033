@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IMovie } from '../../dummy/dummyMovie';
 import { IReview } from '../../dummy/dummyReview';
-import Stars from '../share/Stars';
+import Rating from '../share/Rating';
 import {
   StyledBackground,
   StyledCloseButton,
@@ -12,7 +12,7 @@ import {
   StyledModal,
   StyledMovieTitle,
   StyledSubmitButton,
-} from '../styles/ReviewRegister.styled';
+} from '../styles/ReviewRegisterModal.styled';
 import closeButton from '../../assets/closeButton.svg';
 
 interface IReviewRegister {
@@ -63,7 +63,7 @@ export default function ReviewRegister({
             </StyledCloseButton>
           </StyledHeader>
           <StyledForm onSubmit={handleSubmitForm}>
-            <Stars rating={rating} setRating={setRating} />
+            <Rating rating={rating} setRating={setRating} />
             <StyledCommentTextarea
               placeholder="이 영화 어떠셨나요?"
               value={comment}

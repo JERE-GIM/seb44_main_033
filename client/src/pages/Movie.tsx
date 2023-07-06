@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import ReviewRegister from '../components/movie/ReviewRegister';
+import ReviewRegisterModal from '../components/movie/ReviewRegisterModal';
 import { dummyMovie } from '../dummy/dummyMovie';
 import { dummyReviews } from '../dummy/dummyReview';
-import Stars from '../components/share/Stars';
+import Rating from '../components/share/Rating';
 import {
   StyledMovieCover,
   StyledMovieInfo,
@@ -48,7 +48,7 @@ export default function Movie() {
     <>
       <StyledMovieCover>
         <StyledStarsContainer onClick={handleOpenReviewModal}>
-          <Stars rating={rating} setRating={setRating} />
+          <Rating rating={rating} setRating={setRating} />
         </StyledStarsContainer>
       </StyledMovieCover>
       <StyledMovieInfo>
@@ -77,7 +77,7 @@ export default function Movie() {
       </StyledMovieInfo>
       <StyledReviewList></StyledReviewList>
       {isOpenReviewModal && (
-        <ReviewRegister
+        <ReviewRegisterModal
           movie={movie}
           review={review}
           rating={rating}
