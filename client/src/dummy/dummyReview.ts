@@ -21,7 +21,8 @@ export const dummyReviews: Array<IReview> = [
   {
     id: '2',
     movieTitle: '엘리멘탈',
-    comment: '존잼',
+    comment:
+      '마음이 따뜻해지고 영상이 너무 아름다워요. 마음이 따뜻해지고 영상이 너무 아름다워요. 마음이 따뜻해지고 영상이 너무 아름다워요. 마음이 따뜻해지고 영상이 너무 아름다워요. 마음이 따뜻해지고 영상이 너무 아름다워요. 마음이 따뜻해지고 영상이 너무 아름다워요.',
     writer: '맛있는짜장면',
     rating: 9,
     likes: 0,

@@ -20,7 +20,7 @@ interface IReviewRegister {
   review?: IReview;
   rating: number;
   setRating: React.Dispatch<React.SetStateAction<number>>;
-  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpenReviewModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ReviewRegister({
@@ -28,20 +28,14 @@ export default function ReviewRegister({
   review,
   rating,
   setRating,
-  setIsOpenModal,
+  setIsOpenReviewModal,
 }: IReviewRegister) {
   const [comment, setComment] = useState(review ? review.comment : '');
 
-  const handleClickBackground = () => {
+  const handleCloseModalUnsaved = () => {
     if (review) setRating(review.rating);
     else setRating(0);
-    setIsOpenModal(false);
-  };
-
-  const handleClickCloseButton = () => {
-    if (review) setRating(review.rating);
-    else setRating(0);
-    setIsOpenModal(false);
+    setIsOpenReviewModal(false);
   };
 
   const handleClickModal = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -51,7 +45,7 @@ export default function ReviewRegister({
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // api 로직 추가
-    setIsOpenModal(false);
+    setIsOpenReviewModal(false);
   };
 
   const handleChangeTextarea = (
@@ -60,11 +54,11 @@ export default function ReviewRegister({
 
   return (
     <>
-      <StyledBackground onClick={handleClickBackground}>
+      <StyledBackground onClick={handleCloseModalUnsaved}>
         <StyledModal onClick={handleClickModal}>
           <StyledHeader>
             <StyledMovieTitle>{movie.title}</StyledMovieTitle>
-            <StyledCloseButton onClick={handleClickCloseButton}>
+            <StyledCloseButton onClick={handleCloseModalUnsaved}>
               <img src={closeButton} alt="close button" />
             </StyledCloseButton>
           </StyledHeader>
