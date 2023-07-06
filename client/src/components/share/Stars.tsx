@@ -23,7 +23,7 @@ export default function Stars({ rating, setRating }: IStars) {
       {ratingValues.map((ratingValue) => {
         if (ratingValue % 2 === 1)
           return (
-            <Label>
+            <Label key={ratingValue}>
               <RadioButton
                 type="radio"
                 name="rating"
@@ -43,7 +43,7 @@ export default function Stars({ rating, setRating }: IStars) {
           );
         else if (ratingValue % 2 === 0)
           return (
-            <Label>
+            <Label key={ratingValue}>
               <RadioButton
                 type="radio"
                 name="rating"
