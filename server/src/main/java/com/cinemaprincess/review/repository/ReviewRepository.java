@@ -1,6 +1,10 @@
 package com.cinemaprincess.review.repository;
 
+import com.cinemaprincess.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ReviewRepository extends JpaRepository {
+import java.util.Optional;
+
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+    Optional<Review> findById(Long id);
 }
