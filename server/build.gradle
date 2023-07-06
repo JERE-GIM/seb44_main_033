@@ -60,6 +60,9 @@ dependencies {
 	//reboot
 	implementation 'org.springframework.boot:spring-boot-devtools'
 
+	//aop
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
 	//security
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 //	testImplementation 'org.springframework.security:spring-security-test'
