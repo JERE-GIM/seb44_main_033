@@ -7,6 +7,8 @@ import javax.validation.constraints.Pattern;
 
 import com.cinemaprincess.user.entity.User;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +38,10 @@ public class UserDto {
         @NotBlank(message = "닉네임을 작성해 주세요.") // unique 옵션 프론트와 상의
         private String username;
 
+        @NotBlank(message = "최소 1개 이상 선택해 주세요.")
+        private String genre;
+
+        @NotBlank(message = "최소 1개 이상 선택해 주세요.")
         private String preferredOtt;
     }
 
@@ -52,7 +58,11 @@ public class UserDto {
                 message = "password 길이는 최소 8자 이상 최대 20자 이하, 숫자 1자 이상, 대소문자 구분없이 영문자 1자 이상, 특수문자 1자 이상 입력해 주세요.")
         private String password;
 
+        private Integer age;
+
         private String username;
+
+        private String genre;
 
         private String preferredOtt;
     }
@@ -68,6 +78,7 @@ public class UserDto {
         private String username;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
+        private String genre;
         private String preferredOtt;
     }
 }

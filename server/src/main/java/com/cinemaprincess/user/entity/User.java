@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 
-import com.cinemaprincess.audit.BaseEntity;
+import com.cinemaprincess.audit.Auditable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +25,7 @@ import lombok.AllArgsConstructor;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -46,6 +46,7 @@ public class User extends BaseEntity {
     @Column(nullable = false) // unique 옵션 프론트와 상의
     private String username;
 
+    private String genre;
     private String preferredOtt;
 
     @ElementCollection(fetch = FetchType.EAGER)

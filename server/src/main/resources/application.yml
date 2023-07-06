@@ -29,3 +29,8 @@ server:
   servlet:
     encoding:
       force-response: true
+
+jwt:
+  key: team033team033team033team033team033team033team033team033
+  accessTokenExpirationMinutes: 30
+  refreshTokenExpirationMinutes: 420
