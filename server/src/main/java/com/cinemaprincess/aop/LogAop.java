@@ -16,9 +16,10 @@ import java.lang.reflect.Method;
 @Component
 public class LogAop {
 
-    // com.cinemaprincess.statistics 이하 패키지의 모든 클래스안의 모든 메서드에 적용
-    @Pointcut("execution(* com.cinemaprincess.statistics.controller..*.*(..))")
+    // com.cinemaprincess.statistics.controller 이하 패키지의 모든 클래스안의 모든 메서드에 적용
+    @Pointcut("execution(* com.cinemaprincess.statistics.controller..*.*(..)) || execution(* com.cinemaprincess.search.controller..*.*(..))")
     private void cut(){}
+
 
 
     // pointcut에 의해 필터링된 경로로 들어오는 경우 메서드 호출전에 적용
