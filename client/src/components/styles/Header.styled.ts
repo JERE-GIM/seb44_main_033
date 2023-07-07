@@ -15,7 +15,7 @@ export const HeaderContainer = styled.header`
 
 export const HeaderTitle = styled.h1`
   font-size: 36px;
-  font-weight: bold;
+  font-weight: 700;
   color: #6600cc;
   margin: 0;
   display: flex;
@@ -44,8 +44,8 @@ export const Button = styled.button`
   color: white;
   border: none;
   padding: 6px 16px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 700;
   cursor: pointer;
   margin-left: 8px;
   border-radius: 10px;
