@@ -1,5 +1,6 @@
 package com.cinemaprincess.response;
 
+
 import com.cinemaprincess.exception.ExceptionCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
