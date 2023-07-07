@@ -37,8 +37,14 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+//    public long getUserId(){
+//        return user.getUserId();
+//    }
 
     @ManyToOne
-    @JoinColumn(name = "MOVIE_ID")
+    @JoinColumn(name = "ID")
     private Movie movie;
+    public long getId(){
+        return movie.getId();
+    }
 }
