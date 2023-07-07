@@ -30,3 +30,9 @@ server:
   servlet:
     encoding:
       force-response: true
+
+jwt:
+#  배포 시 환경 변수로 설정 해야함 !
+  key: team033team033team033team033team033team033team033team033
+  accessTokenExpirationMinutes: 30
+  refreshTokenExpirationMinutes: 420
