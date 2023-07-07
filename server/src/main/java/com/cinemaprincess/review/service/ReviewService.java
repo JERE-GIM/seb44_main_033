@@ -26,7 +26,7 @@ public class ReviewService {
     public ReviewResponseDto createReview(ReviewPostDto reviewPostDto){
         Review review = mapper.reviewPostDtoToReview(reviewPostDto);
 
-        Review savedReview = (Review) this.reviewRepository.save(review);
+        Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
     }
 
@@ -41,7 +41,7 @@ public class ReviewService {
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());
 
-        Review updatedReview = (Review) reviewRepository.save(findReview);
+        Review updatedReview = reviewRepository.save(findReview);
         return mapper.reviewToReviewResponseDto(updatedReview);
     }
 
