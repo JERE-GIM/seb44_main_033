@@ -5,7 +5,6 @@ export const SearchbarContainer = styled.div`
   align-items: center;
   border: 1px solid lightgray;
   border-radius: 4px;
-  margin-left: 100px;
   height: 40px;
 `;
 

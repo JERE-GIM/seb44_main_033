@@ -9,6 +9,8 @@ export const HeaderContainer = styled.header`
   position: sticky;
   z-index: 1;
   padding: 0px 0px 0px 0px;
+  a {
+    text-decoration-line: none;
 `;
 
 export const HeaderTitle = styled.h1`
@@ -18,7 +20,8 @@ export const HeaderTitle = styled.h1`
   margin: 0;
   display: flex;
   align-items: center;
-  padding-left: 20px;
+  padding-left: 10px;
+  width: 500px;
 `;
 
 export const LogoImage = styled.img`
@@ -29,9 +32,10 @@ export const LogoImage = styled.img`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   height: 100%;
+  width: 490px;
   padding-right: 20px;
 `;
 
