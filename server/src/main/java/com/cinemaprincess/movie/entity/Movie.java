@@ -1,11 +1,12 @@
 package com.cinemaprincess.movie.entity;
 
-import com.cinemaprincess.audit.Auditable;
 import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -13,11 +14,10 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Entity
 @Builder
-public class Movie extends Auditable {
+@Table(indexes = @Index(name = "idx_title", columnList = "title"))
+public class Movie {
     @Id
-    private long id;
-
-    @Column(name = "original_title")
+    private long movieId;
     private String originalTitle;
 
     private String title;
