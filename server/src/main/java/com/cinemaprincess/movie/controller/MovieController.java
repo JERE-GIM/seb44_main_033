@@ -7,11 +7,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/movies")
@@ -25,19 +28,10 @@ public class MovieController {
         this.movieMapper = movieMapper;
     }
 
-    @GetMapping
-    public String getMovies() {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
+    // 영화 상세조회
+    @GetMapping("/{movie-id}")
+    public ResponseEntity getMovie(@PathVariable("movie-id") @Positive long movieId) {
 
-        String tmdbUrl = "https://api.themoviedb.org/3/discover/movie?api_key=8799558ac2f2609cd5ff89aa63a87f10&release_date.gte=1950-01-01&watch_region=KR&language=ko-KR";
-
-        UriComponents uri = UriComponentsBuilder.fromHttpUrl(tmdbUrl).build();
-
-        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
-
-        return response.getBody();
     }
 }
 

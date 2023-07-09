@@ -2,10 +2,7 @@ package com.cinemaprincess.movie.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -13,7 +10,10 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(indexes = @Index(name = "idx_title", columnList = "title"))
+@Table(indexes = {
+        @Index(name = "idx_title", columnList = "title"),
+        @Index(name = "idx_releaseDate", columnList = "releaseDate")
+})
 public class Movie {
     @Id
     private long movieId;
@@ -21,4 +21,7 @@ public class Movie {
     private String title;
     private String posterPath;
     private String releaseDate;
+
+    @OneToOne(mappedBy = "movie")
+    private MovieDetail movieDetail;
 }
