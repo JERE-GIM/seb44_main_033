@@ -1,9 +1,10 @@
 package com.cinemaprincess.response;
 
+
+import com.cinemaprincess.exception.ExceptionCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import com.cinemaprincess.exception.ExceptionCode;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
@@ -62,12 +63,12 @@ public class ErrorResponse {
 
         public static List<FieldError> of(BindingResult bindingResult) {
             final List<org.springframework.validation.FieldError> fieldErrors =
-                                                        bindingResult.getFieldErrors();
+                    bindingResult.getFieldErrors();
             return fieldErrors.stream()
                     .map(error -> new FieldError(
                             error.getField(),
                             error.getRejectedValue() == null ?
-                                            "" : error.getRejectedValue().toString(),
+                                    "" : error.getRejectedValue().toString(),
                             error.getDefaultMessage()))
                     .collect(Collectors.toList());
         }
@@ -80,7 +81,7 @@ public class ErrorResponse {
         private String reason;
 
         private ConstraintViolationError(String propertyPath, Object rejectedValue,
-                                   String reason) {
+                                         String reason) {
             this.propertyPath = propertyPath;
             this.rejectedValue = rejectedValue;
             this.reason = reason;
@@ -97,5 +98,3 @@ public class ErrorResponse {
         }
     }
 }
-
-
