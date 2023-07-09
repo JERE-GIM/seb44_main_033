@@ -45,6 +45,6 @@ public class Review {
     @JoinColumn(name = "ID")
     private Movie movie;
     public long getId(){
-        return movie.getId();
+        return movie.getMovieId();
     }
 }
