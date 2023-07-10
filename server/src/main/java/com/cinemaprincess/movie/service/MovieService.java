@@ -83,7 +83,7 @@ public class MovieService {
         }
     }
 
-//    @PostConstruct
+    @PostConstruct
     public void initialize() {
         setDateMap();
     }
