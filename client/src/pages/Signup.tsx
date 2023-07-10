@@ -5,6 +5,7 @@ export default function Signup() {
   return (
     <SignupStyle>
       <SignupForm1 />
+      <SignupForm1 />
     </SignupStyle>
   );
 }

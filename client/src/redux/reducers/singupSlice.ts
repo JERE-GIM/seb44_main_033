@@ -7,6 +7,7 @@ const initialState = {
   password: '',
   gender: '',
   age: '',
+  genre: '',
 };
 
 const signupSlice = createSlice({
@@ -15,6 +16,9 @@ const signupSlice = createSlice({
   reducers: {
     nextPage: (state) => {
       state.currentPage += 1;
+    },
+    prevPage: (state) => {
+      state.currentPage -= 1;
     },
     setDisplayName: (state, action) => {
       state.displayName = action.payload;
@@ -31,16 +35,21 @@ const signupSlice = createSlice({
     setAge: (state, action) => {
       state.age = action.payload;
     },
+    setGenre: (state, action) => {
+      state.genre = action.payload;
+    },
   },
 });
 
 export const {
   nextPage,
+  prevPage,
   setDisplayName,
   setEmail,
   setPassword,
   setGender,
   setAge,
+  setGenre,
 } = signupSlice.actions;
 export const signupaction = {
   nextPage,
@@ -49,5 +58,6 @@ export const signupaction = {
   setPassword,
   setGender,
   setAge,
+  setGenre,
 };
 export default signupSlice.reducer;
