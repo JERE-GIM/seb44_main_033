@@ -9,5 +9,6 @@ public class ReviewPostDto {
     private String content;
     private int score;
     @NotNull
-    private String id;
+    private long id;
+    private long userId;
 }

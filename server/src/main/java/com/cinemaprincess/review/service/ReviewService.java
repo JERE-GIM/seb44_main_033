@@ -8,6 +8,8 @@ import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.review.mapper.ReviewMapper;
 import com.cinemaprincess.review.repository.ReviewRepository;
+import com.cinemaprincess.user.entity.User;
+import com.cinemaprincess.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,9 +24,12 @@ import java.util.Optional;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper mapper;
+    private final UserService userService;
 
     public ReviewResponseDto createReview(ReviewPostDto reviewPostDto){
         Review review = mapper.reviewPostDtoToReview(reviewPostDto);
+        User user = userService.findUser(reviewPostDto.getUserId());
+        review.setUser(user);
 
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);

@@ -11,6 +11,7 @@ public class ReviewResponseDto {
     private long id;
     private String content;
     private int score;
+    private String username;
     private String createdAt;
     private String modifiedAt;
 }
