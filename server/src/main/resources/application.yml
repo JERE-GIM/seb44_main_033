@@ -12,12 +12,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        order_inserts: true
+        order_updates: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/moviedb?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/moviedb?&rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999
     username: root
     password: 12345678
 logging:
