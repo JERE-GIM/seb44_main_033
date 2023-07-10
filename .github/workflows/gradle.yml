@@ -13,12 +13,6 @@ env:
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
   CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
   CODEDEPLOY_GROUP_NAME: ${{ secrets.CODEDEPLOY_GROUP_NAME }}
-  SQL_URL: ${{ secrets.SQL_URL }}
-  SQL_USERNAME: ${{ secrets.SQL_USERNAME }}
-  SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
-  JWT_KEY: ${{ secrets.JWT_KEY }}
-  ACCESS_EXPIRE_TIME: ${{ secrets.ACCESS_EXPIRE_TIME }}
-  REFRESH_EXPIRE_TIME: ${{ secrets.REFRESH_EXPIRE_TIME }}
 
 jobs:
   build:
