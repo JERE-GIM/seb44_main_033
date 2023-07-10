@@ -23,7 +23,7 @@ public interface ReviewMapper {
         Review review = new Review();
         Movie movie = new Movie();
         User user = new User();
-        movie.setId(reviewPostDto.getId());
+        movie.setMovieId(reviewPostDto.getMovieId());
         user.setUserId(reviewPostDto.getUserId());
         review.setContent(reviewPostDto.getContent());
         review.setScore(reviewPostDto.getScore());
@@ -36,7 +36,7 @@ public interface ReviewMapper {
         ReviewResponseDto responseDto = new ReviewResponseDto();
         responseDto.setReviewId(review.getReviewId());
         responseDto.setUserId(review.getUserId());
-        responseDto.setId(review.getId());
+        responseDto.setMovieId(review.getMovieId());
         responseDto.setScore(review.getScore());
         responseDto.setContent(review.getContent());
         responseDto.setUsername(review.getUser().getUsername());
