@@ -4,22 +4,22 @@ import { dummyMovie } from '../dummy/dummyMovie';
 import { dummyReviews } from '../dummy/dummyReview';
 import Rating from '../components/share/Rating';
 import {
-  StyledMovieCover,
-  StyledMovieDetail,
-  StyledMovieDetailCol,
-  StyledMovieInfo,
-  StyledMovieInfoCol,
-  StyledMovieInfoContainer,
-  StyledMovieInfoSpan,
-  StyledMovieInfoText,
-  StyledMoviePoster,
-  StyledMyReviewButtons,
-  StyledMyReviewContainer,
-  StyledMyReviewContent,
-  StyledMyReviewControlButton,
-  StyledMyReviewRegisterButton,
-  StyledReviewList,
-  StyledStarsContainer,
+  MovieCover,
+  MovieDetail,
+  MovieDetailCol,
+  MovieInfo,
+  MovieInfoCol,
+  MovieInfoContainer,
+  MovieInfoSpan,
+  MovieInfoText,
+  MoviePoster,
+  MyReviewButtons,
+  MyReviewContainer,
+  MyReviewContent,
+  MyReviewControlButton,
+  MyReviewRegisterButton,
+  ReviewList,
+  StarsContainer,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import elementalPoster from '../assets/elemental_poster.png';
@@ -54,95 +54,87 @@ export default function Movie() {
 
   return (
     <>
-      <StyledMovieCover>
-        <StyledStarsContainer onClick={handleOpenReviewModal}>
+      <MovieCover>
+        <StarsContainer onClick={handleOpenReviewModal}>
           <Rating rating={rating} setRating={setRating} />
-        </StyledStarsContainer>
-      </StyledMovieCover>
-      <StyledMovieDetail>
-        <StyledMovieDetailCol>
-          <StyledMoviePoster src={elementalPoster} alt="poster image" />
-        </StyledMovieDetailCol>
-        <StyledMovieDetailCol>
+        </StarsContainer>
+      </MovieCover>
+      <MovieDetail>
+        <MovieDetailCol>
+          <MoviePoster src={elementalPoster} alt="poster image" />
+        </MovieDetailCol>
+        <MovieDetailCol>
           {review ? (
-            <StyledMyReviewContainer>
-              <StyledMyReviewContent>{review.comment}</StyledMyReviewContent>
-              <StyledMyReviewButtons>
-                <StyledMyReviewControlButton onClick={handleOpenReviewModal}>
+            <MyReviewContainer>
+              <MyReviewContent>{review.comment}</MyReviewContent>
+              <MyReviewButtons>
+                <MyReviewControlButton onClick={handleOpenReviewModal}>
                   수정
-                </StyledMyReviewControlButton>
-                <StyledMyReviewControlButton onClick={handleOpenConfirmModal}>
+                </MyReviewControlButton>
+                <MyReviewControlButton onClick={handleOpenConfirmModal}>
                   삭제
-                </StyledMyReviewControlButton>
-              </StyledMyReviewButtons>
-            </StyledMyReviewContainer>
+                </MyReviewControlButton>
+              </MyReviewButtons>
+            </MyReviewContainer>
           ) : (
-            <StyledMyReviewContainer>
-              <StyledMyReviewContent>
+            <MyReviewContainer>
+              <MyReviewContent>
                 영화를 보고 난 소감을 기록하세요.
-              </StyledMyReviewContent>
-              <StyledMyReviewRegisterButton onClick={handleOpenReviewModal}>
+              </MyReviewContent>
+              <MyReviewRegisterButton onClick={handleOpenReviewModal}>
                 리뷰 작성하기
-              </StyledMyReviewRegisterButton>
-            </StyledMyReviewContainer>
+              </MyReviewRegisterButton>
+            </MyReviewContainer>
           )}
-          <StyledMovieInfo>
-            <StyledMovieInfoContainer>
-              <StyledMovieInfoCol>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>개봉</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>{movie.openAt}</StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>장르</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>
-                    {movie.genres.join('/')}
-                  </StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>국가</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>{movie.nation}</StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>등급</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>{movie.age}</StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>러닝타임</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>
-                    {movie.runningTime}분
-                  </StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>출연</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>
-                    {movie.actors.join(', ')}
-                  </StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-              </StyledMovieInfoCol>
-              <StyledMovieInfoCol>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>평점</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>
-                    {movie.averageRating}
-                  </StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>누적관객</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>
+          <MovieInfo>
+            <MovieInfoContainer>
+              <MovieInfoCol>
+                <MovieInfoText>
+                  <MovieInfoSpan>개봉</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.openAt}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>장르</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.genres.join('/')}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>국가</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.nation}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>등급</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.age}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>러닝타임</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.runningTime}분</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>출연</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.actors.join(', ')}</MovieInfoSpan>
+                </MovieInfoText>
+              </MovieInfoCol>
+              <MovieInfoCol>
+                <MovieInfoText>
+                  <MovieInfoSpan>평점</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.averageRating}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>누적관객</MovieInfoSpan>
+                  <MovieInfoSpan>
                     {movie.audience.toLocaleString()}명
-                  </StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-                <StyledMovieInfoText>
-                  <StyledMovieInfoSpan>박스오피스</StyledMovieInfoSpan>
-                  <StyledMovieInfoSpan>{movie.boxOffice}위</StyledMovieInfoSpan>
-                </StyledMovieInfoText>
-              </StyledMovieInfoCol>
-            </StyledMovieInfoContainer>
-          </StyledMovieInfo>
-        </StyledMovieDetailCol>
-      </StyledMovieDetail>
-      <StyledReviewList></StyledReviewList>
+                  </MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>박스오피스</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.boxOffice}위</MovieInfoSpan>
+                </MovieInfoText>
+              </MovieInfoCol>
+            </MovieInfoContainer>
+          </MovieInfo>
+        </MovieDetailCol>
+      </MovieDetail>
+      <ReviewList></ReviewList>
       {isOpenReviewModal && (
         <ReviewRegisterModal
           movie={movie}

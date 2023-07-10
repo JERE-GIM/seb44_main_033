@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const StyledBackground = styled.div`
+export const Background = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -13,7 +13,7 @@ export const StyledBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 `;
 
-export const StyledModal = styled.div`
+export const Modal = styled.div`
   width: 480px;
   height: 200px;
   border-radius: 16px;
@@ -25,7 +25,7 @@ export const StyledModal = styled.div`
   background-color: rgba(255, 255, 255, 1);
 `;
 
-export const StyledConfirmMessage = styled.p`
+export const ConfirmMessage = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,12 +35,12 @@ export const StyledConfirmMessage = styled.p`
   font-weight: 600;
 `;
 
-export const StyledConfirmButtons = styled.div`
+export const ConfirmButtons = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-export const StyledButton = styled.button`
+export const Button = styled.button`
   width: fit-content;
   height: 40px;
   padding: 0 40px;
