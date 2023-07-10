@@ -6,7 +6,59 @@ export const StyledStarsContainer = styled.div`
 
 export const StyledMovieCover = styled.div``;
 
-export const StyledMovieInfo = styled.section``;
+export const StyledMovieDetail = styled.section`
+  max-width: 1320px;
+  display: flex;
+  margin: 0 auto;
+  padding-top: 20px;
+
+  & > div:first-child {
+    width: 280px;
+    background-color: navy;
+  }
+  & > div:last-child {
+    flex-grow: 1;
+    margin-left: 20px;
+  }
+`;
+
+export const StyledMovieDetailCol = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const StyledMoviePoster = styled.img`
+  width: 280px;
+`;
+
+export const StyledMovieInfo = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0 20px;
+  flex-grow: 1;
+`;
+
+export const StyledMovieInfoContainer = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+export const StyledMovieInfoCol = styled.div`
+  flex-grow: 1;
+`;
+
+export const StyledMovieInfoText = styled.div`
+  width: fit-content;
+  height: 25px;
+`;
+
+export const StyledMovieInfoSpan = styled.span`
+  &:first-child {
+    color: #b0b0b0;
+    margin-right: 10px;
+  }
+`;
 
 export const StyledMyReviewContainer = styled.div`
   display: flex;
