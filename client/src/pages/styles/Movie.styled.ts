@@ -55,7 +55,7 @@ export const StyledMovieInfoText = styled.div`
 
 export const StyledMovieInfoSpan = styled.span`
   &:first-child {
-    color: #b0b0b0;
+    color: var(--gray-deep);
     margin-right: 10px;
   }
 `;
@@ -82,7 +82,7 @@ export const StyledMyReviewContent = styled.p`
 export const StyledMyReviewRegisterButton = styled.button`
   width: fit-content;
   padding: 10px 40px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--gray-dark);
   border-radius: 6px;
   background-color: white;
   font-weight: 500;
@@ -94,11 +94,11 @@ export const StyledMyReviewControlButton = styled.button`
   width: fit-content;
   border: none;
   background-color: transparent;
-  color: #b0b0b0;
+  color: var(--gray-deep);
   font-weight: 500;
 
   &:hover {
-    font-weight: 700;
+    font-weight: 600;
   }
 
   &:last-child {

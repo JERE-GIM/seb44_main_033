@@ -42,6 +42,7 @@ export const StyledCloseButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--gray);
 
   border: none;
   border-radius: 50%;
@@ -71,7 +72,7 @@ export const StyledCommentTextarea = styled.textarea`
   font-size: 20px;
 
   &::placeholder {
-    color: #b0b0b0;
+    color: var(--gray-dark);
   }
 `;
 
@@ -89,6 +90,6 @@ export const StyledSubmitButton = styled.button`
   border-radius: 6px;
   font-weight: 600;
   font-size: 15px;
-  background-color: #8000ff;
+  background-color: var(--purple);
   color: white;
 `;

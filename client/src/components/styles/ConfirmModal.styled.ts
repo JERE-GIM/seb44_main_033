@@ -49,7 +49,7 @@ export const StyledButton = styled.button`
   border-radius: 6px;
   font-weight: 600;
   font-size: 15px;
-  background-color: #8000ff;
+  background-color: var(--purple);
   color: white;
 
   &:not(:first-child) {
