@@ -19,9 +19,9 @@ spring:
     open-in-view: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://cinemaprincess-db.cs2fh6hlv7up.ap-northeast-2.rds.amazonaws.com:13306/test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: 12345678
+    url: $SQL_URL
+    username: $SQL_USERNAME
+    password: $SQL_PASSWORD
 logging:
   level:
     org:
@@ -34,7 +34,6 @@ server:
       force-response: true
 
 jwt:
-#  배포 시 환경 변수로 설정 해야함 !
-  key: team033team033team033team033team033team033team033team033
-  accessTokenExpirationMinutes: 30
-  refreshTokenExpirationMinutes: 420
+  key: $JWT_KEY
+  accessTokenExpirationMinutes: $ACCESS_EXPIRE_TIME
+  refreshTokenExpirationMinutes: $REFRESH_EXPIRE_TIME
