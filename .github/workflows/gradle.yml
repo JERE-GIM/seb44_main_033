@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  S3_BUCKET_NAME: cinemaprincess
+  S3_BUCKET_NAME: ${BUCKET_NAME}
 
 jobs:
   build:
@@ -48,7 +48,7 @@ jobs:
 
     - name: Code Deploy
       run: >
-        aws deploy create-deployment --application-name CinemaPrincess
+        aws deploy create-deployment --application-name ${CODEDEPLOY_APP_NAME}
         --deployment-config-name CodeDeployDefault.AllAtOnce
-        --deployment-group-name CinemaPrincess-group
+        --deployment-group-name ${CODEDEPLOY_GROUP_NAME}
         --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=cinema-princess-deploy.zip

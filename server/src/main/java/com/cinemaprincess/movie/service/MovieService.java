@@ -43,95 +43,95 @@ public class MovieService {
     HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
     LinkedHashMap<String, String> dateMap = new LinkedHashMap<>();
 
-//    private void setDateMap() {
-//        LocalDate startDate = LocalDate.parse("1950-01-01");
-//        LocalDate endDate = LocalDate.parse("2023-12-31");
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//
-//        while (startDate.isBefore(endDate.plusDays(1))) {
-//            LocalDate nextDate = startDate.plusMonths(6).minusDays(1);
-//            if (nextDate.isAfter(endDate)) {
-//                nextDate = endDate;
-//            }
-//
-//            String key = startDate.format(formatter);
-//            String value = nextDate.format(formatter);
-//
-//            int pages = getPages(key, value);
-//            while (pages < 500 && nextDate.isBefore(endDate)) {
-//                nextDate = nextDate.plusMonths(6);
-//                value = nextDate.format(formatter);
-//                pages = getPages(key, value);
-//            }
-//
-//            if (pages > 500) {
-//                while (pages > 500 && !nextDate.equals(startDate)) {
-//                    nextDate = nextDate.minusMonths(1);
-//                    value = nextDate.format(formatter);
-//                    pages = getPages(key, value);
-//                }
-//            }
-//
-//            dateMap.put(key, value);
-//
-//            startDate = nextDate.plusDays(1);
-//            System.out.printf("%s, %s, %dp%n",key, value, pages);
-//            if (dateMap.size() == 1) {
-//                getMovieList();
-//                dateMap.clear(); // getMovieList() 실행 후 dateMap 초기화
-//            }
-//        }
-//    }
+    private void setDateMap() {
+        LocalDate startDate = LocalDate.parse("1950-01-01");
+        LocalDate endDate = LocalDate.parse("2023-12-31");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-//    @PostConstruct
-//    public void initialize() {
-//        setDateMap();
-//    }
+        while (startDate.isBefore(endDate.plusDays(1))) {
+            LocalDate nextDate = startDate.plusMonths(6).minusDays(1);
+            if (nextDate.isAfter(endDate)) {
+                nextDate = endDate;
+            }
 
-//    public void getMovieList() {
-//        try {
-//            ExecutorService executorService = Executors.newFixedThreadPool(35); // 적절한 스레드 풀 크기 선택
-//
-//            List<CompletableFuture<List<Movie>>> futures = new ArrayList<>();
-//
-//            for (Map.Entry<String, String> entry : dateMap.entrySet()) {
-//                String startDate = entry.getKey();
-//                String endDate = entry.getValue();
-//                int pages = getPages(startDate, endDate);
-//
-//                for (int i = 1; i <= pages; i++) {
-//                    int page = i;
-//                    CompletableFuture<List<Movie>> future = CompletableFuture.supplyAsync(() -> {
-//                        String url = buildMovieListUrl(startDate, endDate, page);
-//                        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-//                        String responseBody = response.getBody();
-//                        return parseMovieList(responseBody);
-//                    }, executorService);
-//                    futures.add(future);
-//                }
-//            }
-//
-//            CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-//            CompletableFuture<List<Movie>> combinedFuture = allFutures.thenApply(v -> {
-//                return futures.stream()
-//                        .map(CompletableFuture::join)
-//                        .flatMap(List::stream)
-//                        .collect(Collectors.toList());
-//            });
-//
-//            List<Movie> allMovies = combinedFuture.get();
-//
-//            int batchSize = 10000; // 배치 사이즈 설정
-//            for (int i = 0; i < allMovies.size(); i += batchSize) {
-//                List<Movie> batchMovies = allMovies.subList(i, Math.min(i + batchSize, allMovies.size()));
-//                movieJdbcRepository.saveMovies(batchMovies);
-//            }
-//
-//            executorService.shutdown();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+            String key = startDate.format(formatter);
+            String value = nextDate.format(formatter);
+
+            int pages = getPages(key, value);
+            while (pages < 500 && nextDate.isBefore(endDate)) {
+                nextDate = nextDate.plusMonths(6);
+                value = nextDate.format(formatter);
+                pages = getPages(key, value);
+            }
+
+            if (pages > 500) {
+                while (pages > 500 && !nextDate.equals(startDate)) {
+                    nextDate = nextDate.minusMonths(1);
+                    value = nextDate.format(formatter);
+                    pages = getPages(key, value);
+                }
+            }
+
+            dateMap.put(key, value);
+
+            startDate = nextDate.plusDays(1);
+            System.out.printf("%s, %s, %dp%n",key, value, pages);
+            if (dateMap.size() == 1) {
+                getMovieList();
+                dateMap.clear(); // getMovieList() 실행 후 dateMap 초기화
+            }
+        }
+    }
+
+    @PostConstruct
+    public void initialize() {
+        setDateMap();
+    }
+
+    public void getMovieList() {
+        try {
+            ExecutorService executorService = Executors.newFixedThreadPool(35); // 적절한 스레드 풀 크기 선택
+
+            List<CompletableFuture<List<Movie>>> futures = new ArrayList<>();
+
+            for (Map.Entry<String, String> entry : dateMap.entrySet()) {
+                String startDate = entry.getKey();
+                String endDate = entry.getValue();
+                int pages = getPages(startDate, endDate);
+
+                for (int i = 1; i <= pages; i++) {
+                    int page = i;
+                    CompletableFuture<List<Movie>> future = CompletableFuture.supplyAsync(() -> {
+                        String url = buildMovieListUrl(startDate, endDate, page);
+                        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+                        String responseBody = response.getBody();
+                        return parseMovieList(responseBody);
+                    }, executorService);
+                    futures.add(future);
+                }
+            }
+
+            CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+            CompletableFuture<List<Movie>> combinedFuture = allFutures.thenApply(v -> {
+                return futures.stream()
+                        .map(CompletableFuture::join)
+                        .flatMap(List::stream)
+                        .collect(Collectors.toList());
+            });
+
+            List<Movie> allMovies = combinedFuture.get();
+
+            int batchSize = 10000; // 배치 사이즈 설정
+            for (int i = 0; i < allMovies.size(); i += batchSize) {
+                List<Movie> batchMovies = allMovies.subList(i, Math.min(i + batchSize, allMovies.size()));
+                movieJdbcRepository.saveMovies(batchMovies);
+            }
+
+            executorService.shutdown();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private String buildMovieListUrl(String startDate, String endDate, int page) {
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")

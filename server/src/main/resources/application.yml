@@ -1,10 +1,10 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2
-  datasource:
-    url: jdbc:h2:mem:test;NON_KEYWORDS=USER
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2
+#  datasource:
+#    url: jdbc:h2:mem:test;NON_KEYWORDS=USER
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,16 +12,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
-#        order_inserts: true
-#        order_updates: true
-#    database: mysql
-#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-#    open-in-view: true
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/moviedb?&rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999
-#    username: root
-#    password: 12345678
+        order_inserts: true
+        order_updates: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SQL_URL}
+    username: ${SQL_USERNAME}
+    password: ${SQL_PASSWORD}
 logging:
   level:
     org:
@@ -35,6 +35,6 @@ server:
 
 jwt:
 #  배포 시 환경 변수로 설정 해야함 !
-  key: team033team033team033team033team033team033team033team033
-  accessTokenExpirationMinutes: 30
-  refreshTokenExpirationMinutes: 420
+  key: ${JWT_KEY}
+  accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
+  refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}

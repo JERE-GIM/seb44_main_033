@@ -25,19 +25,19 @@ public class MovieController {
         this.movieMapper = movieMapper;
     }
 
-//    @GetMapping
-//    public String getMovies() {
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
-//
-//        String tmdbUrl = "https://api.themoviedb.org/3/discover/movie?api_key=8799558ac2f2609cd5ff89aa63a87f10&release_date.gte=1950-01-01&watch_region=KR&language=ko-KR";
-//
-//        UriComponents uri = UriComponentsBuilder.fromHttpUrl(tmdbUrl).build();
-//
-//        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
-//
-//        return response.getBody();
-//    }
+    @GetMapping
+    public String getMovies() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
+
+        String tmdbUrl = "https://api.themoviedb.org/3/discover/movie?api_key=8799558ac2f2609cd5ff89aa63a87f10&release_date.gte=1950-01-01&watch_region=KR&language=ko-KR";
+
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(tmdbUrl).build();
+
+        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
+
+        return response.getBody();
+    }
 }
 
