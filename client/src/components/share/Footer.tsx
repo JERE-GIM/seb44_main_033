@@ -13,7 +13,6 @@ const FooterContainer = styled.footer`
   height: 100px;
   padding: 20px;
   text-align: center;
-  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
