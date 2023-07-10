@@ -15,28 +15,33 @@ import java.util.List;
 public interface ReviewMapper {
 //    Review reviewPostDtoToReview(ReviewPostDto reviewPostDto);
     Review reviewPatchDtoToReview(ReviewPatchDto reviewPatchDto);
-    ReviewResponseDto reviewToReviewResponseDto(Review review);
+//    @Mapping(source = "user.username", target = "username")
+//    ReviewResponseDto reviewToReviewResponseDto(Review review);
     List<ReviewResponseDto> reviewsToReviewResponseDtos(List<Review> reviews);
 
         default Review reviewPostDtoToReview(ReviewPostDto reviewPostDto){
         Review review = new Review();
         Movie movie = new Movie();
-        movie.setId(Long.parseLong(reviewPostDto.getId()));
+        User user = new User();
+        movie.setMovieId(reviewPostDto.getMovieId());
+        user.setUserId(reviewPostDto.getUserId());
         review.setContent(reviewPostDto.getContent());
         review.setScore(reviewPostDto.getScore());
         review.setMovie(movie);
+        review.setUser(user);
         return review;
     }
 
-//        default ReviewResponseDto reviewToReviewResponseDto(Review review){
-//        ReviewResponseDto responseDto = new ReviewResponseDto();
-//        responseDto.setReviewId(review.getReviewId());
-//        responseDto.setUserId(review.getUserId());
-//        responseDto.setId(review.getId());
-//        responseDto.setScore(review.getScore());
-//        responseDto.setContent(review.getContent());
-//        responseDto.setCreatedAt(String.valueOf(review.getCreatedAt()));
-//        responseDto.setModifiedAt(String.valueOf(review.getModifiedAt()));
-//        return responseDto;
-//    }
+        default ReviewResponseDto reviewToReviewResponseDto(Review review){
+        ReviewResponseDto responseDto = new ReviewResponseDto();
+        responseDto.setReviewId(review.getReviewId());
+        responseDto.setUserId(review.getUserId());
+        responseDto.setMovieId(review.getMovieId());
+        responseDto.setScore(review.getScore());
+        responseDto.setContent(review.getContent());
+        responseDto.setUsername(review.getUser().getUsername());
+        responseDto.setCreatedAt(String.valueOf(review.getCreatedAt()));
+        responseDto.setModifiedAt(String.valueOf(review.getModifiedAt()));
+        return responseDto;
+    }
 }

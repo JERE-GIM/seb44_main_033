@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,14 +38,14 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
-//    public long getUserId(){
-//        return user.getUserId();
-//    }
+    public long getUserId(){
+        return user.getUserId();
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "ID")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "MOVIE_ID")
     private Movie movie;
-    public long getId(){
-        return movie.getId();
+    public long getMovieId(){
+        return movie.getMovieId();
     }
 }
