@@ -4,7 +4,13 @@ import { dummyMovie } from '../dummy/dummyMovie';
 import { dummyReviews } from '../dummy/dummyReview';
 import Rating from '../components/share/Rating';
 import {
+  Star,
+  AverageRatingContainer,
+  AverageRatingSpan,
+  AverageRatingText,
   MovieCover,
+  MovieCoverImage,
+  MovieTitle,
   MovieDetail,
   MovieDetailCol,
   MovieInfo,
@@ -23,6 +29,8 @@ import {
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import elementalPoster from '../assets/elemental_poster.png';
+import elementalCover from '../assets/elemental_cover.png';
+import starIcon from '../assets/starIcon.svg';
 
 export default function Movie() {
   // 더미데이터 사용
@@ -55,9 +63,18 @@ export default function Movie() {
   return (
     <>
       <MovieCover>
+        <MovieCoverImage src={elementalCover} alt="cover image" />
+        <MovieTitle>{movie.title}</MovieTitle>
         <StarsContainer onClick={handleOpenReviewModal}>
           <Rating rating={rating} setRating={setRating} />
         </StarsContainer>
+        <AverageRatingContainer>
+          <Star src={starIcon} alt="average rating icon" />
+          <AverageRatingText>
+            <AverageRatingSpan>{movie.averageRating}</AverageRatingSpan>
+            <AverageRatingSpan>({movie.ratedUsers}명)</AverageRatingSpan>
+          </AverageRatingText>
+        </AverageRatingContainer>
       </MovieCover>
       <MovieDetail>
         <MovieDetailCol>

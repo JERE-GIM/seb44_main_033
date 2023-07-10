@@ -1,10 +1,64 @@
 import { styled } from 'styled-components';
 
-export const StarsContainer = styled.div`
-  width: fit-content;
+export const MovieCover = styled.div`
+  position: relative;
 `;
 
-export const MovieCover = styled.div``;
+export const MovieCoverImage = styled.img`
+  width: 100%;
+  height: 50vh;
+  object-fit: cover;
+`;
+
+export const MovieTitle = styled.p`
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  font-size: 40px;
+  font-weight: 800;
+  color: white;
+`;
+
+export const StarsContainer = styled.div`
+  width: fit-content;
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+`;
+
+export const AverageRatingContainer = styled.div`
+  position: absolute;
+  left: 220px;
+  bottom: 40px;
+
+  display: flex;
+  align-items: center;
+`;
+
+export const Star = styled.img`
+  width: 32px;
+  height: 36px;
+  filter: invert(15%) sepia(83%) saturate(7433%) hue-rotate(272deg)
+    brightness(92%) contrast(127%);
+`;
+
+export const AverageRatingText = styled.div`
+  margin-left: 5px;
+`;
+
+export const AverageRatingSpan = styled.span`
+  color: white;
+
+  &:first-child {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  &:last-child {
+    font-size: 15px;
+    margin-left: 5px;
+  }
+`;
 
 export const MovieDetail = styled.section`
   max-width: 1320px;
@@ -69,6 +123,7 @@ export const MyReviewContainer = styled.div`
   background-color: #f7f8ff;
   font-weight: 500;
 `;
+
 export const MyReviewContent = styled.p`
   margin-right: 10px;
   line-height: 20px;
@@ -79,6 +134,7 @@ export const MyReviewContent = styled.p`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 `;
+
 export const MyReviewRegisterButton = styled.button`
   width: fit-content;
   padding: 10px 40px;
@@ -87,9 +143,11 @@ export const MyReviewRegisterButton = styled.button`
   background-color: white;
   font-weight: 500;
 `;
+
 export const MyReviewButtons = styled.div`
   flex-shrink: 0;
 `;
+
 export const MyReviewControlButton = styled.button`
   width: fit-content;
   border: none;
