@@ -164,4 +164,15 @@ export const MyReviewControlButton = styled.button`
   }
 `;
 
-export const ReviewList = styled.section``;
+export const MovieReviews = styled.section`
+  max-width: 1320px;
+  margin: 0 auto;
+  margin-top: 20px;
+`;
+
+export const ReviewList = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: 10px;
+`;

@@ -24,13 +24,15 @@ import {
   MyReviewContent,
   MyReviewControlButton,
   MyReviewRegisterButton,
-  ReviewList,
+  MovieReviews,
   StarsContainer,
+  ReviewList,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import elementalPoster from '../assets/elemental_poster.png';
 import elementalCover from '../assets/elemental_cover.png';
 import starIcon from '../assets/starIcon.svg';
+import ReviewListitem from '../components/movie/ReviewListitem';
 
 export default function Movie() {
   // 더미데이터 사용
@@ -151,7 +153,13 @@ export default function Movie() {
           </MovieInfo>
         </MovieDetailCol>
       </MovieDetail>
-      <ReviewList></ReviewList>
+      <MovieReviews>
+        <ReviewList>
+          {dummyReviews.map((review) => (
+            <ReviewListitem key={review.id} review={review} />
+          ))}
+        </ReviewList>
+      </MovieReviews>
       {isOpenReviewModal && (
         <ReviewRegisterModal
           movie={movie}
