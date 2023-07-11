@@ -10,7 +10,6 @@ import {
   setAge,
   setGenre,
 } from '../../redux/reducers/singupSlice';
-import { styled } from 'styled-components';
 import {
   Container,
   Container1page,
@@ -30,8 +29,32 @@ import {
   KakaoLogo,
   NaverLogo,
   GoogleLogo,
+  Container2page,
+  UserInfoTitle,
+  GenderBox,
+  GenderTitle,
+  GenderBoxLabel,
+  GenderText,
+  GenderInput,
+  AgeBox,
+  AgeTitle,
+  AgeBoxLabel,
+  AgeText,
+  AgeInput,
+  AgeTitlebottom,
+  GenreBox,
+  GenreTitle,
+  GenreBoxLabel,
+  GenreText,
+  GenreInput,
+  GenreTitlebottom,
+  MessageBox,
+  Alertmessage,
+  SignupButton2,
 } from '../styles/SignupForm1.styled';
 import { RootState } from '../../redux/store';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm1: React.FC = () => {
   const dispatch = useDispatch();
@@ -40,35 +63,8 @@ const SignupForm1: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [selectedAge, setSelectedAge] = useState<string | null>(null);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
-
-  const handleNext = () => {
-    if (!isNicknameValid(displayName)) {
-      // displayName이 유효하지 않은 경우 처리
-      return;
-    }
-    if (!isEmailValid(email)) {
-      // email이 유효하지 않은 경우 처리
-      return;
-    }
-    if (!isPasswordValid(password)) {
-      // password가 유효하지 않은 경우 처리
-      return;
-    }
-    dispatch(nextPage());
-  };
-  const handlePrev = () => {
-    dispatch(prevPage());
-  };
-
-  const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setDisplayName(e.target.value));
-  };
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setEmail(e.target.value));
-  };
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setPassword(e.target.value));
-  };
+  const [isConfirmValid, setIsConfirmValid] = useState(false);
+  // 닉네임 유효성 검사 함수
   const isNicknameValid = (nickname: string): boolean => {
     return nickname.trim() !== '' && nickname.length <= 12;
   };
@@ -85,19 +81,80 @@ const SignupForm1: React.FC = () => {
     return password.trim() !== '' && passwordRegex.test(password);
   };
 
+  const handleNext = () => {
+    if (!isNicknameValid(displayName)) {
+      alert('닉네임은 공백없이 한글, 영문, 숫자만 입력 가능합니다.'); // displayName이 유효하지 않은 경우 처리
+      return;
+    }
+    if (!isEmailValid(email)) {
+      alert('이메일 형식이 올바르지 않습니다.'); // email이 유효하지 않은 경우 처리
+      return;
+    }
+    if (!isPasswordValid(password)) {
+      alert(
+        '비밀번호는 숫자, 영문, 특수문자를 1자 이상 혼합하여 8-20자리 입력해주세요.',
+      ); // password가 유효하지 않은 경우 처리
+      return;
+    }
+    dispatch(nextPage());
+  };
+
+  const handlePrev = () => {
+    dispatch(prevPage());
+  };
+  const navigate = useNavigate();
+  const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setDisplayName(e.target.value));
+  };
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setEmail(e.target.value));
+  };
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPassword(e.target.value));
+  };
+
   const handleGenderChange = (selectedGender: string) => {
     setSelectedGender(selectedGender);
     dispatch(setGender(selectedGender));
+    validateConfirm();
   };
+
   const handleAgeChange = (selectedAge: string) => {
     setSelectedAge(selectedAge);
     dispatch(setAge(selectedAge));
+    validateConfirm();
   };
+
   const handleGenreChange = (selectedGenre: string) => {
     setSelectedGenre(selectedGenre);
     dispatch(setGenre(selectedGenre));
+    validateConfirm();
   };
 
+  const validateConfirm = () => {
+    const isValid =
+      selectedGender !== null && selectedAge !== null && selectedGenre !== null;
+    setIsConfirmValid(isValid);
+  };
+  const handleConfirm = () => {
+    const formData = {
+      displayName,
+      email,
+      password,
+      gender,
+      age,
+      genre,
+    };
+
+    axios
+      .post('/users/signup', formData) //주소
+      .then((response) => {
+        navigate('/');
+      })
+      .catch((error) => {
+        alert('필수 사항을 모두 체크해주세요');
+      });
+  };
   return (
     <Container>
       {currentPage === 1 && (
@@ -348,9 +405,12 @@ const SignupForm1: React.FC = () => {
               <GenreText selected={selectedGenre === '기타'}>기 타</GenreText>
             </GenreBoxLabel>
           </GenreBox>
+          <Alertmessage>⚠️ 필수로 한가지씩 체크해주세요</Alertmessage>
           <MessageBox>
             <SignupButton2 onClick={handlePrev}>이 전</SignupButton2>
-            <SignupButton2>확 인</SignupButton2>
+            <SignupButton2 disabled={!isConfirmValid} onClick={handleConfirm}>
+              확 인
+            </SignupButton2>
           </MessageBox>
         </Container2page>
       )}
@@ -359,192 +419,3 @@ const SignupForm1: React.FC = () => {
 };
 
 export default SignupForm1;
-
-export const Container2page = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-export const UserInfoTitle = styled.div`
-  font-size: 26px;
-  font-weight: bold;
-  color: #765aaf;
-  margin-top: 40px;
-`;
-export const GenderBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  width: 345px;
-`;
-
-export const GenderTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 20px;
-  margin-right: 50px;
-`;
-
-export const GenderBoxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  width: 90px;
-`;
-
-export const GenderText = styled.span<{ selected: boolean }>`
-  font-size: 16px;
-  width: 65px;
-  height: 30px;
-  background: ${({ selected }) => (selected ? '#b366ff' : 'lightgray')};
-  border-radius: 50px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: ${({ selected }) => (selected ? 'white' : 'black')};
-
-  &:hover {
-    background: #b366ff;
-    color: white;
-  }
-`;
-
-export const GenderInput = styled.input`
-  display: none;
-
-  &:checked + ${GenderText} {
-    background: #765aaf;
-    color: #fff;
-  }
-`;
-
-export const AgeBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  width: 345px;
-`;
-
-export const AgeTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 20px;
-  margin-right: 50px;
-`;
-
-export const AgeBoxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  width: 90px;
-`;
-
-export const AgeText = styled.span<{ selected: boolean }>`
-  font-size: 16px;
-  width: 65px;
-  height: 30px;
-  background: ${({ selected }) => (selected ? '#b366ff' : 'lightgray')};
-  border-radius: 50px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: ${({ selected }) => (selected ? 'white' : 'black')};
-
-  &:hover {
-    background: #b366ff;
-    color: white;
-  }
-`;
-
-export const AgeInput = styled.input`
-  display: none;
-
-  &:checked + ${AgeText} {
-    background: #765aaf;
-    color: #fff;
-  }
-`;
-export const AgeTitlebottom = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 57px;
-  margin-right: 50px;
-`;
-
-export const GenreBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  width: 345px;
-`;
-
-export const GenreTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-right: 27px;
-`;
-
-export const GenreBoxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  width: 90px;
-  margin-right: -20px;
-`;
-
-export const GenreText = styled.span<{ selected: boolean }>`
-  font-size: 14px;
-  width: 65px;
-  height: 30px;
-  background: ${({ selected }) => (selected ? '#b366ff' : 'lightgray')};
-  border-radius: 50px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: ${({ selected }) => (selected ? 'white' : 'black')};
-
-  &:hover {
-    background: #b366ff;
-    color: white;
-  }
-`;
-
-export const GenreInput = styled.input`
-  display: none;
-
-  &:checked + ${AgeText} {
-    background: #765aaf;
-    color: #fff;
-  }
-`;
-export const GenreTitlebottom = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 57px;
-  margin-right: 50px;
-`;
-export const MessageBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-`;
-export const SignupButton2 = styled.button`
-  background-color: #8000ff;
-  width: 100px;
-  height: 40px;
-  color: white;
-  border: none;
-  padding: 6px 16px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 10px;
-  font-family: 'Roboto', sans-serif;
-  margin: 20px 20px 0px 20px;
-  &:active {
-    background-color: #6600cc;
-  }
-`;
