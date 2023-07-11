@@ -5,9 +5,12 @@ spring:
 #      path: /h2
 #  datasource:
 #    url: jdbc:h2:mem:test
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -17,6 +20,7 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: true
+    generate-ddl: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/moviedb?&rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999
@@ -35,6 +39,6 @@ server:
 
 jwt:
 #  배포 시 환경 변수로 설정 해야함 !
-  key: team033team033team033team033team033team033team033team033
+  key: team033team033team033team033team033team033team033team033team033team033team033team033
   accessTokenExpirationMinutes: 30
   refreshTokenExpirationMinutes: 420

@@ -42,9 +42,9 @@ public class Review {
 //    }
 
     @ManyToOne
-    @JoinColumn(name = "ID")
+    @JoinColumn(name = "movie_id")
     private Movie movie;
     public long getId(){
-        return movie.getId();
+        return movie.getMovieId();
     }
 }

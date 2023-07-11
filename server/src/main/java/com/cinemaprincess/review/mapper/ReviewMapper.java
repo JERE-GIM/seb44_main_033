@@ -21,7 +21,7 @@ public interface ReviewMapper {
         default Review reviewPostDtoToReview(ReviewPostDto reviewPostDto){
         Review review = new Review();
         Movie movie = new Movie();
-        movie.setId(Long.parseLong(reviewPostDto.getId()));
+        movie.setMovieId(Long.parseLong(reviewPostDto.getId()));
         review.setContent(reviewPostDto.getContent());
         review.setScore(reviewPostDto.getScore());
         review.setMovie(movie);

@@ -17,11 +17,18 @@ import javax.persistence.*;
 public class Movie {
     @Id
     private long movieId;
-    private String originalTitle;
+    private float voteAverage;
     private String title;
     private String posterPath;
     private String releaseDate;
 
-    @OneToOne(mappedBy = "movie")
+    @OneToOne(mappedBy = "movie", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private MovieDetail movieDetail;
+
+    public void setMovieDetail(MovieDetail movieDetail) {
+        this.movieDetail = movieDetail;
+        if (movieDetail.getMovie() != this) {
+            movieDetail.setMovie(this);
+        }
+    }
 }
