@@ -42,9 +42,20 @@ const SignupForm1: React.FC = () => {
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   const handleNext = () => {
+    if (!isNicknameValid(displayName)) {
+      // displayName이 유효하지 않은 경우 처리
+      return;
+    }
+    if (!isEmailValid(email)) {
+      // email이 유효하지 않은 경우 처리
+      return;
+    }
+    if (!isPasswordValid(password)) {
+      // password가 유효하지 않은 경우 처리
+      return;
+    }
     dispatch(nextPage());
   };
-
   const handlePrev = () => {
     dispatch(prevPage());
   };
@@ -52,14 +63,28 @@ const SignupForm1: React.FC = () => {
   const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setDisplayName(e.target.value));
   };
-
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setEmail(e.target.value));
   };
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPassword(e.target.value));
   };
+  const isNicknameValid = (nickname: string): boolean => {
+    return nickname.trim() !== '' && nickname.length <= 12;
+  };
+
+  // 이메일 유효성 검사 함수
+  const isEmailValid = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return email.trim() !== '' && emailRegex.test(email);
+  };
+
+  // 패스워드 유효성 검사 함수
+  const isPasswordValid = (password: string): boolean => {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,20}$/;
+    return password.trim() !== '' && passwordRegex.test(password);
+  };
+
   const handleGenderChange = (selectedGender: string) => {
     setSelectedGender(selectedGender);
     dispatch(setGender(selectedGender));
@@ -72,6 +97,7 @@ const SignupForm1: React.FC = () => {
     setSelectedGenre(selectedGenre);
     dispatch(setGenre(selectedGenre));
   };
+
   return (
     <Container>
       {currentPage === 1 && (
@@ -79,19 +105,25 @@ const SignupForm1: React.FC = () => {
           <LogoTitle>CINEMA PRINCESS</LogoTitle>
           <SubTitle>Sign up</SubTitle>
           <DisplayNameBox>
-            DisplayName
             <DisplayNameInput
               value={displayName}
+              placeholder="DisplayName"
               onChange={handleDisplayNameChange}
             />
           </DisplayNameBox>
           <EmailBox>
-            Email
-            <EmailInput value={email} onChange={handleEmailChange} />
+            <EmailInput
+              value={email}
+              placeholder="Email"
+              onChange={handleEmailChange}
+            />
           </EmailBox>
           <PasswordBox>
-            Password
-            <PasswordInput value={password} onChange={handlePasswordChange} />
+            <PasswordInput
+              value={password}
+              placeholder="Password"
+              onChange={handlePasswordChange}
+            />
           </PasswordBox>
           <SignupButton onClick={handleNext}>다 음</SignupButton>
           <LoginmessageBox>
@@ -235,6 +267,16 @@ const SignupForm1: React.FC = () => {
                 판타지
               </GenreText>
             </GenreBoxLabel>
+            <GenreBoxLabel>
+              <GenreInput
+                type="radio"
+                name="genre"
+                value="만화"
+                checked={genre === 'animation'}
+                onChange={() => handleGenreChange('만화')}
+              />
+              <GenreText selected={selectedGenre === '만화'}>만화</GenreText>
+            </GenreBoxLabel>
           </GenreBox>
           <GenreBox>
             <GenreTitlebottom></GenreTitlebottom>
@@ -246,7 +288,7 @@ const SignupForm1: React.FC = () => {
                 checked={genre === 'melo'}
                 onChange={() => handleGenreChange('멜로')}
               />
-              <GenreText selected={selectedGenre === '멜로'}>멜로</GenreText>
+              <GenreText selected={selectedGenre === '멜로'}>멜 로</GenreText>
             </GenreBoxLabel>
             <GenreBoxLabel>
               <GenreInput
@@ -259,6 +301,16 @@ const SignupForm1: React.FC = () => {
               <GenreText selected={selectedGenre === '로맨스'}>
                 로맨스
               </GenreText>
+            </GenreBoxLabel>
+            <GenreBoxLabel>
+              <GenreInput
+                type="radio"
+                name="genre"
+                value="공포"
+                checked={genre === 'horror'}
+                onChange={() => handleGenreChange('공포')}
+              />
+              <GenreText selected={selectedGenre === '공포'}>공 포</GenreText>
             </GenreBoxLabel>
           </GenreBox>
           <GenreBox>
@@ -283,12 +335,22 @@ const SignupForm1: React.FC = () => {
                 checked={genre === 'Documentary'}
                 onChange={() => handleGenreChange('다큐')}
               />
-              <GenreText selected={selectedGenre === '다큐'}>다큐</GenreText>
+              <GenreText selected={selectedGenre === '다큐'}>다 큐</GenreText>
+            </GenreBoxLabel>
+            <GenreBoxLabel>
+              <GenreInput
+                type="radio"
+                name="genre"
+                value="기타"
+                checked={genre === 'null'}
+                onChange={() => handleGenreChange('기타')}
+              />
+              <GenreText selected={selectedGenre === '기타'}>기 타</GenreText>
             </GenreBoxLabel>
           </GenreBox>
           <MessageBox>
-            <SignupButton onClick={handlePrev}>이 전</SignupButton>
-            <SignupButton onClick={handleNext}>확 인</SignupButton>
+            <SignupButton2 onClick={handlePrev}>이 전</SignupButton2>
+            <SignupButton2>확 인</SignupButton2>
           </MessageBox>
         </Container2page>
       )}
@@ -421,18 +483,18 @@ export const GenreBox = styled.div`
 export const GenreTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
-  margin-left: 20px;
-  margin-right: 50px;
+  margin-right: 27px;
 `;
 
 export const GenreBoxLabel = styled.label`
   display: flex;
   align-items: center;
   width: 90px;
+  margin-right: -20px;
 `;
 
 export const GenreText = styled.span<{ selected: boolean }>`
-  font-size: 16px;
+  font-size: 14px;
   width: 65px;
   height: 30px;
   background: ${({ selected }) => (selected ? '#b366ff' : 'lightgray')};
@@ -466,5 +528,23 @@ export const GenreTitlebottom = styled.div`
 `;
 export const MessageBox = styled.div`
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
+export const SignupButton2 = styled.button`
+  background-color: #8000ff;
+  width: 100px;
+  height: 40px;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: 'Roboto', sans-serif;
+  margin: 20px 20px 0px 20px;
+  &:active {
+    background-color: #6600cc;
+  }
 `;
