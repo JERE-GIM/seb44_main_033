@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export const Container = styled.div`
   text-decoration: none;
@@ -14,12 +14,12 @@ export const Base = styled.div`
 `;
 
 export const ImageWrapper = styled.div`
-  width: 220px;
+  width: 200px;
   height: 300px;
 `;
 
 export const Image = styled.img`
-  width: 100%;
+  width: 95%;
   height: 100%;
   object-fit: cover;
   border-radius: 4px;

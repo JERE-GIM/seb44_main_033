@@ -1,23 +1,17 @@
-import styled from 'styled-components';
-import Topmovie from '../components/main/Topmovie';
-
-const Main = styled.main`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const Container = styled.div`
-  margin-top: 62px;
-  padding: 24px 0;
-`;
+import { Main, TopContainer, BotContainer } from '../pages/styles/Main.styled';
+import Topmovie from '../components/main/MovieRank.tsx/Topmovie';
+import BotMovieTab from '../components/main/Tabmovie.tsx/Botmovietab';
 
 const MainPage: React.FC = () => {
   return (
     <div>
       <Main>
-        <Container>
+        <TopContainer>
           <Topmovie />
-        </Container>
+        </TopContainer>
+        <BotContainer>
+          <BotMovieTab />
+        </BotContainer>
       </Main>
     </div>
   );

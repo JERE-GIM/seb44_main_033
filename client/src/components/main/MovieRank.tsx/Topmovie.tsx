@@ -1,8 +1,8 @@
 import React from 'react';
-import { ITop, dummyTopMovie } from '../../dummy/dummyTop';
+import { ITop, dummyTopMovie } from '../../../dummy/dummyTop';
 import Slider from './Slider';
 import Card from './Card';
-import { Base, Title } from '../styles/Topmovie.styled';
+import { Base, Title } from '../../styles/rankmovie/Topmovie.styled';
 // slide
 // import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
