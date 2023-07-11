@@ -7,7 +7,7 @@ import {
   Info,
   Title,
   Keyword,
-} from '../styles/Card.styled';
+} from '../../styles/tabmovie/Tabcard.styled';
 
 interface Props {
   poster: string;
