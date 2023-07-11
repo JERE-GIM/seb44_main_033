@@ -5,10 +5,12 @@ import { StyledRoot } from './styles/Root.styled';
 
 export default function Root() {
   return (
-    <StyledRoot>
-      <Header />
-      <Outlet />
+    <>
+      <StyledRoot>
+        <Header />
+        <Outlet />
+      </StyledRoot>
       <Footer />
-    </StyledRoot>
+    </>
   );
 }

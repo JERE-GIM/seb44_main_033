@@ -1,9 +1,9 @@
 import {
-  StyledButton,
-  StyledConfirmButtons,
-  StyledConfirmMessage,
-  StyledBackground,
-  StyledModal,
+  Button,
+  ConfirmButtons,
+  ConfirmMessage,
+  Background,
+  Modal,
 } from '../styles/ConfirmModal.styled';
 
 interface IConfirmModal {
@@ -31,16 +31,14 @@ export default function ConfirmModal({
   };
 
   return (
-    <StyledBackground onClick={handleCloseModalUnconfirmed}>
-      <StyledModal onClick={handleClickModal}>
-        <StyledConfirmMessage>{message}</StyledConfirmMessage>
-        <StyledConfirmButtons>
-          <StyledButton onClick={handleClickConfirm}>확인</StyledButton>
-          <StyledButton onClick={handleCloseModalUnconfirmed}>
-            취소
-          </StyledButton>
-        </StyledConfirmButtons>
-      </StyledModal>
-    </StyledBackground>
+    <Background onClick={handleCloseModalUnconfirmed}>
+      <Modal onClick={handleClickModal}>
+        <ConfirmMessage>{message}</ConfirmMessage>
+        <ConfirmButtons>
+          <Button onClick={handleClickConfirm}>확인</Button>
+          <Button onClick={handleCloseModalUnconfirmed}>취소</Button>
+        </ConfirmButtons>
+      </Modal>
+    </Background>
   );
 }

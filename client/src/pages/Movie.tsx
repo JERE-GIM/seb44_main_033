@@ -4,17 +4,35 @@ import { dummyMovie } from '../dummy/dummyMovie';
 import { dummyReviews } from '../dummy/dummyReview';
 import Rating from '../components/share/Rating';
 import {
-  StyledMovieCover,
-  StyledMovieInfo,
-  StyledMyReviewButtons,
-  StyledMyReviewContainer,
-  StyledMyReviewContent,
-  StyledMyReviewControlButton,
-  StyledMyReviewRegisterButton,
-  StyledReviewList,
-  StyledStarsContainer,
+  Star,
+  AverageRatingContainer,
+  AverageRatingSpan,
+  AverageRatingText,
+  MovieCover,
+  MovieCoverImage,
+  MovieTitle,
+  MovieDetail,
+  MovieDetailCol,
+  MovieInfo,
+  MovieInfoCol,
+  MovieInfoContainer,
+  MovieInfoSpan,
+  MovieInfoText,
+  MoviePoster,
+  MyReviewButtons,
+  MyReviewContainer,
+  MyReviewContent,
+  MyReviewControlButton,
+  MyReviewRegisterButton,
+  MovieReviews,
+  StarsContainer,
+  ReviewList,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
+import elementalPoster from '../assets/elemental_poster.png';
+import elementalCover from '../assets/elemental_cover.png';
+import starIcon from '../assets/starIcon.svg';
+import ReviewListitem from '../components/movie/ReviewListitem';
 
 export default function Movie() {
   // 더미데이터 사용
@@ -46,36 +64,102 @@ export default function Movie() {
 
   return (
     <>
-      <StyledMovieCover>
-        <StyledStarsContainer onClick={handleOpenReviewModal}>
+      <MovieCover>
+        <MovieCoverImage src={elementalCover} alt="cover image" />
+        <MovieTitle>{movie.title}</MovieTitle>
+        <StarsContainer onClick={handleOpenReviewModal}>
           <Rating rating={rating} setRating={setRating} />
-        </StyledStarsContainer>
-      </StyledMovieCover>
-      <StyledMovieInfo>
-        {review ? (
-          <StyledMyReviewContainer>
-            <StyledMyReviewContent>{review.comment}</StyledMyReviewContent>
-            <StyledMyReviewButtons>
-              <StyledMyReviewControlButton onClick={handleOpenReviewModal}>
-                수정
-              </StyledMyReviewControlButton>
-              <StyledMyReviewControlButton onClick={handleOpenConfirmModal}>
-                삭제
-              </StyledMyReviewControlButton>
-            </StyledMyReviewButtons>
-          </StyledMyReviewContainer>
-        ) : (
-          <StyledMyReviewContainer>
-            <StyledMyReviewContent>
-              영화를 보고 난 소감을 기록하세요.
-            </StyledMyReviewContent>
-            <StyledMyReviewRegisterButton onClick={handleOpenReviewModal}>
-              리뷰 작성하기
-            </StyledMyReviewRegisterButton>
-          </StyledMyReviewContainer>
-        )}
-      </StyledMovieInfo>
-      <StyledReviewList></StyledReviewList>
+        </StarsContainer>
+        <AverageRatingContainer>
+          <Star src={starIcon} alt="average rating icon" />
+          <AverageRatingText>
+            <AverageRatingSpan>{movie.averageRating}</AverageRatingSpan>
+            <AverageRatingSpan>({movie.ratedUsers}명)</AverageRatingSpan>
+          </AverageRatingText>
+        </AverageRatingContainer>
+      </MovieCover>
+      <MovieDetail>
+        <MovieDetailCol>
+          <MoviePoster src={elementalPoster} alt="poster image" />
+        </MovieDetailCol>
+        <MovieDetailCol>
+          {review ? (
+            <MyReviewContainer>
+              <MyReviewContent>{review.comment}</MyReviewContent>
+              <MyReviewButtons>
+                <MyReviewControlButton onClick={handleOpenReviewModal}>
+                  수정
+                </MyReviewControlButton>
+                <MyReviewControlButton onClick={handleOpenConfirmModal}>
+                  삭제
+                </MyReviewControlButton>
+              </MyReviewButtons>
+            </MyReviewContainer>
+          ) : (
+            <MyReviewContainer>
+              <MyReviewContent>
+                영화를 보고 난 소감을 기록하세요.
+              </MyReviewContent>
+              <MyReviewRegisterButton onClick={handleOpenReviewModal}>
+                리뷰 작성하기
+              </MyReviewRegisterButton>
+            </MyReviewContainer>
+          )}
+          <MovieInfo>
+            <MovieInfoContainer>
+              <MovieInfoCol>
+                <MovieInfoText>
+                  <MovieInfoSpan>개봉</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.openAt}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>장르</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.genres.join('/')}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>국가</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.nation}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>등급</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.age}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>러닝타임</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.runningTime}분</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>출연</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.actors.join(', ')}</MovieInfoSpan>
+                </MovieInfoText>
+              </MovieInfoCol>
+              <MovieInfoCol>
+                <MovieInfoText>
+                  <MovieInfoSpan>평점</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.averageRating}</MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>누적관객</MovieInfoSpan>
+                  <MovieInfoSpan>
+                    {movie.audience.toLocaleString()}명
+                  </MovieInfoSpan>
+                </MovieInfoText>
+                <MovieInfoText>
+                  <MovieInfoSpan>박스오피스</MovieInfoSpan>
+                  <MovieInfoSpan>{movie.boxOffice}위</MovieInfoSpan>
+                </MovieInfoText>
+              </MovieInfoCol>
+            </MovieInfoContainer>
+          </MovieInfo>
+        </MovieDetailCol>
+      </MovieDetail>
+      <MovieReviews>
+        <ReviewList>
+          {dummyReviews.map((review) => (
+            <ReviewListitem key={review.id} review={review} />
+          ))}
+        </ReviewList>
+      </MovieReviews>
       {isOpenReviewModal && (
         <ReviewRegisterModal
           movie={movie}

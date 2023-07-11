@@ -11,6 +11,7 @@ export interface IMovie {
   director: string;
   actors: Array<string>;
   averageRating: number;
+  ratedUsers: number;
   audience: number;
   boxOffice: number;
 }
@@ -28,6 +29,7 @@ export const dummyMovie = {
   director: '피터 손',
   actors: ['레아 루이스', '마무두 애시', '웬디 맥렌던'],
   averageRating: 8.7,
+  ratedUsers: 40000,
   audience: 1982492,
   boxOffice: 1,
 };
