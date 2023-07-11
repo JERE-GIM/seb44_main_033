@@ -20,36 +20,36 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${{ secrets.SQL_URL }}
-    username: ${{ secrets.SQL_USERNAME }}
-    password: ${{ secrets.SQL_PASSWORD }}
+    url: ${SQL_URL}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${SQL_USERNAME}
+    password: ${SQL_PASSWORD}
 
   security:
     oauth2:
       client:
         registration:
           google:
-            clientId: ${{ secrets.GOOGLE_CLIENT_ID }}
-            clientSecret: ${{ secrets.GOOGLE_SECRET }}
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_SECRET}
             scope:
               - email
 
           kakao:
-            clientId: ${{ secrets.KAKAO_CLIENT_ID }}
-            clientSecret: ${{ secrets.KAKAO_SECRET }}
+            clientId: ${KAKAO_CLIENT_ID}
+            clientSecret: ${KAKAO_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: ${{ secrets.KAKAO_REDIRECT }}
+            redirectUri: ${KAKAO_REDIRECT}
             scope:
               - account_email
             clientName: Kakao
 
           naver:
-            clientId: ${{ secrets.NAVER_CLIENT_ID }}
-            clientSecret: ${{ secrets.NAVER_SECRET }}
+            clientId: ${NAVER_CLIENT_ID}
+            clientSecret: ${NAVER_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: ${{ secrets.NAVER_REDIRECT }}
+            redirectUri: ${NAVER_REDIRECT}
             scope:
               - email
             clientName: Naver
@@ -80,6 +80,6 @@ server:
       force-response: true
 
 jwt:
-  key: ${{ secrets.JWT_KEY }}
-  accessTokenExpirationMinutes: ${{ secrets.ACCESS_EXPIRE_TIME }}
-  refreshTokenExpirationMinutes: ${{ secrets.REFRESH_EXPIRE_TIME }}
+  key: ${JWT_KEY}
+  accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
+  refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}
