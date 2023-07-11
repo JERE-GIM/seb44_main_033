@@ -4,7 +4,9 @@ import com.cinemaprincess.review.entity.Review;
 import lombok.*;
 
 import javax.persistence.*;
+
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -34,7 +36,6 @@ public class Movie {
             movieDetail.setMovie(this);
         }
     }
-
     @OneToMany(mappedBy = "movie")
     private List<Review> reviews;
 

@@ -21,7 +21,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                     "ORDER BY reviewCount DESC")
     List<TopReviewedMoviesResponse> findReviewsByDay(@Param("today") LocalDateTime today);
 
-//    @Query("SELECT r FROM Review r WHERE r.createdAt >= : weekAgo")
     @Query(value = "SELECT m.releaseDate as releaseDate, m.title AS title, m.posterPath as posterPath, COUNT(r.reviewId) AS reviewCount " +
             "FROM Review r JOIN r.movie m " +
             "WHERE DATE(r.createdAt) >= DATE(:weekAgo) " +

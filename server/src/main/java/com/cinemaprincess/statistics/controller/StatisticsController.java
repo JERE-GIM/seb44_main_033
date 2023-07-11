@@ -40,7 +40,7 @@ public class StatisticsController {
 
 
     /*
-        사용자들의 연령별, 성별별 선호 장르 통계,
+        사용자들의 연령별, 성별별 선호 장르 통계
     */
 
     @GetMapping("/users")
@@ -65,14 +65,15 @@ public class StatisticsController {
         return ResponseEntity.status(HttpStatus.OK).body(genreService.searchGenres);
     }
     */
+
+    /*
+    ===============개발보류===============
+     */
 /*
     @GetMapping("/watchlists")
     public ResponseEntity getWatchlistsByPeriod() {
         return ResponseEntity.status(HttpStatus.OK).body(watchlistService.searchWatchlists);
     }
-*/
-    /*
-
 
     @GetMapping("/views")
     public ResponseEntity getViewsOfMoviesByPeriod() {
