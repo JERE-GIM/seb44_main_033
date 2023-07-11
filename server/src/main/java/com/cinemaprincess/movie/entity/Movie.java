@@ -1,8 +1,10 @@
 package com.cinemaprincess.movie.entity;
 
+import com.cinemaprincess.review.entity.Review;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,6 +18,7 @@ import javax.persistence.*;
 })
 public class Movie {
     @Id
+    @Column(name = "movie_id")
     private long movieId;
     private float voteAverage;
     private String title;
@@ -31,4 +34,8 @@ public class Movie {
             movieDetail.setMovie(this);
         }
     }
+
+    @OneToMany(mappedBy = "movie")
+    private List<Review> reviews;
+
 }
