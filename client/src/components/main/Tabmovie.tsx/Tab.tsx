@@ -51,7 +51,7 @@ const TabMenu: React.FC = () => {
         </TabItem>
       </TabMenuContainer>
       <TabContentContainer>
-        <TabSlider>
+        <TabSlider key={activeTab}>
           {data.map((movie: ITop) => {
             return (
               <TabCard
