@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   currentPage: 1,
-  displayName: '',
+  username: '',
   email: '',
   password: '',
   gender: '',
@@ -20,8 +20,8 @@ const signupSlice = createSlice({
     prevPage: (state) => {
       state.currentPage -= 1;
     },
-    setDisplayName: (state, action) => {
-      state.displayName = action.payload;
+    setUsername: (state, action) => {
+      state.username = action.payload;
     },
     setEmail: (state, action) => {
       state.email = action.payload;
@@ -44,7 +44,7 @@ const signupSlice = createSlice({
 export const {
   nextPage,
   prevPage,
-  setDisplayName,
+  setUsername,
   setEmail,
   setPassword,
   setGender,
@@ -53,7 +53,7 @@ export const {
 } = signupSlice.actions;
 export const signupaction = {
   nextPage,
-  setDisplayName,
+  setUsername,
   setEmail,
   setPassword,
   setGender,

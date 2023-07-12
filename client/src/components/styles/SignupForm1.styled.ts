@@ -51,7 +51,7 @@ export const SubTitle = styled.div`
   font-weight: bold;
   margin-top: 5px;
 `;
-export const DisplayNameBox = styled.div`
+export const UserNameBox = styled.div`
   border: 1px solid #f5f5f5;
   background-color: #f5f5f5;
   width: 345px;
@@ -59,7 +59,7 @@ export const DisplayNameBox = styled.div`
   border-radius: 10px;
   margin-top: 20px;
 `;
-export const DisplayNameInput = styled.input`
+export const UserNameInput = styled.input`
   background-color: #f5f5f5;
   margin: 15px 0px 0px 10px;
   font-size: 18px;

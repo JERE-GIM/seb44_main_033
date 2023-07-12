@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   nextPage,
   prevPage,
-  setDisplayName,
+  setUsername,
   setEmail,
   setPassword,
   setGender,
@@ -17,8 +17,8 @@ import {
   Container1page,
   LogoTitle,
   SubTitle,
-  DisplayNameBox,
-  DisplayNameInput,
+  UserNameBox,
+  UserNameInput,
   EmailBox,
   EmailInput,
   PasswordBox,
@@ -59,20 +59,20 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
-  const { currentPage, displayName, email, password, gender, age, genres } =
+  const { currentPage, username, email, password, gender, age, genres } =
     useSelector((state: RootState) => state.signup);
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [selectedAge, setSelectedAge] = useState<string | null>(null);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [isConfirmValid, setIsConfirmValid] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null); // 모달 참조를 생성합니다.
+  const modalRef = useRef<HTMLDivElement>(null); // 모달 참조?
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // 모달 창 내부를 클릭했을 때에는 모달 창이 닫히지 않도록 합니다.
+    // 모달 창 내부를 클릭했을 때에는 모달 창 안닫힘
     e.stopPropagation();
   };
   // 닉네임
-  const isNicknameValid = (nickname: string): boolean => {
-    return nickname.trim() !== '' && nickname.length <= 12;
+  const isUserNameValid = (username: string): boolean => {
+    return username.trim() !== '' && username.length <= 12;
   };
 
   // 이메일
@@ -88,7 +88,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   const handleNext = () => {
-    if (!isNicknameValid(displayName)) {
+    if (!isUserNameValid(username)) {
       alert('닉네임은 공백없이 한글, 영문, 숫자만 입력 가능합니다.');
       return;
     }
@@ -109,8 +109,8 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     dispatch(prevPage());
   };
   const navigate = useNavigate();
-  const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setDisplayName(e.target.value));
+  const handleusernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setUsername(e.target.value));
   };
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setEmail(e.target.value));
@@ -136,10 +136,9 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const genreIndex = updatedGenres.indexOf(selectedGenre); // 선택된 장르의 인덱스 확인
 
     if (genreIndex > -1) {
-      // 이미 선택된 장르라면 선택 해제
+      // 체크한 장르 선택 해제
       updatedGenres.splice(genreIndex, 1);
     } else if (updatedGenres.length < 3) {
-      // 선택된 장르가 3개 미만일 경우에만 선택 추가
       updatedGenres.push(selectedGenre);
     }
 
@@ -157,21 +156,24 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
   const handleConfirm = () => {
     const formData = {
-      displayName,
       email,
       password,
       gender,
       age,
+      username,
       genres,
     };
 
     axios
-      .post('/users/signup', formData) //주소
-      .then((response) => {
+      .post(
+        `http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080//signup`,
+        formData,
+      )
+      .then(() => {
         onClose();
         navigate('/');
       })
-      .catch((error) => {
+      .catch(() => {
         alert('필수 사항을 모두 체크해주세요');
       });
   };
@@ -183,13 +185,13 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Container1page>
               <LogoTitle>CINEMA PRINCESS</LogoTitle>
               <SubTitle>Sign up</SubTitle>
-              <DisplayNameBox>
-                <DisplayNameInput
-                  value={displayName}
-                  placeholder="DisplayName"
-                  onChange={handleDisplayNameChange}
+              <UserNameBox>
+                <UserNameInput
+                  value={username}
+                  placeholder="username"
+                  onChange={handleusernameChange}
                 />
-              </DisplayNameBox>
+              </UserNameBox>
               <EmailBox>
                 <EmailInput
                   value={email}
