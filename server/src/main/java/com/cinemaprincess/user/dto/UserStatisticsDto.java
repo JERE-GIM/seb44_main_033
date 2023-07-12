@@ -1,4 +1,4 @@
-package com.cinemaprincess.statistics.dto;
+package com.cinemaprincess.user.dto;
 
 import com.cinemaprincess.user.entity.User;
 import lombok.AllArgsConstructor;
