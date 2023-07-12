@@ -8,14 +8,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.cinemaprincess.auth.userdetails.OAuth2UserDetailsService;
 import com.cinemaprincess.auth.userdetails.UsersDetails;
-import com.cinemaprincess.auth.utils.CustomAuthorityUtils;
 import com.cinemaprincess.auth.jwt.JwtTokenProvider;
 
-import com.cinemaprincess.user.entity.User;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -81,7 +77,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         return UriComponentsBuilder
                 .newInstance()
-                .fromUriString("http://localhost:8080")
+                .fromUriString("http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
