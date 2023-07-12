@@ -15,12 +15,16 @@ import {
   Button,
   MypageContainer,
   MyPageId,
+  ModalContainer,
+  ModalBackground,
 } from '../styles/Header.styled';
+import SignupForm1 from '../signup/SignupForm1'; // SignupForm1 컴포넌트 추가
 
 export default function Header() {
   const isLoggedIn = useAppSelector((state: RootState) => state.isLogin);
   const dispatch = useAppDispatch();
   const [username, setusername] = useState('');
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const navigate = useNavigate();
   const handleLogin = () => {
     dispatch(login());
@@ -32,6 +36,15 @@ export default function Header() {
     dispatch(logout());
     navigate('/');
   };
+
+  const handleSignupModalOpen = () => {
+    setIsSignupModalOpen(true); // 모달 창 열기
+  };
+
+  const handleSignupModalClose = () => {
+    setIsSignupModalOpen(false); // 모달 창 닫기
+  };
+
   return (
     <HeaderContainer>
       <Link to="/">
@@ -44,7 +57,7 @@ export default function Header() {
         </HeaderTitle>
       </Link>
       <Searchbar></Searchbar>
-      {isLoggedIn ? (
+      {!isLoggedIn ? (
         <ButtonContainer>
           <MypageContainer>
             <FontAwesomeIcon icon={faCircleUser} size="2x" />
@@ -58,11 +71,21 @@ export default function Header() {
       ) : (
         <ButtonContainer>
           <Button onClick={handleLogin}>로그인</Button>
-          <Button>회원가입</Button>
+          <Button onClick={handleSignupModalOpen}>회원가입</Button>
           <Link to="/statistics">
             <Button>통계자료</Button>
           </Link>
         </ButtonContainer>
+      )}
+      {/* 모달 */}
+      {isSignupModalOpen && (
+        <ModalBackground onClick={handleSignupModalClose}>
+          <ModalContainer>
+            <div className="modal-content">
+              <SignupForm1 onClose={handleSignupModalClose} />
+            </div>
+          </ModalContainer>
+        </ModalBackground>
       )}
     </HeaderContainer>
   );

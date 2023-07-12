@@ -8,7 +8,7 @@ import {
   setPassword,
   setGender,
   setAge,
-  setGenre,
+  setGenres,
 } from '../../redux/reducers/singupSlice';
 import {
   Container,
@@ -56,26 +56,26 @@ import { RootState } from '../../redux/store';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const SignupForm1: React.FC = () => {
+const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
-  const { currentPage, displayName, email, password, gender, age, genre } =
+  const { currentPage, displayName, email, password, gender, age, genres } =
     useSelector((state: RootState) => state.signup);
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [selectedAge, setSelectedAge] = useState<string | null>(null);
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [isConfirmValid, setIsConfirmValid] = useState(false);
-  // 닉네임 유효성 검사 함수
+  // 닉네임
   const isNicknameValid = (nickname: string): boolean => {
     return nickname.trim() !== '' && nickname.length <= 12;
   };
 
-  // 이메일 유효성 검사 함수
+  // 이메일
   const isEmailValid = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return email.trim() !== '' && emailRegex.test(email);
   };
 
-  // 패스워드 유효성 검사 함수
+  // 비번
   const isPasswordValid = (password: string): boolean => {
     const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,20}$/;
     return password.trim() !== '' && passwordRegex.test(password);
@@ -83,17 +83,17 @@ const SignupForm1: React.FC = () => {
 
   const handleNext = () => {
     if (!isNicknameValid(displayName)) {
-      alert('닉네임은 공백없이 한글, 영문, 숫자만 입력 가능합니다.'); // displayName이 유효하지 않은 경우 처리
+      alert('닉네임은 공백없이 한글, 영문, 숫자만 입력 가능합니다.');
       return;
     }
     if (!isEmailValid(email)) {
-      alert('이메일 형식이 올바르지 않습니다.'); // email이 유효하지 않은 경우 처리
+      alert('이메일 형식이 올바르지 않습니다.');
       return;
     }
     if (!isPasswordValid(password)) {
       alert(
         '비밀번호는 숫자, 영문, 특수문자를 1자 이상 혼합하여 8-20자리 입력해주세요.',
-      ); // password가 유효하지 않은 경우 처리
+      );
       return;
     }
     dispatch(nextPage());
@@ -126,14 +126,27 @@ const SignupForm1: React.FC = () => {
   };
 
   const handleGenreChange = (selectedGenre: string) => {
-    setSelectedGenre(selectedGenre);
-    dispatch(setGenre(selectedGenre));
+    const updatedGenres = [...selectedGenres]; // 선택된 장르 배열 복사
+    const genreIndex = updatedGenres.indexOf(selectedGenre); // 선택된 장르의 인덱스 확인
+
+    if (genreIndex > -1) {
+      // 이미 선택된 장르라면 선택 해제
+      updatedGenres.splice(genreIndex, 1);
+    } else if (updatedGenres.length < 3) {
+      // 선택된 장르가 3개 미만일 경우에만 선택 추가
+      updatedGenres.push(selectedGenre);
+    }
+
+    setSelectedGenres(updatedGenres);
+    dispatch(setGenres(updatedGenres));
     validateConfirm();
   };
 
   const validateConfirm = () => {
     const isValid =
-      selectedGender !== null && selectedAge !== null && selectedGenre !== null;
+      selectedGender !== null &&
+      selectedAge !== null &&
+      selectedGenres !== null;
     setIsConfirmValid(isValid);
   };
   const handleConfirm = () => {
@@ -143,12 +156,13 @@ const SignupForm1: React.FC = () => {
       password,
       gender,
       age,
-      genre,
+      genres,
     };
 
     axios
       .post('/users/signup', formData) //주소
       .then((response) => {
+        onClose();
         navigate('/');
       })
       .catch((error) => {
@@ -304,108 +318,120 @@ const SignupForm1: React.FC = () => {
             <GenreTitle>선호 장르</GenreTitle>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="액션"
-                checked={genre === 'action'}
+                value="action"
+                checked={selectedGenres.includes('액션')}
                 onChange={() => handleGenreChange('액션')}
               />
-              <GenreText selected={selectedGenre === '액션'}>액션</GenreText>
+              <GenreText selected={selectedGenres.includes('액션')}>
+                액 션
+              </GenreText>
             </GenreBoxLabel>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="판타지"
-                checked={genre === 'fantasy'}
+                value="fantasy"
+                checked={selectedGenres.includes('판타지')}
                 onChange={() => handleGenreChange('판타지')}
               />
-              <GenreText selected={selectedGenre === '판타지'}>
+              <GenreText selected={selectedGenres.includes('판타지')}>
                 판타지
               </GenreText>
             </GenreBoxLabel>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="만화"
-                checked={genre === 'animation'}
+                value="animation"
+                checked={selectedGenres.includes('만화')}
                 onChange={() => handleGenreChange('만화')}
               />
-              <GenreText selected={selectedGenre === '만화'}>만화</GenreText>
+              <GenreText selected={selectedGenres.includes('만화')}>
+                만 화
+              </GenreText>
             </GenreBoxLabel>
           </GenreBox>
           <GenreBox>
             <GenreTitlebottom></GenreTitlebottom>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="멜로"
-                checked={genre === 'melo'}
+                value="melo"
+                checked={selectedGenres.includes('멜로')}
                 onChange={() => handleGenreChange('멜로')}
               />
-              <GenreText selected={selectedGenre === '멜로'}>멜 로</GenreText>
+              <GenreText selected={selectedGenres.includes('멜로')}>
+                멜 로
+              </GenreText>
             </GenreBoxLabel>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="로맨스"
-                checked={genre === 'romance'}
+                value="romance"
+                checked={selectedGenres.includes('로맨스')}
                 onChange={() => handleGenreChange('로맨스')}
               />
-              <GenreText selected={selectedGenre === '로맨스'}>
+              <GenreText selected={selectedGenres.includes('로맨스')}>
                 로맨스
               </GenreText>
             </GenreBoxLabel>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="공포"
-                checked={genre === 'horror'}
+                value="horror"
+                checked={selectedGenres.includes('공포')}
                 onChange={() => handleGenreChange('공포')}
               />
-              <GenreText selected={selectedGenre === '공포'}>공 포</GenreText>
+              <GenreText selected={selectedGenres.includes('공포')}>
+                공 포
+              </GenreText>
             </GenreBoxLabel>
           </GenreBox>
           <GenreBox>
             <GenreTitlebottom></GenreTitlebottom>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="코미디"
-                checked={genre === 'comedy'}
+                value="comedy"
+                checked={selectedGenres.includes('코미디')}
                 onChange={() => handleGenreChange('코미디')}
               />
-              <GenreText selected={selectedGenre === '코미디'}>
+              <GenreText selected={selectedGenres.includes('코미디')}>
                 코미디
               </GenreText>
             </GenreBoxLabel>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="다큐"
-                checked={genre === 'Documentary'}
+                value="documentary"
+                checked={selectedGenres.includes('다큐')}
                 onChange={() => handleGenreChange('다큐')}
               />
-              <GenreText selected={selectedGenre === '다큐'}>다 큐</GenreText>
+              <GenreText selected={selectedGenres.includes('다큐')}>
+                다 큐
+              </GenreText>
             </GenreBoxLabel>
             <GenreBoxLabel>
               <GenreInput
-                type="radio"
+                type="checkbox"
                 name="genre"
-                value="기타"
-                checked={genre === 'null'}
+                value="null"
+                checked={selectedGenres.includes('기타')}
                 onChange={() => handleGenreChange('기타')}
               />
-              <GenreText selected={selectedGenre === '기타'}>기 타</GenreText>
+              <GenreText selected={selectedGenres.includes('기타')}>
+                기 타
+              </GenreText>
             </GenreBoxLabel>
           </GenreBox>
-          <Alertmessage>⚠️ 필수로 한가지씩 체크해주세요</Alertmessage>
+          <Alertmessage>⚠️ 선호 장르는 0-3개 선택해주세요</Alertmessage>
           <MessageBox>
             <SignupButton2 onClick={handlePrev}>이 전</SignupButton2>
             <SignupButton2 disabled={!isConfirmValid} onClick={handleConfirm}>

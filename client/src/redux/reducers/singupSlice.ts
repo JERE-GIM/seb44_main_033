@@ -7,7 +7,7 @@ const initialState = {
   password: '',
   gender: '',
   age: '',
-  genre: '',
+  genres: [], // 변경: genre -> genres로 수정
 };
 
 const signupSlice = createSlice({
@@ -35,8 +35,8 @@ const signupSlice = createSlice({
     setAge: (state, action) => {
       state.age = action.payload;
     },
-    setGenre: (state, action) => {
-      state.genre = action.payload;
+    setGenres: (state, action) => {
+      state.genres = action.payload; // 변경: setGenre -> setGenres로 수정
     },
   },
 });
@@ -49,7 +49,7 @@ export const {
   setPassword,
   setGender,
   setAge,
-  setGenre,
+  setGenres, // 변경: setGenre -> setGenres로 수정
 } = signupSlice.actions;
 export const signupaction = {
   nextPage,
@@ -58,6 +58,6 @@ export const signupaction = {
   setPassword,
   setGender,
   setAge,
-  setGenre,
+  setGenres, // 변경: setGenre -> setGenres로 수정
 };
 export default signupSlice.reducer;
