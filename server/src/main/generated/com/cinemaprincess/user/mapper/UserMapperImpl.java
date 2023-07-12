@@ -2,12 +2,14 @@ package com.cinemaprincess.user.mapper;
 
 import com.cinemaprincess.user.dto.UserDto;
 import com.cinemaprincess.user.entity.User;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-07-10T09:42:04+0900",
+    date = "2023-07-12T19:52:12+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 11.0.19 (Azul Systems, Inc.)"
 )
 @Component
@@ -19,17 +21,19 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        User user = new User();
+        User.UserBuilder user = User.builder();
 
-        user.setEmail( userPostDto.getEmail() );
-        user.setPassword( userPostDto.getPassword() );
-        user.setGender( userPostDto.getGender() );
-        user.setAge( userPostDto.getAge() );
-        user.setUsername( userPostDto.getUsername() );
-        user.setGenre( userPostDto.getGenre() );
-        user.setPreferredOtt( userPostDto.getPreferredOtt() );
+        user.email( userPostDto.getEmail() );
+        user.password( userPostDto.getPassword() );
+        user.gender( userPostDto.getGender() );
+        user.age( userPostDto.getAge() );
+        user.username( userPostDto.getUsername() );
+        List<String> list = userPostDto.getGenre();
+        if ( list != null ) {
+            user.genre( new ArrayList<String>( list ) );
+        }
 
-        return user;
+        return user.build();
     }
 
     @Override
@@ -38,17 +42,19 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        User user = new User();
+        User.UserBuilder user = User.builder();
 
-        user.setUserId( userPatchDto.getUserId() );
-        user.setEmail( userPatchDto.getEmail() );
-        user.setPassword( userPatchDto.getPassword() );
-        user.setAge( userPatchDto.getAge() );
-        user.setUsername( userPatchDto.getUsername() );
-        user.setGenre( userPatchDto.getGenre() );
-        user.setPreferredOtt( userPatchDto.getPreferredOtt() );
+        user.userId( userPatchDto.getUserId() );
+        user.email( userPatchDto.getEmail() );
+        user.password( userPatchDto.getPassword() );
+        user.age( userPatchDto.getAge() );
+        user.username( userPatchDto.getUsername() );
+        List<String> list = userPatchDto.getGenre();
+        if ( list != null ) {
+            user.genre( new ArrayList<String>( list ) );
+        }
 
-        return user;
+        return user.build();
     }
 
     @Override
@@ -66,8 +72,10 @@ public class UserMapperImpl implements UserMapper {
         response.setUsername( user.getUsername() );
         response.setCreatedAt( user.getCreatedAt() );
         response.setModifiedAt( user.getModifiedAt() );
-        response.setGenre( user.getGenre() );
-        response.setPreferredOtt( user.getPreferredOtt() );
+        List<String> list = user.getGenre();
+        if ( list != null ) {
+            response.setGenre( new ArrayList<String>( list ) );
+        }
 
         return response;
     }
