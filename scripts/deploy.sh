@@ -23,6 +23,6 @@ else
 fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
-source ~/bash.bashrc
+source /etc/bash.bashrc
 echo "> DEPLOY_JAR 배포"    >> /home/ubuntu/action/deploy.log
 sudo nohup java -jar $DEPLOY_JAR >> /home/ubuntu/action/deploy.log 2>/home/ubuntu/action/deploy_err.log &
