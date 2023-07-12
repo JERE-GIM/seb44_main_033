@@ -35,21 +35,21 @@ spring:
               - email
 
           kakao:
-            clientId: kf2OUTY3_j68eCBWML9c
-            clientSecret: O2wLr6v208
-            clientAuthenticationMethod: post
-            authorizationGrantType: authorization_code
-            redirectUri: "http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/naver"
-            scope:
-              - account_email
-            clientName: Kakao
-
-          naver:
             clientId: af3226b758eb5aad6d425db0445c13d7
             clientSecret: 59wb3hhtZ7kKeARzIjGW6PvxOxtqe9oy
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
             redirectUri: "http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/kakao"
+            scope:
+              - account_email
+            clientName: Kakao
+
+          naver:
+            clientId: kf2OUTY3_j68eCBWML9c
+            clientSecret: O2wLr6v208
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirectUri: "http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/naver"
             scope:
               - email
             clientName: Naver
