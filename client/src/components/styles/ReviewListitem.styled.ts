@@ -23,10 +23,13 @@ export const ProfileImage = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 50%;
+  margin-right: 5px;
 `;
 
-export const Username = styled.div`
-  margin-left: 5px;
+export const Username = styled.div``;
+
+export const MovieTitle = styled.div`
+  font-weight: 600;
 `;
 
 export const Stars = styled(ReviewStars)``;
