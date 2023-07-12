@@ -39,11 +39,6 @@ public class SaveMovieList {
     RestTemplate restTemplate = new RestTemplate();
     LinkedHashMap<String, String> dateMap = new LinkedHashMap<>();
 
-    @PostConstruct
-    public void initialize() {
-        setDateMap();
-    }
-
     // api url
     public String buildMovieListUrl(String startDate, String endDate, int page) {
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
