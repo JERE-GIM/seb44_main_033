@@ -55,8 +55,6 @@ public class UserService {
                 .ifPresent(userName -> findUser.setUsername(userName));
         Optional.ofNullable(user.getGenre())
                 .ifPresent(genre -> findUser.setGenre(genre));
-        Optional.ofNullable(user.getPreferredOtt())
-                .ifPresent(preferredOtt -> findUser.setPreferredOtt(preferredOtt));
 
         return userRepository.save(findUser);
     }

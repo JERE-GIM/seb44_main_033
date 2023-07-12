@@ -2,9 +2,10 @@ package com.cinemaprincess.auth.config;
 
 import com.cinemaprincess.auth.filter.JwtAuthenticationFilter;
 import com.cinemaprincess.auth.filter.JwtVerificationFilter;
-import com.cinemaprincess.auth.handler.UserAuthenticationFailureHandler;
-import com.cinemaprincess.auth.handler.UserAuthenticationSuccessHandler;
+import com.cinemaprincess.auth.handler.*;
+import com.cinemaprincess.auth.userdetails.OAuth2UserDetailsService;
 import com.cinemaprincess.auth.utils.CustomAuthorityUtils;
+import com.cinemaprincess.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,6 +33,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomAuthorityUtils customAuthorityUtils;
+    private final OAuth2UserDetailsService oAuth2UserDetailsService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -42,25 +48,32 @@ public class SecurityConfiguration {
                 .formLogin().disable()
                 .httpBasic().disable()
 
+                // 예외 핸들러 등록
+                .exceptionHandling()
+                .authenticationEntryPoint(new UserAuthenticationEntryPoint())
+                .accessDeniedHandler(new UserAccessDeniedHandler())
+                .and()
+
                 // JWT 인증 및 검증 필터 등록
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         // 접근 권한 수정 필요
                         .anyRequest().permitAll()
-                );
-        return http.build();
-    }
+                )
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+                .oauth2Login()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .userInfoEndpoint()
+                .userService(oAuth2UserDetailsService);
+
+        return http.build();
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
+        configuration.setAllowedOrigins(List.of("http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
@@ -84,7 +97,8 @@ public class SecurityConfiguration {
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }
 }

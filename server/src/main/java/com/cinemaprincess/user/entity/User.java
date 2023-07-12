@@ -15,14 +15,12 @@ import javax.persistence.EnumType;
 
 import com.cinemaprincess.audit.Auditable;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends Auditable {
@@ -36,26 +34,27 @@ public class User extends Auditable {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Integer age;
 
     @Column(nullable = false) // unique 옵션 프론트와 상의
     private String username;
 
-    private String genre;
-    private String preferredOtt;
+    @ElementCollection()
+    private List<String> genre = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    public User(String email, String password, String username) {
+    public User(String email, String password, String username, List<String> roles) {
         this.email = email;
         this.password = password;
         this.username = username;
+        this.roles = roles;
     }
 
     public enum Gender {
