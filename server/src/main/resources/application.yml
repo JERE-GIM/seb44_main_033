@@ -23,9 +23,9 @@ spring:
     generate-ddl: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: ${SQL_URL}
-#    username: ${SQL_USERNAME}
-#    password: ${SQL_PASSWORD}
+    url: ${SQL_URL}
+    username: ${SQL_USERNAME}
+    password: ${SQL_PASSWORD}
 
   security:
     oauth2:
