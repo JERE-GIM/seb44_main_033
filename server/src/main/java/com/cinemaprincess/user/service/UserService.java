@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.user.dto.UserStatisticsDto;
 import lombok.Getter;
 import com.cinemaprincess.statistics.dto.UserStatisticsDto;
 import lombok.RequiredArgsConstructor;
