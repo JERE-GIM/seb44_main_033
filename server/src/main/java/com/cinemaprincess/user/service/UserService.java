@@ -1,10 +1,14 @@
 package com.cinemaprincess.user.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.cinemaprincess.genre.Genre;
 import lombok.Getter;
-import com.cinemaprincess.statistics.dto.StatisticsDto;
+import com.cinemaprincess.statistics.dto.UserStatisticsDto;
 import lombok.RequiredArgsConstructor;
 
 import lombok.Setter;
@@ -88,12 +92,36 @@ public class UserService {
         return findUser;
     }
 
-    public StatisticsDto getUsersStatistics() {
-        List<User> allUsers = userRepository.findAll();
-        System.out.println("findall~");
-        for (User user : allUsers){
-            System.out.println(user);
+    public Map<String, Integer> getUsersStatistics(String gender, String age) {
+        int minAge = calculateMinAge(age);
+        int maxAge = calculateMaxAge(age);
+        User.Gender genderEnum = User.Gender.valueOf(gender);
+
+        List<UserStatisticsDto> allUsers = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
+                .map(user -> new UserStatisticsDto(user.getGenre(), user.getGender()))
+                .collect(Collectors.toList());
+
+        Map<String, Integer> genreCount = new HashMap<>();
+
+        for (UserStatisticsDto userStatistics : allUsers) {
+            for (String genre : userStatistics.getGenre()) {
+                genreCount.put(genre, genreCount.getOrDefault(genre, 0) + 1);
+            }
         }
-        return new StatisticsDto();
+
+        return genreCount;
     }
+
+    private int calculateMinAge(String age){
+        int ageGroup = Integer.parseInt(age);
+        return ageGroup / 10 * 10;
+    }
+
+    private int calculateMaxAge(String age){
+        int ageGroup = Integer.parseInt(age);
+        return (ageGroup / 10 * 10) + 9;
+    }
+
+
+
 }
