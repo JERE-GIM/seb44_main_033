@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 
 export const Background = styled.div`
   width: fit-content;
+  display: flex;
 `;
 
 export const Label = styled.label``;
