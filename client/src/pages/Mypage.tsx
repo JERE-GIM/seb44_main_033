@@ -15,9 +15,26 @@ import profile from '../assets/profile.jpg';
 import ReviewListitem from '../components/movie/ReviewListitem';
 import { dummyUser } from '../dummy/dummyUser';
 import { dummyReviews } from '../dummy/dummyReview';
+import { useAppDispatch, useAppSelector } from '../redux/store';
+import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
+import ConfirmModal from '../components/movie/ConfirmModal';
 
 export default function Mypage() {
   const user = dummyUser;
+  const dispatch = useAppDispatch();
+  const { modal: openModal } = useAppSelector((state) => state);
+
+  const deleteMyAccount = () => {
+    console.log('회원 탈퇴');
+  };
+
+  const handleClickEditUserInfo = () => {
+    dispatch(modalAction.open(MODAL_ROLE.USER_INFO_EDIT));
+  };
+
+  const handleClickDeleteAccount = () => {
+    dispatch(modalAction.open(MODAL_ROLE.ACCOUNT_DELETE));
+  };
 
   return (
     <>
@@ -31,8 +48,8 @@ export default function Mypage() {
             ))}
           </Genres>
           <Buttons>
-            <Button>회원정보 수정</Button>
-            <Button>회원 탈퇴</Button>
+            <Button onClick={handleClickEditUserInfo}>회원정보 수정</Button>
+            <Button onClick={handleClickDeleteAccount}>회원 탈퇴</Button>
           </Buttons>
         </InfoCol>
       </Info>
@@ -44,6 +61,12 @@ export default function Mypage() {
           ))}
         </ReviewList>
       </MyReviews>
+      {openModal.status && openModal.role === MODAL_ROLE.ACCOUNT_DELETE && (
+        <ConfirmModal
+          message="Cinema Princess에서 탈퇴하시겠습니까?"
+          callback={deleteMyAccount}
+        />
+      )}
     </>
   );
 }
