@@ -11,6 +11,7 @@ export const TopContainer = styled.div`
 `;
 
 export const BotContainer = styled.div`
+  display: flex;
   margin-top: 20px;
   padding: 24px 0;
 `;

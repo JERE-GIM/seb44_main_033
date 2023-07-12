@@ -5,3 +5,8 @@ export const Base = styled.div`
   margin-bottom: 42px;
   height: 500px;
 `;
+export const RightBase = styled.div`
+  margin-left: 55px;
+  width: 25%;
+  height: 500px;
+`;
