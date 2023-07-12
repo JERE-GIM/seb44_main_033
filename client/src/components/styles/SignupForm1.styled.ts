@@ -10,6 +10,15 @@ export const ModalContainer = styled.div`
   ); /* 창을 수평 및 수직으로 정확히 중앙에 위치시킴 */
   /* 모달 창의 크기, 배경색, 그림자 등의 스타일을 추가로 설정할 수 있습니다. */
   z-index: 1000; /* 모달 창의 z-index 설정 */
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 375px;
+  height: 540px;
+  box-sizing: border-box;
+  border: 1px solid gray;
+  border-radius: 10px;
 `;
 export const ModalBackground = styled.div`
   position: fixed;
@@ -24,16 +33,6 @@ export const ModalBackground = styled.div`
   right: 0;
   background: rgba(0, 0, 0, 0, 0.8);
   z-index: 999; /* 모달 배경의 z-index 설정 */
-`;
-export const Container = styled.h1`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 375px;
-  height: 540px;
-  box-sizing: border-box;
-  border: 1px solid gray;
-  border-radius: 10px;
 `;
 export const Container1page = styled.h1`
   display: flex;
