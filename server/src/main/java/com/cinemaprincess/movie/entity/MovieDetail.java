@@ -36,4 +36,7 @@ public class MovieDetail {
     private String director;
     private String actors;
     private String videoPath;
+
+    @OneToMany(mappedBy = "movieDetail")
+    private List<MovieDetailGenre> movieDetailGenres;
 }

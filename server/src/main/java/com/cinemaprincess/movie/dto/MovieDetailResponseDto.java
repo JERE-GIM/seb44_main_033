@@ -1,5 +1,6 @@
 package com.cinemaprincess.movie.dto;
 
+import com.cinemaprincess.genre.Genre;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,4 +21,5 @@ public class MovieDetailResponseDto {
     private String director;
     private String actors;
     private String videoPath;
+    private List<MovieDetailGenreDto.Response> movieDetailGenres;
 }
