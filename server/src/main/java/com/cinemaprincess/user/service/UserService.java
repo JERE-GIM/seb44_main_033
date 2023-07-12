@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.Getter;
+import com.cinemaprincess.statistics.dto.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 
 import lombok.Setter;
@@ -87,5 +88,14 @@ public class UserService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 
         return findUser;
+    }
+
+    public StatisticsDto getUsersStatistics() {
+        List<User> allUsers = userRepository.findAll();
+        System.out.println("findall~");
+        for (User user : allUsers){
+            System.out.println(user);
+        }
+        return new StatisticsDto();
     }
 }

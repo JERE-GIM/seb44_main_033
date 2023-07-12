@@ -25,6 +25,7 @@ public interface ReviewMapper {
         User user = new User();
         movie.setMovieId(reviewPostDto.getMovieId());
         user.setUserId(reviewPostDto.getUserId());
+
         review.setContent(reviewPostDto.getContent());
         review.setScore(reviewPostDto.getScore());
         review.setMovie(movie);
