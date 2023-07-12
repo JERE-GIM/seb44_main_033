@@ -20,7 +20,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${SQL_URL}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: ${SQL_URL}
     username: ${SQL_USERNAME}
     password: ${SQL_PASSWORD}
 
