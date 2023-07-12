@@ -1,10 +1,16 @@
 package com.cinemaprincess.movie.save;
 
+import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
+import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
+import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
+import com.cinemaprincess.watch_provider.WatchProvider;
+import com.cinemaprincess.watch_provider.WatchProviderRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,8 +23,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +40,11 @@ public class SaveMovieDetail {
     String key = "8799558ac2f2609cd5ff89aa63a87f10";
     private final MovieRepository movieRepository;
     private final MovieJdbcRepository movieJdbcRepository;
+    private final MovieDetailRepository movieDetailRepository;
+    private final GenreRepository genreRepository;
+    private final WatchProviderRepository watchProviderRepository;
     private MovieDetail movieDetail;
+
     private final Map<Long, MovieDetail> movieDetailCache = new ConcurrentHashMap<>();
 
     RestTemplate restTemplate = new RestTemplate();
@@ -68,6 +85,8 @@ public class SaveMovieDetail {
             e.printStackTrace();
         }
         movieJdbcRepository.saveMovieDetail(movieDetail);
+        movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
+//        movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
         return movieDetail;
     }
 
@@ -88,12 +107,9 @@ public class SaveMovieDetail {
 
         String videoPath = parseVideoPath(jsonObject);
 
-        JsonArray genreArray = jsonObject.getAsJsonArray("genres");
+        List<MovieDetailGenre> movieDetailGenreList = parseMovieDetailGenres(jsonObject);
 
-        for (JsonElement element : genreArray) {
-            JsonObject genreObject = element.getAsJsonObject();
-            genreObject.get("id").getAsLong();
-        }
+        List<MovieDetailWatchProvider> movieDetailWatchProviders = parseMovieDetailWatchProviders(jsonObject);
 
         Movie movie = movieRepository.findById(jsonObject.get("id").getAsLong()).get();
 
@@ -107,7 +123,71 @@ public class SaveMovieDetail {
                 .actors(actors)
                 .director(director)
                 .videoPath(videoPath)
+                .movieDetailGenres(movieDetailGenreList)
+                .movieDetailWatchProviders(movieDetailWatchProviders)
                 .build();
+    }
+
+    private List<MovieDetailGenre> parseMovieDetailGenres(JsonObject jsonObject) {
+        JsonArray genreArray = jsonObject.getAsJsonArray("genres");
+
+        return StreamSupport.stream(genreArray.spliterator(), false)
+                .map(JsonElement::getAsJsonObject)
+                .map(genreObject -> {
+                    long genreId = genreObject.get("id").getAsLong();
+                    Genre genre = genreRepository.findById(genreId).orElse(null);
+                    movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
+
+                    MovieDetailGenre movieDetailGenre = new MovieDetailGenre();
+                    movieDetailGenre.setMovieDetail(movieDetail);
+                    movieDetailGenre.setGenre(genre);
+                    return movieDetailGenre;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<MovieDetailWatchProvider> parseMovieDetailWatchProviders(JsonObject jsonObject) {
+        List<MovieDetailWatchProvider> movieDetailWatchProviders = new ArrayList<>();
+
+        JsonObject watchProvidersObject = jsonObject.getAsJsonObject("watch/providers");
+        JsonObject resultsObject = watchProvidersObject.getAsJsonObject("results");
+        if (resultsObject.isJsonNull()) {
+            return movieDetailWatchProviders;
+        }
+        JsonObject koreaObject = resultsObject.getAsJsonObject("KR");
+        if (koreaObject.isJsonNull()) {
+            return movieDetailWatchProviders;
+        }
+
+        JsonArray ottArray = ottArray = koreaObject.getAsJsonArray("flatrate");
+
+        if (!ottArray.isJsonNull()) {
+            for (JsonElement element : ottArray) {
+                JsonObject ottObject = element.getAsJsonObject();
+
+                WatchProvider watchProvider = new WatchProvider();
+                long providerId = ottObject.get("provider_id").getAsLong();
+
+                if (watchProviderRepository.existsById(providerId)) {
+                    watchProvider = watchProviderRepository.findById(providerId).get();
+                } else {
+                    watchProvider.setProviderId(providerId);
+                    watchProvider.setProviderName(ottObject.get("provider_name").getAsString());
+                    watchProvider.setLogoPath(ottObject.get("logo_path").getAsString());
+                    watchProviderRepository.save(watchProvider);
+                }
+
+                movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
+
+                MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
+                movieDetailWatchProvider.setWatchProvider(watchProvider);
+                movieDetailWatchProvider.setMovieDetail(movieDetail);
+
+                movieDetailWatchProviders.add(movieDetailWatchProvider);
+            }
+        }
+
+        return movieDetailWatchProviders;
     }
 
     private String parseOverview(String responseBody) {
@@ -142,60 +222,45 @@ public class SaveMovieDetail {
 
     private String parseDirector(JsonObject creditsObject) {
         JsonArray crewArray = creditsObject.getAsJsonArray("crew");
-        String director = "";
-        if (crewArray.size() != 0) {
-            for (JsonElement element : crewArray) {
-                JsonObject crewObject = element.getAsJsonObject();
-                if (crewObject.get("job").getAsString().equals("Director") && !crewObject.get("name").isJsonNull()) {
-                    director = crewObject.get("name").getAsString();
-                }
-            }
-        }
-        return director;
+
+        Stream<JsonElement> crewStream = StreamSupport.stream(crewArray.spliterator(), false);
+
+        Optional<String> directorOptional = crewStream
+                .map(JsonElement::getAsJsonObject)
+                .filter(crewObject -> crewObject.get("job").getAsString().equals("Director"))
+                .map(crewObject -> crewObject.get("name").getAsString())
+                .findFirst();
+
+        return directorOptional.orElse("");
     }
 
     private String parseActors(JsonObject creditsObject) {
         JsonArray castArray = creditsObject.getAsJsonArray("cast");
 
-        String actors = "";
-        if (castArray.size() != 0) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < 3; i++) {
-                JsonObject castObject = castArray.get(i).getAsJsonObject();
-                if (!castObject.get("name").isJsonNull()) {
-                    sb.append(castObject.get("name").getAsString()).append(", ");
-                }
-            }
-            actors = sb.substring(0, sb.length() - 2);
-        }
-        return actors;
+        List<String> actors = IntStream.range(0, Math.min(castArray.size(), 3))
+                .mapToObj(i -> castArray.get(i).getAsJsonObject())
+                .map(castObject -> castObject.get("name").getAsString())
+                .collect(Collectors.toList());
+
+        return String.join(", ", actors);
     }
 
     private String parseCertification(JsonObject jsonObject) {
-        // "release_dates" 배열 가져오기
         JsonObject releaseDatesObject = jsonObject.getAsJsonObject("release_dates");
         JsonArray resultsArray = releaseDatesObject.getAsJsonArray("results");
 
-        String certification = "";
+        Stream<JsonElement> certificationStream = StreamSupport.stream(resultsArray.spliterator(), false);
 
-        outer:
-        for (JsonElement element : resultsArray) {
-            JsonObject resultObject = element.getAsJsonObject();
+        Optional<String> certificationOptional = certificationStream
+                .map(JsonElement::getAsJsonObject)
+                .filter(resultObject -> resultObject.get("iso_3166_1").getAsString().equals("KR"))
+                .flatMap(resultObject -> StreamSupport.stream(resultObject.getAsJsonArray("release_dates").spliterator(), false)
+                        .map(JsonElement::getAsJsonObject)
+                        .map(releaseDateObject -> releaseDateObject.get("certification").getAsString())
+                        .filter(certificationString -> !certificationString.isEmpty()))
+                .findFirst();
 
-            // "iso_3166_1" 값이 "KR"인 경우
-            if (resultObject.get("iso_3166_1").getAsString().equals("KR")) {
-                JsonArray releaseDates = resultObject.getAsJsonArray("release_dates");
-
-                for (JsonElement releaseDate : releaseDates) {
-                    JsonObject releaseDateObject = releaseDate.getAsJsonObject();
-                    if (!releaseDateObject.get("certification").getAsString().isEmpty()) {
-                        certification = releaseDateObject.get("certification").getAsString();
-                        break outer;
-                    }
-                }
-            }
-        }
-        return certification;
+        return certificationOptional.orElse("");
     }
 }
 
