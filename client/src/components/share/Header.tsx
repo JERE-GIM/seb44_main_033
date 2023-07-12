@@ -15,8 +15,6 @@ import {
   Button,
   MypageContainer,
   MyPageId,
-  ModalContainer,
-  ModalBackground,
 } from '../styles/Header.styled';
 import SignupForm1 from '../signup/SignupForm1'; // SignupForm1 컴포넌트 추가
 
@@ -57,7 +55,7 @@ export default function Header() {
         </HeaderTitle>
       </Link>
       <Searchbar></Searchbar>
-      {!isLoggedIn ? (
+      {isLoggedIn ? (
         <ButtonContainer>
           <MypageContainer>
             <FontAwesomeIcon icon={faCircleUser} size="2x" />
@@ -77,16 +75,7 @@ export default function Header() {
           </Link>
         </ButtonContainer>
       )}
-      {/* 모달 */}
-      {isSignupModalOpen && (
-        <ModalBackground onClick={handleSignupModalClose}>
-          <ModalContainer>
-            <div className="modal-content">
-              <SignupForm1 onClose={handleSignupModalClose} />
-            </div>
-          </ModalContainer>
-        </ModalBackground>
-      )}
+      {isSignupModalOpen && <SignupForm1 onClose={handleSignupModalClose} />}
     </HeaderContainer>
   );
 }
