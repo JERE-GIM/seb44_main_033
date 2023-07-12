@@ -58,3 +58,22 @@ export const Button = styled.button`
     background-color: var(--red);
   }
 `;
+
+export const MyReviews = styled.section`
+  max-width: 1320px;
+  margin: 0 auto;
+  margin-top: 20px;
+`;
+
+export const SectionHeader = styled.h2`
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+`;
+
+export const ReviewList = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: 10px;
+`;
