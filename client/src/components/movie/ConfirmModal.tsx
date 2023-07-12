@@ -1,3 +1,5 @@
+import { modalAction } from '../../redux/reducers/modal';
+import { useAppDispatch } from '../../redux/store';
 import {
   Button,
   ConfirmButtons,
@@ -9,21 +11,17 @@ import {
 interface IConfirmModal {
   message: string;
   callback: () => void;
-  setIsOpenConfirmModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ConfirmModal({
-  message,
-  callback,
-  setIsOpenConfirmModal,
-}: IConfirmModal) {
+export default function ConfirmModal({ message, callback }: IConfirmModal) {
+  const dispatch = useAppDispatch();
+
   const handleClickConfirm = () => {
     callback();
-    setIsOpenConfirmModal(false);
   };
 
   const handleCloseModalUnconfirmed = () => {
-    setIsOpenConfirmModal(false);
+    dispatch(modalAction.close());
   };
 
   const handleClickModal = (event: React.MouseEvent<HTMLDivElement>) => {
