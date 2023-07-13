@@ -2,6 +2,8 @@ package com.cinemaprincess.review.service;
 
 import com.cinemaprincess.exception.BusinessLogicException;
 import com.cinemaprincess.exception.ExceptionCode;
+import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.service.MovieService;
 import com.cinemaprincess.review.dto.ReviewPatchDto;
 import com.cinemaprincess.review.dto.ReviewPostDto;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
@@ -25,11 +27,14 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper mapper;
     private final UserService userService;
+    private final MovieService movieService;
 
     public ReviewResponseDto createReview(ReviewPostDto reviewPostDto){
         Review review = mapper.reviewPostDtoToReview(reviewPostDto);
         User user = userService.findUser(reviewPostDto.getUserId());
         review.setUser(user);
+        Movie movie = movieService.findMovie(reviewPostDto.getMovieId());
+        review.setMovie(movie);
 
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
