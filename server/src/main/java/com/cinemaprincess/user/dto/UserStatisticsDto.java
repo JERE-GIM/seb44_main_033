@@ -5,12 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
-@AllArgsConstructor
 @Setter
 @Getter
+@AllArgsConstructor
 public class UserStatisticsDto {
-    private List<String> genre;
-    private User.Gender gender;
-
+    private List<Long> genreIds;
 }

@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.user.dto.UserStatisticsDto;
 import lombok.Getter;
 import com.cinemaprincess.statistics.dto.StatisticsDto;
@@ -28,6 +29,7 @@ public class UserService {
     private final CustomAuthorityUtils customAuthorityUtils;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final GenreRepository genreRepository;
 
     // 회원가입
     public User createUser(User user) {
@@ -104,17 +106,19 @@ public class UserService {
         int maxAge = calculateMaxAge(age);
         User.Gender genderEnum = User.Gender.valueOf(gender);
 
-//        List<UserStatisticsDto> allUsers = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
-//                .map(user -> new UserStatisticsDto(user.getGenre(), user.getGender()))
-//                .collect(Collectors.toList());
+        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
+                .map(user -> new UserStatisticsDto(user.getGenre()))
+                .collect(Collectors.toList());
 
         Map<String, Integer> genreCount = new HashMap<>();
 
-//        for (UserStatisticsDto userStatistics : allUsers) {
-//            for (String genre : userStatistics.getGenre()) {
-//                genreCount.put(genre, genreCount.getOrDefault(genre, 0) + 1);
-//            }
-//        }
+        for (UserStatisticsDto userStatistics : allUsersGenre) {
+            for (Long genreId : userStatistics.getGenreIds()) {
+                Genre genre = genreRepository.getGenreNameByGenreId(genreId);
+                String genreName = genre.getGenreName();
+                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
+            }
+        }
 
         return genreCount;
     }
