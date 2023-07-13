@@ -1,7 +1,6 @@
 package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.movie.entity.Movie;
-import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 @Component
 @RequiredArgsConstructor
@@ -110,36 +109,34 @@ public class SaveMovieList {
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = jsonParser.parse(responseBody).getAsJsonObject();
         JsonArray movieList = jsonObject.getAsJsonArray("results");
-        List<Movie> movies = new ArrayList<>();
 
-        for (JsonElement jsonElement : movieList) {
-            JsonObject contents = jsonElement.getAsJsonObject();
+        return StreamSupport.stream(movieList.spliterator(), false)
+                .map(JsonElement::getAsJsonObject)
+                .filter(contents -> {
+                    String title = contents.get("title").getAsString();
+                    return title.matches("^[a-zA-Z0-9가-힣\\s\\p{Punct}]+$");
+                })
+                .map(contents -> {
+                    String posterPath = parsePosterPath(contents);
+                    String title = contents.get("title").getAsString();
+                    return Movie.builder()
+                            .movieId(contents.get("id").getAsLong())
+                            .voteAverage(contents.get("vote_average").getAsFloat())
+                            .releaseDate(contents.get("release_date").getAsString())
+                            .title(title)
+                            .posterPath(posterPath)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
 
-            // 포스터가 없을 경우, null 이 아닌 빈 문자열이 들어감
-            String posterPath = "";
-            if (contents.has("poster_path") && !contents.get("poster_path").isJsonNull()) {
-                posterPath = contents.get("poster_path").getAsString();
-            }
-
-            String title = contents.get("title").getAsString();
-
-            // title 이 한글, 영어, 숫자, 공백, 특수문자만으로 이루어진 영화만 저장
-            if (!title.matches("^[a-zA-Z0-9가-힣\\s\\p{Punct}]+$")) {
-                continue; // 조건에 맞지 않는 title 은 건너뜀
-            }
-
-            Movie movie = Movie.builder()
-                    .movieId(contents.get("id").getAsLong())
-                    .voteAverage(contents.get("vote_average").getAsFloat())
-                    .releaseDate(contents.get("release_date").getAsString())
-                    .title(title)
-                    .posterPath(posterPath)
-                    .build();
-
-            movies.add(movie);
+    private String parsePosterPath(JsonObject contents) {
+        // 포스터가 없을 경우, null 이 아닌 빈 문자열이 들어감
+        String posterPath = "";
+        if (contents.has("poster_path") && !contents.get("poster_path").isJsonNull()) {
+            posterPath = contents.get("poster_path").getAsString();
         }
-
-        return movies;
+        return posterPath;
     }
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장

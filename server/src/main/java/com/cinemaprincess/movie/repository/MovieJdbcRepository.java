@@ -2,13 +2,13 @@ package com.cinemaprincess.movie.repository;
 
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.entity.MovieDetailGenre;
+import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -97,4 +97,43 @@ public class MovieJdbcRepository {
 
         jdbcTemplate.update(sql, args);
     }
+
+    public void saveMovieDetailGenres(List<MovieDetailGenre> movieDetailGenres) {
+        String sql = "INSERT INTO movie_detail_genre (movie_id, genre_id) "
+                + "VALUES (?, ?)";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                MovieDetailGenre movieDetailGenre = movieDetailGenres.get(i);
+                ps.setLong(1, movieDetailGenre.getMovieDetail().getMovie().getMovieId());
+                ps.setLong(2, movieDetailGenre.getGenre().getGenreId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return movieDetailGenres.size();
+            }
+        });
+    }
+
+    public void saveMovieDetailWatchProviders(List<MovieDetailWatchProvider> movieDetailWatchProviders) {
+        String sql = "INSERT INTO movie_detail_watch_provider (movie_id, provider_id) "
+                + "VALUES (?, ?)";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                MovieDetailWatchProvider movieDetailWatchProvider = movieDetailWatchProviders.get(i);
+                ps.setLong(1, movieDetailWatchProvider.getMovieDetail().getMovie().getMovieId());
+                ps.setLong(2, movieDetailWatchProvider.getWatchProvider().getProviderId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return movieDetailWatchProviders.size();
+            }
+        });
+    }
 }
+

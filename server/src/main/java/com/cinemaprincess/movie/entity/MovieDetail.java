@@ -1,5 +1,7 @@
 package com.cinemaprincess.movie.entity;
 
+import com.cinemaprincess.review.entity.Review;
+import com.cinemaprincess.watch_provider.WatchProvider;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,4 +41,10 @@ public class MovieDetail {
 
     @OneToMany(mappedBy = "movieDetail")
     private List<MovieDetailGenre> movieDetailGenres;
+
+    @OneToMany(mappedBy = "movieDetail")
+    private List<MovieDetailWatchProvider> movieDetailWatchProviders;
+
+//    @OneToMany(mappedBy = "movieDetail",cascade = CascadeType.ALL)
+//    private List<Review> reviews;
 }
