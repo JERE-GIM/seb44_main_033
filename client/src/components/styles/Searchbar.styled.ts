@@ -6,13 +6,14 @@ export const SearchbarContainer = styled.div`
   border: 1px solid lightgray;
   border-radius: 4px;
   height: 40px;
+  margin-left: 120px;
 `;
 
 export const SearchInput = styled.input`
   padding: 0px 12px;
   border: none;
   margin-right: 8px;
-  width: 400px;
+  width: 300px;
   font-size: 16px;
   font-weight: bold;
   &:focus {
