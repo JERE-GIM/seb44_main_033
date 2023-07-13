@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/movies")
+//@RequestMapping("/movies")
 @RequiredArgsConstructor
 public class MovieController {
     private final static String MOVIE_DEFAULT_URL = "/movies";
@@ -31,5 +31,6 @@ public class MovieController {
 
         return new ResponseEntity<>(new SingleResponseDto<>(movieDetailResponseDto), HttpStatus.OK);
     }
+
 }
 

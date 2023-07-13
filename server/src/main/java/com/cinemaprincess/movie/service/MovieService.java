@@ -26,5 +26,4 @@ public class MovieService {
 
         return findMovie;
     }
-
 }

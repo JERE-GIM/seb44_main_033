@@ -25,7 +25,7 @@ public class ServerApplication {
 
     @PostConstruct
     public void initialize() {
-        saveMovieList.setDateMap();
         genreService.getGenreList();
+        saveMovieList.setDateMap();
     }
 }

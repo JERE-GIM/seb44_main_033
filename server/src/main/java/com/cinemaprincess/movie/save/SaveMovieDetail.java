@@ -85,7 +85,7 @@ public class SaveMovieDetail {
             e.printStackTrace();
         }
         movieJdbcRepository.saveMovieDetail(movieDetail);
-        movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
+//        movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
 //        movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
         return movieDetail;
     }
@@ -151,40 +151,38 @@ public class SaveMovieDetail {
 
         JsonObject watchProvidersObject = jsonObject.getAsJsonObject("watch/providers");
         JsonObject resultsObject = watchProvidersObject.getAsJsonObject("results");
-        if (resultsObject.isJsonNull()) {
-            return movieDetailWatchProviders;
-        }
         JsonObject koreaObject = resultsObject.getAsJsonObject("KR");
-        if (koreaObject.isJsonNull()) {
+        if (koreaObject == null) {
             return movieDetailWatchProviders;
         }
 
         JsonArray ottArray = ottArray = koreaObject.getAsJsonArray("flatrate");
+        if (ottArray == null) {
+            return movieDetailWatchProviders;
+        }
 
-        if (!ottArray.isJsonNull()) {
-            for (JsonElement element : ottArray) {
-                JsonObject ottObject = element.getAsJsonObject();
+        for (JsonElement element : ottArray) {
+            JsonObject ottObject = element.getAsJsonObject();
 
-                WatchProvider watchProvider = new WatchProvider();
-                long providerId = ottObject.get("provider_id").getAsLong();
+            WatchProvider watchProvider = new WatchProvider();
+            long providerId = ottObject.get("provider_id").getAsLong();
 
-                if (watchProviderRepository.existsById(providerId)) {
-                    watchProvider = watchProviderRepository.findById(providerId).get();
-                } else {
-                    watchProvider.setProviderId(providerId);
-                    watchProvider.setProviderName(ottObject.get("provider_name").getAsString());
-                    watchProvider.setLogoPath(ottObject.get("logo_path").getAsString());
-                    watchProviderRepository.save(watchProvider);
-                }
-
-                movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
-
-                MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
-                movieDetailWatchProvider.setWatchProvider(watchProvider);
-                movieDetailWatchProvider.setMovieDetail(movieDetail);
-
-                movieDetailWatchProviders.add(movieDetailWatchProvider);
+            if (watchProviderRepository.existsById(providerId)) {
+                watchProvider = watchProviderRepository.findById(providerId).get();
+            } else {
+                watchProvider.setProviderId(providerId);
+                watchProvider.setProviderName(ottObject.get("provider_name").getAsString());
+                watchProvider.setLogoPath(ottObject.get("logo_path").getAsString());
+                watchProviderRepository.save(watchProvider);
             }
+
+            movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
+
+            MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
+            movieDetailWatchProvider.setWatchProvider(watchProvider);
+            movieDetailWatchProvider.setMovieDetail(movieDetail);
+
+            movieDetailWatchProviders.add(movieDetailWatchProvider);
         }
 
         return movieDetailWatchProviders;

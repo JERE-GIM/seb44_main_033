@@ -1,6 +1,7 @@
 package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -80,24 +81,29 @@ public class SaveMovieList {
             List<Movie> allMovies = combinedFuture.get();
 
             movieJdbcRepository.saveMovies(allMovies); // DB에 저장
+            log.info("Movie 저장 완료");
 
-/*            List<CompletableFuture<MovieDetail>> detailFutures = allMovies.stream()
-                    .map(movie -> CompletableFuture.supplyAsync(() -> {
-                        MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
-                        movieDetail.setMovie(movie);
-                        return movieDetail;
-                    }, executorService))
-                    .collect(Collectors.toList());
-
-            CompletableFuture<List<MovieDetail>> movieDetailsFuture = CompletableFuture.allOf(detailFutures.toArray(new CompletableFuture[0]))
-                    .thenApply(v -> detailFutures.stream()
-                            .map(CompletableFuture::join)
-                            .collect(Collectors.toList()));
-
-            List<MovieDetail> movieDetails = movieDetailsFuture.get();
-
-            movieJdbcRepository.saveMovieDetails(movieDetails);
-            log.info("=========================Movie_detail 저장 완료=========================");*/
+            log.info("Movie_detail 저장 시작");
+            for (Movie movie : allMovies) {
+                saveMovieDetail.getMovieDetail(movie.getMovieId());
+            }
+//            List<CompletableFuture<MovieDetail>> detailFutures = allMovies.stream()
+//                    .map(movie -> CompletableFuture.supplyAsync(() -> {
+//                        MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
+//                        movieDetail.setMovie(movie);
+//                        return movieDetail;
+//                    }, executorService))
+//                    .collect(Collectors.toList());
+//            log.info("detailFutures 리스트 완료");
+//            CompletableFuture<List<MovieDetail>> movieDetailsFuture = CompletableFuture.allOf(detailFutures.toArray(new CompletableFuture[0]))
+//                    .thenApply(v -> detailFutures.stream()
+//                            .map(CompletableFuture::join)
+//                            .collect(Collectors.toList()));
+//            log.info("movieDetailsFuture 리스트 완료");
+//            List<MovieDetail> movieDetails = movieDetailsFuture.get();
+//            log.info("MovieDetails 리스트 완료");
+//            movieJdbcRepository.saveMovieDetails(movieDetails);
+            log.info("Movie_detail 저장 완료");
             executorService.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,7 +147,7 @@ public class SaveMovieList {
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
     public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("2019-05-30");
+        LocalDate startDate = LocalDate.parse("2018-05-30");
         LocalDate endDate = LocalDate.parse("2019-05-30");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -172,7 +178,7 @@ public class SaveMovieList {
             dateMap.put(key, value);
 
             startDate = nextDate.plusDays(1);
-            System.out.printf("%s, %s, %dp%n", key, value, pages);
+            log.info("{}, {}, {}p", key, value, pages);
             // 500p가 되면 DB에 저장
             getMovieList();
         }

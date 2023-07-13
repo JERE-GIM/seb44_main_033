@@ -46,12 +46,15 @@ public class MovieJdbcRepository {
     }
 
     public void saveMovieDetails(List<MovieDetail> movieDetails) {
-        String sql = "INSERT INTO movie_detail (movie_id, backdrop_path, overview, runtime, certification) "
-                + "VALUES (?, ?, ?, ?, ?) "
+        String sql = "INSERT INTO movie_detail (movie_id, backdrop_path, overview, runtime, certification, director, actors, video_path) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
                 + "ON DUPLICATE KEY UPDATE movie_id = VALUES(movie_id), "
                 + "backdrop_path = VALUES(backdrop_path), "
                 + "overview = VALUES(overview), "
                 + "runtime = VALUES(runtime), "
+                + "director = VALUES(director), "
+                + "actors = VALUES(actors), "
+                + "video_path = VALUES(video_path), "
                 + "certification = VALUES(certification)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -63,6 +66,9 @@ public class MovieJdbcRepository {
                 ps.setString(3, movieDetail.getOverview());
                 ps.setInt(4, movieDetail.getRuntime());
                 ps.setString(5, movieDetail.getCertification());
+                ps.setString(6, movieDetail.getDirector());
+                ps.setString(7, movieDetail.getActors());
+                ps.setString(8, movieDetail.getVideoPath());
             }
 
             @Override
