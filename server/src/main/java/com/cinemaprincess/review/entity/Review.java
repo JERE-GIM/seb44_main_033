@@ -42,7 +42,8 @@ public class Review {
         return user.getUserId();
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+//    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "MOVIE_ID")
     private Movie movie;
     public long getMovieId(){

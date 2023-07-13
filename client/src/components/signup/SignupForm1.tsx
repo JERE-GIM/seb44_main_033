@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   nextPage,
   prevPage,
-  setDisplayName,
+  setUsername,
   setEmail,
   setPassword,
   setGender,
   setAge,
-  setGenre,
+  setGenres,
 } from '../../redux/reducers/singupSlice';
-import { styled } from 'styled-components';
 import {
-  Container,
+  ModalBackground,
+  ModalContainer,
   Container1page,
   LogoTitle,
   SubTitle,
-  DisplayNameBox,
-  DisplayNameInput,
+  UserNameBox,
+  UserNameInput,
   EmailBox,
   EmailInput,
   PasswordBox,
@@ -30,441 +30,431 @@ import {
   KakaoLogo,
   NaverLogo,
   GoogleLogo,
+  Container2page,
+  UserInfoTitle,
+  GenderBox,
+  GenderTitle,
+  GenderBoxLabel,
+  GenderText,
+  GenderInput,
+  AgeBox,
+  AgeTitle,
+  AgeBoxLabel,
+  AgeText,
+  AgeInput,
+  AgeTitlebottom,
+  GenreBox,
+  GenreTitle,
+  GenreBoxLabel,
+  GenreText,
+  GenreInput,
+  GenreTitlebottom,
+  MessageBox,
+  Alertmessage,
+  SignupButton2,
 } from '../styles/SignupForm1.styled';
 import { RootState } from '../../redux/store';
-
-const SignupForm1: React.FC = () => {
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
-  const { currentPage, displayName, email, password, gender, age, genre } =
+  const { currentPage, username, email, password, gender, age, genres } =
     useSelector((state: RootState) => state.signup);
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [selectedAge, setSelectedAge] = useState<string | null>(null);
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [isConfirmValid, setIsConfirmValid] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null); // 모달 참조?
+  const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // 모달 창 내부를 클릭했을 때에는 모달 창 안닫힘
+    e.stopPropagation();
+  };
+  // 닉네임
+  const isUserNameValid = (username: string): boolean => {
+    return username.trim() !== '' && username.length <= 12;
+  };
+
+  // 이메일
+  const isEmailValid = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return email.trim() !== '' && emailRegex.test(email);
+  };
+
+  // 비번
+  const isPasswordValid = (password: string): boolean => {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,20}$/;
+    return password.trim() !== '' && passwordRegex.test(password);
+  };
 
   const handleNext = () => {
+    if (!isUserNameValid(username)) {
+      alert('닉네임은 공백없이 한글, 영문, 숫자만 입력 가능합니다.');
+      return;
+    }
+    if (!isEmailValid(email)) {
+      alert('이메일 형식이 올바르지 않습니다.');
+      return;
+    }
+    if (!isPasswordValid(password)) {
+      alert(
+        '비밀번호는 숫자, 영문, 특수문자를 1자 이상 혼합하여 8-20자리 입력해주세요.',
+      );
+      return;
+    }
     dispatch(nextPage());
   };
 
   const handlePrev = () => {
     dispatch(prevPage());
   };
-
-  const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setDisplayName(e.target.value));
+  const navigate = useNavigate();
+  const handleusernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setUsername(e.target.value));
   };
-
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setEmail(e.target.value));
   };
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPassword(e.target.value));
   };
+
   const handleGenderChange = (selectedGender: string) => {
     setSelectedGender(selectedGender);
     dispatch(setGender(selectedGender));
+    validateConfirm();
   };
+
   const handleAgeChange = (selectedAge: string) => {
     setSelectedAge(selectedAge);
     dispatch(setAge(selectedAge));
+    validateConfirm();
   };
+
   const handleGenreChange = (selectedGenre: string) => {
-    setSelectedGenre(selectedGenre);
-    dispatch(setGenre(selectedGenre));
+    const updatedGenres = [...selectedGenres]; // 선택된 장르 배열 복사
+    const genreIndex = updatedGenres.indexOf(selectedGenre); // 선택된 장르의 인덱스 확인
+
+    if (genreIndex > -1) {
+      // 체크한 장르 선택 해제
+      updatedGenres.splice(genreIndex, 1);
+    } else if (updatedGenres.length < 3) {
+      updatedGenres.push(selectedGenre);
+    }
+
+    setSelectedGenres(updatedGenres);
+    dispatch(setGenres(updatedGenres));
+    validateConfirm();
+  };
+
+  const validateConfirm = () => {
+    const isValid =
+      selectedGender !== null &&
+      selectedAge !== null &&
+      selectedGenres !== null;
+    setIsConfirmValid(isValid);
+  };
+  const handleConfirm = () => {
+    const formData = {
+      email,
+      password,
+      gender,
+      age,
+      username,
+      genres,
+    };
+
+    axios
+      .post(
+        `http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080//signup`,
+        formData,
+      )
+      .then(() => {
+        onClose();
+        navigate('/');
+      })
+      .catch(() => {
+        alert('필수 사항을 모두 체크해주세요');
+      });
   };
   return (
-    <Container>
-      {currentPage === 1 && (
-        <Container1page>
-          <LogoTitle>CINEMA PRINCESS</LogoTitle>
-          <SubTitle>Sign up</SubTitle>
-          <DisplayNameBox>
-            DisplayName
-            <DisplayNameInput
-              value={displayName}
-              onChange={handleDisplayNameChange}
-            />
-          </DisplayNameBox>
-          <EmailBox>
-            Email
-            <EmailInput value={email} onChange={handleEmailChange} />
-          </EmailBox>
-          <PasswordBox>
-            Password
-            <PasswordInput value={password} onChange={handlePasswordChange} />
-          </PasswordBox>
-          <SignupButton onClick={handleNext}>다 음</SignupButton>
-          <LoginmessageBox>
-            <Loginmessage>Already haver an account?</Loginmessage>
-            <Loginlink>Login</Loginlink>
-          </LoginmessageBox>
-          <div>or</div>
-          <OAuthbox>
-            <KakaoLogo
-              src={process.env.PUBLIC_URL + '/images/Kakao.png'}
-              alt="Kakao"
-            />
-            <NaverLogo
-              src={process.env.PUBLIC_URL + '/images/Naver.png'}
-              alt="Naver"
-            />
-            <GoogleLogo
-              src={process.env.PUBLIC_URL + '/images/Google.png'}
-              alt="Google"
-            />
-          </OAuthbox>
-        </Container1page>
-      )}
-      {currentPage === 2 && (
-        <Container2page>
-          <UserInfoTitle>User님의 회원정보</UserInfoTitle>
-          <GenderBox>
-            <GenderTitle>성별</GenderTitle>
-            <GenderBoxLabel>
-              <GenderInput
-                type="radio"
-                name="gender"
-                value="남자"
-                checked={gender === 'male'}
-                onChange={() => handleGenderChange('남자')}
+    <ModalBackground onClick={onClose}>
+      <ModalContainer ref={modalRef} onClick={handleModalClick}>
+        {currentPage === 1 && (
+          <Container1page>
+            <LogoTitle>CINEMA PRINCESS</LogoTitle>
+            <SubTitle>Sign up</SubTitle>
+            <UserNameBox>
+              <UserNameInput
+                value={username}
+                placeholder="username"
+                onChange={handleusernameChange}
               />
-              <GenderText selected={selectedGender === '남자'}>남자</GenderText>
-            </GenderBoxLabel>
-            <GenderBoxLabel>
-              <GenderInput
-                type="radio"
-                name="gender"
-                value="여자"
-                checked={gender === 'female'}
-                onChange={() => handleGenderChange('여자')}
+            </UserNameBox>
+            <EmailBox>
+              <EmailInput
+                value={email}
+                placeholder="Email"
+                onChange={handleEmailChange}
               />
-              <GenderText selected={selectedGender === '여자'}>여자</GenderText>
-            </GenderBoxLabel>
-          </GenderBox>
-          <AgeBox>
-            <AgeTitle>나이</AgeTitle>
-            <AgeBoxLabel>
-              <GenderInput
-                type="radio"
-                name="age"
-                value="10"
-                checked={age === 'teens'}
-                onChange={() => handleAgeChange('10대')}
+            </EmailBox>
+            <PasswordBox>
+              <PasswordInput
+                value={password}
+                placeholder="Password"
+                onChange={handlePasswordChange}
               />
-              <AgeText selected={selectedAge === '10대'}>10대</AgeText>
-            </AgeBoxLabel>
-            <AgeBoxLabel>
-              <AgeInput
-                type="radio"
-                name="age"
-                value="20"
-                checked={age === 'twenties'}
-                onChange={() => handleAgeChange('20대')}
+            </PasswordBox>
+            <SignupButton onClick={handleNext}>다 음</SignupButton>
+            <LoginmessageBox>
+              <Loginmessage>Already haver an account?</Loginmessage>
+              <Loginlink>Login</Loginlink>
+            </LoginmessageBox>
+            <div>or</div>
+            <OAuthbox>
+              <KakaoLogo
+                src={process.env.PUBLIC_URL + '/images/Kakao.png'}
+                alt="Kakao"
               />
-              <AgeText selected={selectedAge === '20대'}>20대</AgeText>
-            </AgeBoxLabel>
-          </AgeBox>
-          <AgeBox>
-            <AgeTitlebottom></AgeTitlebottom>
-            <AgeBoxLabel>
-              <AgeInput
-                type="radio"
-                name="age"
-                value="30"
-                checked={age === 'thirties'}
-                onChange={() => handleAgeChange('30대')}
+              <NaverLogo
+                src={process.env.PUBLIC_URL + '/images/Naver.png'}
+                alt="Naver"
               />
-              <AgeText selected={selectedAge === '30대'}>30대</AgeText>
-            </AgeBoxLabel>
-            <AgeBoxLabel>
-              <AgeInput
-                type="radio"
-                name="age"
-                value="40"
-                checked={age === 'forties'}
-                onChange={() => handleAgeChange('40대')}
+              <GoogleLogo
+                src={process.env.PUBLIC_URL + '/images/Google.png'}
+                alt="Google"
               />
-              <AgeText selected={selectedAge === '40대'}>40대</AgeText>
-            </AgeBoxLabel>
-          </AgeBox>
-          <AgeBox>
-            <AgeTitlebottom></AgeTitlebottom>
-            <AgeBoxLabel>
-              <AgeInput
-                type="radio"
-                name="age"
-                value="50"
-                checked={age === 'fifties'}
-                onChange={() => handleAgeChange('50대')}
-              />
-              <AgeText selected={selectedAge === '50대'}>50대</AgeText>
-            </AgeBoxLabel>
-            <AgeBoxLabel>
-              <GenderInput
-                type="radio"
-                name="age"
-                value="60"
-                checked={age === 'sixties'}
-                onChange={() => handleAgeChange('60대')}
-              />
-              <AgeText selected={selectedAge === '60대'}>60대</AgeText>
-            </AgeBoxLabel>
-          </AgeBox>
-          {/* 선호 장르 작업선 */}
-          <GenreBox>
-            <GenreTitle>선호 장르</GenreTitle>
-            <GenreBoxLabel>
-              <GenreInput
-                type="radio"
-                name="genre"
-                value="액션"
-                checked={genre === 'action'}
-                onChange={() => handleGenreChange('액션')}
-              />
-              <GenreText selected={selectedGenre === '액션'}>액션</GenreText>
-            </GenreBoxLabel>
-            <GenreBoxLabel>
-              <GenreInput
-                type="radio"
-                name="genre"
-                value="판타지"
-                checked={genre === 'fantasy'}
-                onChange={() => handleGenreChange('판타지')}
-              />
-              <GenreText selected={selectedGenre === '판타지'}>
-                판타지
-              </GenreText>
-            </GenreBoxLabel>
-          </GenreBox>
-          <GenreBox>
-            <GenreTitlebottom></GenreTitlebottom>
-            <GenreBoxLabel>
-              <GenreInput
-                type="radio"
-                name="genre"
-                value="멜로"
-                checked={genre === 'melo'}
-                onChange={() => handleGenreChange('멜로')}
-              />
-              <GenreText selected={selectedGenre === '멜로'}>멜로</GenreText>
-            </GenreBoxLabel>
-            <GenreBoxLabel>
-              <GenreInput
-                type="radio"
-                name="genre"
-                value="로맨스"
-                checked={genre === 'romance'}
-                onChange={() => handleGenreChange('로맨스')}
-              />
-              <GenreText selected={selectedGenre === '로맨스'}>
-                로맨스
-              </GenreText>
-            </GenreBoxLabel>
-          </GenreBox>
-          <GenreBox>
-            <GenreTitlebottom></GenreTitlebottom>
-            <GenreBoxLabel>
-              <GenreInput
-                type="radio"
-                name="genre"
-                value="코미디"
-                checked={genre === 'comedy'}
-                onChange={() => handleGenreChange('코미디')}
-              />
-              <GenreText selected={selectedGenre === '코미디'}>
-                코미디
-              </GenreText>
-            </GenreBoxLabel>
-            <GenreBoxLabel>
-              <GenreInput
-                type="radio"
-                name="genre"
-                value="다큐"
-                checked={genre === 'Documentary'}
-                onChange={() => handleGenreChange('다큐')}
-              />
-              <GenreText selected={selectedGenre === '다큐'}>다큐</GenreText>
-            </GenreBoxLabel>
-          </GenreBox>
-          <MessageBox>
-            <SignupButton onClick={handlePrev}>이 전</SignupButton>
-            <SignupButton onClick={handleNext}>확 인</SignupButton>
-          </MessageBox>
-        </Container2page>
-      )}
-    </Container>
+            </OAuthbox>
+          </Container1page>
+        )}
+        {currentPage === 2 && (
+          <Container2page>
+            <UserInfoTitle>User님의 회원정보</UserInfoTitle>
+            <GenderBox>
+              <GenderTitle>성별</GenderTitle>
+              <GenderBoxLabel>
+                <GenderInput
+                  type="radio"
+                  name="gender"
+                  value="남자"
+                  checked={gender === 'male'}
+                  onChange={() => handleGenderChange('남자')}
+                />
+                <GenderText selected={selectedGender === '남자'}>
+                  남자
+                </GenderText>
+              </GenderBoxLabel>
+              <GenderBoxLabel>
+                <GenderInput
+                  type="radio"
+                  name="gender"
+                  value="여자"
+                  checked={gender === 'female'}
+                  onChange={() => handleGenderChange('여자')}
+                />
+                <GenderText selected={selectedGender === '여자'}>
+                  여자
+                </GenderText>
+              </GenderBoxLabel>
+            </GenderBox>
+            <AgeBox>
+              <AgeTitle>나이</AgeTitle>
+              <AgeBoxLabel>
+                <GenderInput
+                  type="radio"
+                  name="age"
+                  value="10"
+                  checked={age === 'teens'}
+                  onChange={() => handleAgeChange('10대')}
+                />
+                <AgeText selected={selectedAge === '10대'}>10대</AgeText>
+              </AgeBoxLabel>
+              <AgeBoxLabel>
+                <AgeInput
+                  type="radio"
+                  name="age"
+                  value="20"
+                  checked={age === 'twenties'}
+                  onChange={() => handleAgeChange('20대')}
+                />
+                <AgeText selected={selectedAge === '20대'}>20대</AgeText>
+              </AgeBoxLabel>
+            </AgeBox>
+            <AgeBox>
+              <AgeTitlebottom></AgeTitlebottom>
+              <AgeBoxLabel>
+                <AgeInput
+                  type="radio"
+                  name="age"
+                  value="30"
+                  checked={age === 'thirties'}
+                  onChange={() => handleAgeChange('30대')}
+                />
+                <AgeText selected={selectedAge === '30대'}>30대</AgeText>
+              </AgeBoxLabel>
+              <AgeBoxLabel>
+                <AgeInput
+                  type="radio"
+                  name="age"
+                  value="40"
+                  checked={age === 'forties'}
+                  onChange={() => handleAgeChange('40대')}
+                />
+                <AgeText selected={selectedAge === '40대'}>40대</AgeText>
+              </AgeBoxLabel>
+            </AgeBox>
+            <AgeBox>
+              <AgeTitlebottom></AgeTitlebottom>
+              <AgeBoxLabel>
+                <AgeInput
+                  type="radio"
+                  name="age"
+                  value="50"
+                  checked={age === 'fifties'}
+                  onChange={() => handleAgeChange('50대')}
+                />
+                <AgeText selected={selectedAge === '50대'}>50대</AgeText>
+              </AgeBoxLabel>
+              <AgeBoxLabel>
+                <GenderInput
+                  type="radio"
+                  name="age"
+                  value="60"
+                  checked={age === 'sixties'}
+                  onChange={() => handleAgeChange('60대')}
+                />
+                <AgeText selected={selectedAge === '60대'}>60대</AgeText>
+              </AgeBoxLabel>
+            </AgeBox>
+            {/* 선호 장르 작업선 */}
+            <GenreBox>
+              <GenreTitle>선호 장르</GenreTitle>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="action"
+                  checked={selectedGenres.includes('액션')}
+                  onChange={() => handleGenreChange('액션')}
+                />
+                <GenreText selected={selectedGenres.includes('액션')}>
+                  액 션
+                </GenreText>
+              </GenreBoxLabel>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="fantasy"
+                  checked={selectedGenres.includes('판타지')}
+                  onChange={() => handleGenreChange('판타지')}
+                />
+                <GenreText selected={selectedGenres.includes('판타지')}>
+                  판타지
+                </GenreText>
+              </GenreBoxLabel>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="animation"
+                  checked={selectedGenres.includes('만화')}
+                  onChange={() => handleGenreChange('만화')}
+                />
+                <GenreText selected={selectedGenres.includes('만화')}>
+                  만 화
+                </GenreText>
+              </GenreBoxLabel>
+            </GenreBox>
+            <GenreBox>
+              <GenreTitlebottom></GenreTitlebottom>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="melo"
+                  checked={selectedGenres.includes('멜로')}
+                  onChange={() => handleGenreChange('멜로')}
+                />
+                <GenreText selected={selectedGenres.includes('멜로')}>
+                  멜 로
+                </GenreText>
+              </GenreBoxLabel>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="romance"
+                  checked={selectedGenres.includes('로맨스')}
+                  onChange={() => handleGenreChange('로맨스')}
+                />
+                <GenreText selected={selectedGenres.includes('로맨스')}>
+                  로맨스
+                </GenreText>
+              </GenreBoxLabel>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="horror"
+                  checked={selectedGenres.includes('공포')}
+                  onChange={() => handleGenreChange('공포')}
+                />
+                <GenreText selected={selectedGenres.includes('공포')}>
+                  공 포
+                </GenreText>
+              </GenreBoxLabel>
+            </GenreBox>
+            <GenreBox>
+              <GenreTitlebottom></GenreTitlebottom>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="comedy"
+                  checked={selectedGenres.includes('코미디')}
+                  onChange={() => handleGenreChange('코미디')}
+                />
+                <GenreText selected={selectedGenres.includes('코미디')}>
+                  코미디
+                </GenreText>
+              </GenreBoxLabel>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="documentary"
+                  checked={selectedGenres.includes('다큐')}
+                  onChange={() => handleGenreChange('다큐')}
+                />
+                <GenreText selected={selectedGenres.includes('다큐')}>
+                  다 큐
+                </GenreText>
+              </GenreBoxLabel>
+              <GenreBoxLabel>
+                <GenreInput
+                  type="checkbox"
+                  name="genre"
+                  value="null"
+                  checked={selectedGenres.includes('기타')}
+                  onChange={() => handleGenreChange('기타')}
+                />
+                <GenreText selected={selectedGenres.includes('기타')}>
+                  기 타
+                </GenreText>
+              </GenreBoxLabel>
+            </GenreBox>
+            <Alertmessage>⚠️ 선호 장르는 0-3개 선택해주세요</Alertmessage>
+            <MessageBox>
+              <SignupButton2 onClick={handlePrev}>이 전</SignupButton2>
+              <SignupButton2 disabled={!isConfirmValid} onClick={handleConfirm}>
+                확 인
+              </SignupButton2>
+            </MessageBox>
+          </Container2page>
+        )}
+      </ModalContainer>
+    </ModalBackground>
   );
 };
 
 export default SignupForm1;
-
-export const Container2page = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-export const UserInfoTitle = styled.div`
-  font-size: 26px;
-  font-weight: bold;
-  color: #765aaf;
-  margin-top: 40px;
-`;
-export const GenderBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  width: 345px;
-`;
-
-export const GenderTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 20px;
-  margin-right: 50px;
-`;
-
-export const GenderBoxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  width: 90px;
-`;
-
-export const GenderText = styled.span<{ selected: boolean }>`
-  font-size: 16px;
-  width: 65px;
-  height: 30px;
-  background: ${({ selected }) => (selected ? '#b366ff' : 'lightgray')};
-  border-radius: 50px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: ${({ selected }) => (selected ? 'white' : 'black')};
-
-  &:hover {
-    background: #b366ff;
-    color: white;
-  }
-`;
-
-export const GenderInput = styled.input`
-  display: none;
-
-  &:checked + ${GenderText} {
-    background: #765aaf;
-    color: #fff;
-  }
-`;
-
-export const AgeBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  width: 345px;
-`;
-
-export const AgeTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 20px;
-  margin-right: 50px;
-`;
-
-export const AgeBoxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  width: 90px;
-`;
-
-export const AgeText = styled.span<{ selected: boolean }>`
-  font-size: 16px;
-  width: 65px;
-  height: 30px;
-  background: ${({ selected }) => (selected ? '#b366ff' : 'lightgray')};
-  border-radius: 50px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: ${({ selected }) => (selected ? 'white' : 'black')};
-
-  &:hover {
-    background: #b366ff;
-    color: white;
-  }
-`;
-
-export const AgeInput = styled.input`
-  display: none;
-
-  &:checked + ${AgeText} {
-    background: #765aaf;
-    color: #fff;
-  }
-`;
-export const AgeTitlebottom = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 57px;
-  margin-right: 50px;
-`;
-
-export const GenreBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  width: 345px;
-`;
-
-export const GenreTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 20px;
-  margin-right: 50px;
-`;
-
-export const GenreBoxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  width: 90px;
-`;
-
-export const GenreText = styled.span<{ selected: boolean }>`
-  font-size: 16px;
-  width: 65px;
-  height: 30px;
-  background: ${({ selected }) => (selected ? '#b366ff' : 'lightgray')};
-  border-radius: 50px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: ${({ selected }) => (selected ? 'white' : 'black')};
-
-  &:hover {
-    background: #b366ff;
-    color: white;
-  }
-`;
-
-export const GenreInput = styled.input`
-  display: none;
-
-  &:checked + ${AgeText} {
-    background: #765aaf;
-    color: #fff;
-  }
-`;
-export const GenreTitlebottom = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 57px;
-  margin-right: 50px;
-`;
-export const MessageBox = styled.div`
-  display: flex;
-  flex-direction: row;
-`;

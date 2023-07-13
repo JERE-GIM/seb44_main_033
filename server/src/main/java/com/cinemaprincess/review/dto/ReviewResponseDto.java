@@ -12,6 +12,7 @@ public class ReviewResponseDto {
     private String content;
     private int score;
     private String username;
+    private int votesCount;
     private String createdAt;
     private String modifiedAt;
 }
