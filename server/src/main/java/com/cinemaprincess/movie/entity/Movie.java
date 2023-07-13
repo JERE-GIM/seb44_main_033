@@ -1,12 +1,12 @@
 package com.cinemaprincess.movie.entity;
 
+import com.cinemaprincess.review.entity.Review;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -14,17 +14,29 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(indexes = @Index(name = "idx_title", columnList = "title"))
+@Table(indexes = {
+        @Index(name = "idx_title", columnList = "title"),
+        @Index(name = "idx_releaseDate", columnList = "releaseDate")
+})
 public class Movie {
     @Id
+    @Column(name = "movie_id")
     private long movieId;
-    private String originalTitle;
-
+    private float voteAverage;
     private String title;
-
-    @Column(name = "poster_path")
     private String posterPath;
-
-    @Column(name = "release_date")
     private String releaseDate;
+
+    @OneToOne(mappedBy = "movie", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private MovieDetail movieDetail;
+
+    public void setMovieDetail(MovieDetail movieDetail) {
+        this.movieDetail = movieDetail;
+        if (movieDetail.getMovie() != this) {
+            movieDetail.setMovie(this);
+        }
+    }
+    @OneToMany(mappedBy = "movie")
+    private List<Review> reviews;
+
 }

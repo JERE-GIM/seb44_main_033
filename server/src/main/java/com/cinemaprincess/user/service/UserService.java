@@ -3,13 +3,9 @@ package com.cinemaprincess.user.service;
 import java.util.List;
 import java.util.Optional;
 
-import lombok.Getter;
+import com.cinemaprincess.statistics.dto.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -46,14 +42,24 @@ public class UserService {
     // 회원정보 수정
     public User updateUser(User user) {
         User findUser = findVerifiedUser(user.getUserId());
-        Optional.ofNullable(user.getPassword())
-                .ifPresent(password -> findUser.setPassword(password));
         Optional.ofNullable(user.getAge())
                 .ifPresent(age -> findUser.setAge(age));
         Optional.ofNullable(user.getUsername())
                 .ifPresent(userName -> findUser.setUsername(userName));
         Optional.ofNullable(user.getGenre())
                 .ifPresent(genre -> findUser.setGenre(genre));
+
+        return userRepository.save(findUser);
+    }
+
+    // password 수정
+    public User updatePasswordToUser(User user) {
+        User findUser = findVerifiedUser(user.getUserId());
+        Optional.ofNullable(user.getPassword())
+                .ifPresent(password -> findUser.setPassword(password));
+
+        String encryptedPassword = passwordEncoder.encode(findUser.getPassword());
+        findUser.setPassword(encryptedPassword);
 
         return userRepository.save(findUser);
     }
@@ -85,5 +91,14 @@ public class UserService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 
         return findUser;
+    }
+
+    public StatisticsDto getUsersStatistics() {
+        List<User> allUsers = userRepository.findAll();
+        System.out.println("findall~");
+        for (User user : allUsers){
+            System.out.println(user);
+        }
+        return new StatisticsDto();
     }
 }

@@ -3,15 +3,15 @@ import { IMovie } from '../../dummy/dummyMovie';
 import { IReview } from '../../dummy/dummyReview';
 import Rating from '../share/Rating';
 import {
-  StyledBackground,
-  StyledCloseButton,
-  StyledCommentTextarea,
-  StyledController,
-  StyledForm,
-  StyledHeader,
-  StyledModal,
-  StyledMovieTitle,
-  StyledSubmitButton,
+  Background,
+  CloseButton,
+  CommentTextarea,
+  Controller,
+  Form,
+  ModalHeader,
+  Modal,
+  MovieTitle,
+  SubmitButton,
 } from '../styles/ReviewRegisterModal.styled';
 import closeButton from '../../assets/closeButton.svg';
 
@@ -54,27 +54,27 @@ export default function ReviewRegister({
 
   return (
     <>
-      <StyledBackground onClick={handleCloseModalUnsaved}>
-        <StyledModal onClick={handleClickModal}>
-          <StyledHeader>
-            <StyledMovieTitle>{movie.title}</StyledMovieTitle>
-            <StyledCloseButton onClick={handleCloseModalUnsaved}>
+      <Background onClick={handleCloseModalUnsaved}>
+        <Modal onClick={handleClickModal}>
+          <ModalHeader>
+            <MovieTitle>{movie.title}</MovieTitle>
+            <CloseButton onClick={handleCloseModalUnsaved}>
               <img src={closeButton} alt="close button" />
-            </StyledCloseButton>
-          </StyledHeader>
-          <StyledForm onSubmit={handleSubmitForm}>
+            </CloseButton>
+          </ModalHeader>
+          <Form onSubmit={handleSubmitForm}>
             <Rating rating={rating} setRating={setRating} />
-            <StyledCommentTextarea
+            <CommentTextarea
               placeholder="이 영화 어떠셨나요?"
               value={comment}
               onChange={handleChangeTextarea}
             />
-            <StyledController>
-              <StyledSubmitButton>저장</StyledSubmitButton>
-            </StyledController>
-          </StyledForm>
-        </StyledModal>
-      </StyledBackground>
+            <Controller>
+              <SubmitButton>저장</SubmitButton>
+            </Controller>
+          </Form>
+        </Modal>
+      </Background>
     </>
   );
 }

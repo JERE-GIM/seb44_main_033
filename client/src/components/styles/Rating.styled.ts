@@ -19,7 +19,7 @@ export const Star = styled.img<{ $rated: boolean }>`
   filter: ${(props) =>
     props.$rated
       ? 'invert(88%) sepia(62%) saturate(1415%) hue-rotate(326deg) brightness(98%) contrast(104%)'
-      : 'invert(100%) sepia(2%) saturate(770%) hue-rotate(321deg) brightness(107%) contrast(74%)'};
+      : 'invert(99%) sepia(99%) saturate(37%) hue-rotate(191deg) brightness(111%) contrast(92%)'}; // #f5f5f5
 
   &:hover {
     filter: invert(95%) sepia(69%) saturate(6547%) hue-rotate(326deg)

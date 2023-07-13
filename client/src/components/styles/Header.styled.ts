@@ -7,8 +7,10 @@ export const HeaderContainer = styled.header`
   height: 60px;
   border-bottom: 3px solid #f1c6d4;
   position: sticky;
-  z-index: 1;
+  z-index: 1; /* 변경된 부분 */
+  top: 0;
   padding: 0px 0px 0px 0px;
+  background-color: white;
   a {
     text-decoration-line: none;
 `;
@@ -25,8 +27,8 @@ export const HeaderTitle = styled.h1`
 `;
 
 export const LogoImage = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   margin-right: 8px;
 `;
 
@@ -36,26 +38,21 @@ export const ButtonContainer = styled.div`
   align-items: center;
   height: 100%;
   width: 490px;
-  padding-right: 20px;
+  margin-left: 30px;
+  margin-right: 20px;
 `;
 
 export const Button = styled.button`
   background-color: #8000ff;
   color: white;
   border: none;
-  padding: 6px 16px;
-  font-size: 20px;
+  padding: 6px 12px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  margin-left: 8px;
   border-radius: 10px;
   font-family: 'Roboto', sans-serif;
-  &:first-child {
-    margin-left: 0;
-  }
-  &:not(:last-child) {
-    margin-right: 20px;
-  }
+  margin-left: 10px;
   &:active {
     background-color: #6600cc;
   }
@@ -67,14 +64,14 @@ export const MypageContainer = styled.button`
   justify-content: space-between;
   align-items: center;
   height: 57px;
-  padding: 0 10px;
+  padding: 0 0px;
   cursor: pointer;
 `;
 export const MyPageId = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   color: #8000ff;
   border: none;

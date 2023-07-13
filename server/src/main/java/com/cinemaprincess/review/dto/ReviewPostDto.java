@@ -8,6 +8,6 @@ import javax.validation.constraints.NotNull;
 public class ReviewPostDto {
     private String content;
     private int score;
-    @NotNull
-    private String id;
+    private long movieId;
+    private long userId;
 }
