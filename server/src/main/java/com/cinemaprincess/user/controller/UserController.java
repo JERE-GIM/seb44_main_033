@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
+import com.cinemaprincess.genre.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,18 @@ public class UserController {
         user.setUserId(userId);
 
         userService.updateUser(user);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // password 수정
+    @PatchMapping("/users/mypage/edit/pw/{user-id}")
+    public ResponseEntity patchPasswordToUser(@PathVariable("user-id") @Positive Long userId,
+                                    @Valid @RequestBody UserDto.PatchToPassword patchToPasswordDto) {
+        User user = userMapper.patchPasswordToUser(patchToPasswordDto);
+        user.setUserId(userId);
+
+        userService.updatePasswordToUser(user);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
