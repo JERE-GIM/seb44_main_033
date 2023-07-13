@@ -11,5 +11,7 @@ public interface UserMapper {
 
     User patchDtoToUser(UserDto.Patch userPatchDto);
 
+    User patchPasswordToUser(UserDto.PatchToPassword userPatchToPassword);
+
     UserDto.Response userToResponse(User user);
 }

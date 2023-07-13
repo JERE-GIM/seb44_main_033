@@ -3,15 +3,7 @@ package com.cinemaprincess.user.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
+import javax.persistence.*;
 
 import com.cinemaprincess.audit.Auditable;
 
@@ -41,11 +33,12 @@ public class User extends Auditable {
 //    @Column(nullable = false)
     private Integer age;
 
-    @Column(nullable = false) // unique 옵션 프론트와 상의
+    @Column(nullable = false, unique = true)
     private String username;
 
     @ElementCollection()
-    private List<String> genre = new ArrayList<>();
+    @Column(name = "genreId")
+    private List<Long> genre = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();

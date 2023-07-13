@@ -9,13 +9,9 @@ import java.util.stream.Collectors;
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.user.dto.UserStatisticsDto;
 import lombok.Getter;
-import com.cinemaprincess.statistics.dto.UserStatisticsDto;
+import com.cinemaprincess.statistics.dto.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -52,14 +48,24 @@ public class UserService {
     // 회원정보 수정
     public User updateUser(User user) {
         User findUser = findVerifiedUser(user.getUserId());
-        Optional.ofNullable(user.getPassword())
-                .ifPresent(password -> findUser.setPassword(password));
         Optional.ofNullable(user.getAge())
                 .ifPresent(age -> findUser.setAge(age));
         Optional.ofNullable(user.getUsername())
                 .ifPresent(userName -> findUser.setUsername(userName));
         Optional.ofNullable(user.getGenre())
                 .ifPresent(genre -> findUser.setGenre(genre));
+
+        return userRepository.save(findUser);
+    }
+
+    // password 수정
+    public User updatePasswordToUser(User user) {
+        User findUser = findVerifiedUser(user.getUserId());
+        Optional.ofNullable(user.getPassword())
+                .ifPresent(password -> findUser.setPassword(password));
+
+        String encryptedPassword = passwordEncoder.encode(findUser.getPassword());
+        findUser.setPassword(encryptedPassword);
 
         return userRepository.save(findUser);
     }
@@ -98,17 +104,17 @@ public class UserService {
         int maxAge = calculateMaxAge(age);
         User.Gender genderEnum = User.Gender.valueOf(gender);
 
-        List<UserStatisticsDto> allUsers = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
-                .map(user -> new UserStatisticsDto(user.getGenre(), user.getGender()))
-                .collect(Collectors.toList());
+//        List<UserStatisticsDto> allUsers = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
+//                .map(user -> new UserStatisticsDto(user.getGenre(), user.getGender()))
+//                .collect(Collectors.toList());
 
         Map<String, Integer> genreCount = new HashMap<>();
 
-        for (UserStatisticsDto userStatistics : allUsers) {
-            for (String genre : userStatistics.getGenre()) {
-                genreCount.put(genre, genreCount.getOrDefault(genre, 0) + 1);
-            }
-        }
+//        for (UserStatisticsDto userStatistics : allUsers) {
+//            for (String genre : userStatistics.getGenre()) {
+//                genreCount.put(genre, genreCount.getOrDefault(genre, 0) + 1);
+//            }
+//        }
 
         return genreCount;
     }
