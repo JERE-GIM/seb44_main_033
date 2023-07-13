@@ -116,11 +116,13 @@ export const LoginmessageBox = styled.div`
 `;
 export const Loginmessage = styled.div`
   margin-top: 30px;
-  margin-right: 10px;z
+  margin-right: 10px;
+  color: #939393;
 `;
 export const Loginlink = styled.div`
   margin-top: 30px;
   margin-right: 20px;
+  color: #9933ff;
 `;
 export const OAuthbox = styled.div`
   margin-top: 20px;
