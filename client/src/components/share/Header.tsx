@@ -57,11 +57,16 @@ export default function Header() {
       <Searchbar></Searchbar>
       {isLoggedIn ? (
         <ButtonContainer>
-          <MypageContainer>
-            <FontAwesomeIcon icon={faCircleUser} size="2x" />
-            <MyPageId>{username}</MyPageId>
-          </MypageContainer>
+          <Link to="/mypage">
+            <MypageContainer>
+              <FontAwesomeIcon icon={faCircleUser} size="2x" />
+              <MyPageId>{username}</MyPageId>
+            </MypageContainer>
+          </Link>
           <Button onClick={handleLogout}>로그아웃</Button>
+          <Link to="/watchlist">
+            <Button>찜한 영화</Button>
+          </Link>
           <Link to="/statistics">
             <Button>통계자료</Button>
           </Link>
@@ -69,7 +74,7 @@ export default function Header() {
       ) : (
         <ButtonContainer>
           <Button onClick={handleLogin}>로그인</Button>
-          <Button onClick={handleSignupModalOpen}>회원가입</Button>
+          <Button onClick={handleSignupModalOpen}>회원 가입</Button>
           <Link to="/statistics">
             <Button>통계자료</Button>
           </Link>
