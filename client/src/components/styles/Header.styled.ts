@@ -26,8 +26,8 @@ export const HeaderTitle = styled.h1`
 `;
 
 export const LogoImage = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   margin-right: 8px;
 `;
 
