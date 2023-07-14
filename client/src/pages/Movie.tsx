@@ -35,6 +35,8 @@ import elementalPoster from '../assets/elemental_poster.png';
 import elementalCover from '../assets/elemental_cover.png';
 import starIcon from '../assets/starIcon.svg';
 import ReviewListitem from '../components/movie/ReviewListitem';
+import { useAppDispatch, useAppSelector } from '../redux/store';
+import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 import Slider from 'react-slick';
 
@@ -50,16 +52,16 @@ export default function Movie() {
       review.writer === loggedInUser.nickname,
   )[0];
 
-  const [isOpenReviewModal, setIsOpenReviewModal] = useState(false);
-  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+  const dispatch = useAppDispatch();
+  const { modal } = useAppSelector((state) => state);
   const [rating, setRating] = useState(review ? review.rating : 0);
 
   const handleOpenReviewModal = () => {
-    setIsOpenReviewModal(true);
+    dispatch(modalAction.open(MODAL_ROLE.REVIEW_WRITE));
   };
 
   const handleOpenConfirmModal = () => {
-    setIsOpenConfirmModal(true);
+    dispatch(modalAction.open(MODAL_ROLE.REVIEW_DELETE));
   };
 
   const deleteMyReview = () => {
@@ -189,20 +191,18 @@ export default function Movie() {
           </Slider>
         </ReviewList>
       </MovieReviews>
-      {isOpenReviewModal && (
+      {modal.status && modal.role === MODAL_ROLE.REVIEW_WRITE && (
         <ReviewRegisterModal
           movie={movie}
           review={review}
           rating={rating}
           setRating={setRating}
-          setIsOpenReviewModal={setIsOpenReviewModal}
         />
       )}
-      {isOpenConfirmModal && (
+      {modal.status && modal.role === MODAL_ROLE.REVIEW_DELETE && (
         <ConfirmModal
           message={'리뷰를 삭제하시겠습니까?'}
           callback={() => deleteMyReview()}
-          setIsOpenConfirmModal={setIsOpenConfirmModal}
         />
       )}
     </>
