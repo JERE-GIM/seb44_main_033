@@ -77,6 +77,6 @@ server:
       force-response: true
 
 jwt:
-  key: ${JWT_KET}
+  key: ${JWT_KEY}
   accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
   refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}
