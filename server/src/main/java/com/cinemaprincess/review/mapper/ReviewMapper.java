@@ -1,6 +1,7 @@
 package com.cinemaprincess.review.mapper;
 
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.review.dto.ReviewPatchDto;
 import com.cinemaprincess.review.dto.ReviewPostDto;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
@@ -21,14 +22,14 @@ public interface ReviewMapper {
 
         default Review reviewPostDtoToReview(ReviewPostDto reviewPostDto){
         Review review = new Review();
-        Movie movie = new Movie();
+        MovieDetail movieDetail = new MovieDetail();
         User user = new User();
-        movie.setMovieId(reviewPostDto.getMovieId());
+        movieDetail.setId(reviewPostDto.getMovieId());
         user.setUserId(reviewPostDto.getUserId());
 
         review.setContent(reviewPostDto.getContent());
         review.setScore(reviewPostDto.getScore());
-        review.setMovie(movie);
+        review.setMovieDetail(movieDetail);
         review.setUser(user);
         return review;
     }

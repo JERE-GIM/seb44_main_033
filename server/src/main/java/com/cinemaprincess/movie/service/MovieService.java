@@ -3,6 +3,8 @@ package com.cinemaprincess.movie.service;
 import com.cinemaprincess.exception.BusinessLogicException;
 import com.cinemaprincess.exception.ExceptionCode;
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,17 +16,16 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class MovieService {
-    private final MovieRepository movieRepository;
-    public Movie findMovie(Long movieId) {
+    private final MovieDetailRepository movieDetailRepository;
+    public MovieDetail findMovie(Long movieId) {
         return findVerifiedMovie(movieId);
     }
 
-    private Movie findVerifiedMovie(Long movieId) {
-        Optional<Movie> optional = movieRepository.findById(movieId);
-        Movie findMovie = optional
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MOVIE_NOT_FOUND));
+    private MovieDetail findVerifiedMovie(Long movieId) {
+        Optional<MovieDetail> optional = movieDetailRepository.findById(movieId);
 
-        return findMovie;
+        return optional
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MOVIE_NOT_FOUND));
     }
 
 }
