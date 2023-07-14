@@ -19,25 +19,23 @@ public class MovieJdbcRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public void saveMovies(List<Movie> movies) {
-        String sql = "INSERT INTO movie (vote_average, poster_path, release_date, title, movie_id, popularity) "
-                + "VALUES (?, ?, ?, ?, ?, ?) "
-                + "ON DUPLICATE KEY UPDATE vote_average = VALUES(vote_average), "
-                + "poster_path = VALUES(poster_path), "
-                + "release_date = VALUES(release_date), "
+        String sql = "INSERT INTO movie (movie_id, title, poster_path, vote_average, popularity) "
+                + "VALUES (?, ?, ?, ?, ?) "
+                + "ON DUPLICATE KEY UPDATE movie_id = VALUES(movie_id), "
                 + "title = VALUES(title), "
-                + "popularity = VALUES(popularity), "
-                + "movie_id = VALUES(movie_id)";
+                + "poster_path = VALUES(poster_path), "
+                + "vote_average = VALUES(vote_average), "
+                + "popularity = VALUES(popularity)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 Movie movie = movies.get(i);
-                ps.setString(2, movie.getPosterPath());
-                ps.setString(3, movie.getReleaseDate());
-                ps.setString(4, movie.getTitle());
-                ps.setDouble(1, movie.getVoteAverage());
-                ps.setDouble(6, movie.getPopularity());
-                ps.setLong(5, movie.getMovieId());
+                ps.setLong(1, movie.getMovieId());
+                ps.setString(2, movie.getTitle());
+                ps.setString(3, movie.getPosterPath());
+                ps.setFloat(4, movie.getVoteAverage());
+                ps.setFloat(5, movie.getPopularity());
             }
 
             @Override
@@ -48,8 +46,8 @@ public class MovieJdbcRepository {
     }
 
     public void saveMovieDetails(List<MovieDetail> movieDetails) {
-        String sql = "INSERT INTO movie_detail (movie_id, backdrop_path, overview, runtime, certification, director, actors, video_path) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
+        String sql = "INSERT INTO movie_detail (movie_id, backdrop_path, overview, runtime, certification, director, actors, video_path, release_date) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
                 + "ON DUPLICATE KEY UPDATE movie_id = VALUES(movie_id), "
                 + "backdrop_path = VALUES(backdrop_path), "
                 + "overview = VALUES(overview), "
@@ -57,6 +55,7 @@ public class MovieJdbcRepository {
                 + "director = VALUES(director), "
                 + "actors = VALUES(actors), "
                 + "video_path = VALUES(video_path), "
+                + "release_date = VALUES(release_date), "
                 + "certification = VALUES(certification)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -71,6 +70,7 @@ public class MovieJdbcRepository {
                 ps.setString(6, movieDetail.getDirector());
                 ps.setString(7, movieDetail.getActors());
                 ps.setString(8, movieDetail.getVideoPath());
+                ps.setString(9, movieDetail.getReleaseDate());
             }
 
             @Override

@@ -14,5 +14,6 @@ public class MovieDto {
         private long movieId;
         private String posterPath;
         private String title;
+        private String releaseDate;
     }
 }

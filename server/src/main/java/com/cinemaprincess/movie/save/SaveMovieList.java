@@ -95,7 +95,7 @@ public class SaveMovieList {
                 movieDetails.add(movieDetail);
             }
             movieJdbcRepository.saveMovieDetails(movieDetails);
-
+//
 //            for (MovieDetail movieDetail : movieDetails) {
 //                movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
 //                movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
@@ -105,6 +105,9 @@ public class SaveMovieList {
 //                    .map(movie -> CompletableFuture.supplyAsync(() -> {
 //                        MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
 //                        movieDetail.setMovie(movie);
+//                        movieDetail.setId(movie.getMovieId());
+//                        movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
+//                        movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
 //                        return movieDetail;
 //                    }, executorService))
 //                    .collect(Collectors.toList());
@@ -117,7 +120,7 @@ public class SaveMovieList {
 //            List<MovieDetail> movieDetails = movieDetailsFuture.get();
 //            log.info("MovieDetails 리스트 완료");
 //            movieJdbcRepository.saveMovieDetails(movieDetails);
-            log.info("Movie_detail 저장 완료");
+//            log.info("Movie_detail 저장 완료");
             executorService.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,11 +133,6 @@ public class SaveMovieList {
         JsonObject jsonObject = jsonParser.parse(responseBody).getAsJsonObject();
         JsonArray movieList = jsonObject.getAsJsonArray("results");
 
-        // ObjectMapper 객체 생성
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
-
         return StreamSupport.stream(movieList.spliterator(), false)
                 .map(JsonElement::getAsJsonObject)
                 .filter(contents -> {
@@ -142,17 +140,17 @@ public class SaveMovieList {
                     return title.matches("^[a-zA-Z0-9가-힣\\s\\p{Punct}]+$");
                 })
                 .map(contents -> {
-                    // JSON 객체를 Movie 엔티티로 변환
-                    Movie movie = objectMapper.convertValue(contents, Movie.class);
-                    // posterPath를 별도로 파싱
+                    String title = contents.get("title").getAsString();
                     String posterPath = parsePosterPath(contents);
-                    // posterPath를 Movie 엔티티에 설정
-                    movie.setPosterPath(posterPath);
-                    long movieId = contents.get("id").getAsLong();
-                    String releaseDate = contents.get("release_date").getAsString();
-                    movie.setReleaseDate(releaseDate);
-                    movie.setMovieId(movieId);
-                    return movie;
+
+                    return Movie.builder()
+                            .movieId(contents.get("id").getAsLong())
+                            .voteAverage(contents.get("vote_average").getAsFloat())
+                            .popularity(contents.get("popularity").getAsFloat())
+                            .title(title)
+                            .posterPath(posterPath)
+                            .build();
+
                 })
                 .collect(Collectors.toList());
     }
@@ -168,8 +166,8 @@ public class SaveMovieList {
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
     public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("2023-06-13");
-        LocalDate endDate = LocalDate.parse("2023-08-13");
+        LocalDate startDate = LocalDate.parse("2023-07-19");
+        LocalDate endDate = LocalDate.parse("2023-07-20");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         while (startDate.isBefore(endDate.plusDays(1))) {

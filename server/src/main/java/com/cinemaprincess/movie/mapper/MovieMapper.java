@@ -5,6 +5,7 @@ import com.cinemaprincess.movie.dto.MovieDetailResponseDto;
 import com.cinemaprincess.movie.dto.MovieDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.watch_provider.WatchProviderDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -22,13 +23,30 @@ public interface MovieMapper {
         movieDetailResponseDto.posterPath(movieDetail.getMovie().getPosterPath());
         movieDetailResponseDto.title(movieDetail.getMovie().getTitle());
         movieDetailResponseDto.voteAverage(movieDetail.getMovie().getVoteAverage());
-        movieDetailResponseDto.releaseDate(movieDetail.getMovie().getReleaseDate());
+        movieDetailResponseDto.releaseDate(movieDetail.getReleaseDate());
         movieDetailResponseDto.overview(movieDetail.getOverview());
         movieDetailResponseDto.runtime(movieDetail.getRuntime());
         movieDetailResponseDto.certification(movieDetail.getCertification());
         movieDetailResponseDto.actors(movieDetail.getActors());
         movieDetailResponseDto.director(movieDetail.getDirector());
         movieDetailResponseDto.videoPath(movieDetail.getVideoPath());
+
+//        List<ReviewResponseDto> reviewDtos = movieDetail.getReviews().stream()
+//                .map(review -> {
+//                    ReviewResponseDto reviewDto = new ReviewResponseDto();
+//                    reviewDto.setReviewId(review.getReviewId());
+//                    reviewDto.setUserId(review.getUser().getUserId());
+//                    reviewDto.setMovieId(review.getMovieDetail().getMovie().getMovieId());
+//                    reviewDto.setContent(review.getContent());
+//                    reviewDto.setScore(review.getScore());
+//                    reviewDto.setUsername(review.getUser().getUsername());
+//                    reviewDto.setVotesCount(10);
+//                    reviewDto.setCreatedAt(review.getCreatedAt());
+//                    reviewDto.setModifiedAt(review.getModifiedAt());
+//                    return reviewDto;
+//                })
+//                .collect(Collectors.toList());
+//        movieDetailResponseDto.reviews(reviewDtos);
 
         List<GenreDto.Response> genreDtos = movieDetail.getMovieDetailGenres().stream()
                 .map(movieDetailGenre -> {
@@ -54,7 +72,16 @@ public interface MovieMapper {
         return movieDetailResponseDto.build();
     }
 
-    MovieDto.Response movieToMovieResponseDto(Movie movie);
+    default MovieDto.Response movieToMovieResponseDto(Movie movie) {
+        MovieDto.Response.ResponseBuilder response = MovieDto.Response.builder();
+
+        response.movieId( movie.getMovieId() );
+        response.posterPath( movie.getPosterPath() );
+        response.title( movie.getTitle() );
+        response.releaseDate(movie.getMovieDetail().getReleaseDate());
+
+        return response.build();
+    }
 
     List<MovieDto.Response> moviesToMovieResponseDtos(List<Movie> movies);
 }

@@ -18,26 +18,19 @@ import java.util.List;
 @Entity
 @Builder
 @Table(indexes = {
-        @Index(name = "idx_releaseDate_title", columnList = "releaseDate, title")
+        @Index(name = "idx_releaseDate_title", columnList = "title")
 })
 public class Movie {
     @Id
-    private long movieId;
+    private Long movieId;
 
-    @JsonProperty("vote_average")
-    private double voteAverage;
-
-    @JsonProperty
     private String title;
 
-    @JsonProperty("poster_path")
     private String posterPath;
 
-    @JsonProperty("release_date")
-    private String releaseDate;
+    private float voteAverage;
 
-    @JsonProperty
-    private double popularity;
+    private float popularity;
 
     @OneToOne(mappedBy = "movie", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private MovieDetail movieDetail;
@@ -48,6 +41,4 @@ public class Movie {
             movieDetail.setMovie(this);
         }
     }
-    @OneToMany(mappedBy = "movie")
-    private List<Review> reviews;
 }

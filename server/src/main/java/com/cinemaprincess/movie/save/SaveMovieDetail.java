@@ -9,6 +9,7 @@ import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
+import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.watch_provider.WatchProvider;
 import com.cinemaprincess.watch_provider.WatchProviderRepository;
 import com.google.gson.JsonArray;
@@ -44,8 +45,6 @@ public class SaveMovieDetail {
     private final WatchProviderRepository watchProviderRepository;
     private MovieDetail movieDetail;
 
-    private final Map<Long, MovieDetail> movieDetailCache = new ConcurrentHashMap<>();
-
     RestTemplate restTemplate = new RestTemplate();
 
     public String buildMovieDetailUrl(long movieId, String language) {
@@ -59,12 +58,6 @@ public class SaveMovieDetail {
     }
 
     public MovieDetail getMovieDetail(long movieId) {
-        // 캐시에서 영화 상세 정보 조회
-        MovieDetail cachedMovieDetail = movieDetailCache.get(movieId);
-        if (cachedMovieDetail != null) {
-            return cachedMovieDetail;
-        }
-
         try {
             String url = buildMovieDetailUrl(movieId, "ko");
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
@@ -78,9 +71,6 @@ public class SaveMovieDetail {
                 String overview = parseOverview(responseBody);
                 movieDetail.setOverview(overview);
             }
-
-            // 영화 상세 정보 캐시에 저장
-            movieDetailCache.put(movieId, movieDetail);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,6 +99,8 @@ public class SaveMovieDetail {
 
         List<MovieDetailWatchProvider> movieDetailWatchProviders = parseMovieDetailWatchProviders(jsonObject);
 
+        String releaseDate = parseReleaseDate(jsonObject);
+
         Movie movie = movieRepository.findById(jsonObject.get("id").getAsLong()).get();
 
         return MovieDetail.builder()
@@ -123,6 +115,7 @@ public class SaveMovieDetail {
                 .videoPath(videoPath)
                 .movieDetailGenres(movieDetailGenreList)
                 .movieDetailWatchProviders(movieDetailWatchProviders)
+                .releaseDate(releaseDate)
                 .build();
     }
 
@@ -257,6 +250,26 @@ public class SaveMovieDetail {
                 .findFirst();
 
         return certificationOptional.orElse("");
+    }
+
+    private String parseReleaseDate(JsonObject jsonObject) {
+        String releaseDate = jsonObject.get("release_date").getAsString();
+
+        JsonObject releaseDatesObject = jsonObject.getAsJsonObject("release_dates");
+        JsonArray resultsArray = releaseDatesObject.getAsJsonArray("results");
+
+        Stream<JsonElement> releaseDateStream = StreamSupport.stream(resultsArray.spliterator(), false);
+
+        Optional<String> releaseDateOptional = releaseDateStream
+                .map(JsonElement::getAsJsonObject)
+                .filter(resultObject -> resultObject.get("iso_3166_1").getAsString().equals("KR"))
+                .flatMap(resultObject -> StreamSupport.stream(resultObject.getAsJsonArray("release_dates").spliterator(), false)
+                        .map(JsonElement::getAsJsonObject)
+                        .filter(releaseDateObject -> releaseDateObject.get("type").getAsLong() == 3)
+                        .map(releaseDateObject -> releaseDateObject.get("release_date").getAsString().substring(0, 10)))
+                .findFirst();
+
+        return releaseDateOptional.orElse(releaseDate);
     }
 }
 
