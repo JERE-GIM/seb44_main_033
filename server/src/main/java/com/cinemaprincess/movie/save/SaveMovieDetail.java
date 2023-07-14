@@ -9,6 +9,8 @@ import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
+import com.cinemaprincess.review.entity.Review;
+import com.cinemaprincess.review.repository.ReviewRepository;
 import com.cinemaprincess.watch_provider.WatchProvider;
 import com.cinemaprincess.watch_provider.WatchProviderRepository;
 import com.google.gson.JsonArray;
@@ -37,19 +39,18 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 @Transactional
 public class SaveMovieDetail {
-    String key = "8799558ac2f2609cd5ff89aa63a87f10";
     private final MovieRepository movieRepository;
     private final MovieJdbcRepository movieJdbcRepository;
     private final MovieDetailRepository movieDetailRepository;
     private final GenreRepository genreRepository;
     private final WatchProviderRepository watchProviderRepository;
+    private final ReviewRepository reviewRepository;
     private MovieDetail movieDetail;
-
-    private final Map<Long, MovieDetail> movieDetailCache = new ConcurrentHashMap<>();
 
     RestTemplate restTemplate = new RestTemplate();
 
     public String buildMovieDetailUrl(long movieId, String language) {
+        String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + movieId)
                 .queryParam("api_key", key)
                 .queryParam("language", language)
@@ -59,12 +60,6 @@ public class SaveMovieDetail {
     }
 
     public MovieDetail getMovieDetail(long movieId) {
-        // 캐시에서 영화 상세 정보 조회
-        MovieDetail cachedMovieDetail = movieDetailCache.get(movieId);
-        if (cachedMovieDetail != null) {
-            return cachedMovieDetail;
-        }
-
         try {
             String url = buildMovieDetailUrl(movieId, "ko");
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
@@ -78,15 +73,11 @@ public class SaveMovieDetail {
                 String overview = parseOverview(responseBody);
                 movieDetail.setOverview(overview);
             }
-
-            // 영화 상세 정보 캐시에 저장
-            movieDetailCache.put(movieId, movieDetail);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        movieJdbcRepository.saveMovieDetail(movieDetail);
-        movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
-//        movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
+//        movieJdbcRepository.saveMovieDetail(movieDetail);
+        movieDetail.setReviews(reviewRepository.findByMovieDetail_Id(movieId));
         return movieDetail;
     }
 
@@ -111,6 +102,8 @@ public class SaveMovieDetail {
 
         List<MovieDetailWatchProvider> movieDetailWatchProviders = parseMovieDetailWatchProviders(jsonObject);
 
+        String releaseDate = parseReleaseDate(jsonObject);
+
         Movie movie = movieRepository.findById(jsonObject.get("id").getAsLong()).get();
 
         return MovieDetail.builder()
@@ -125,6 +118,7 @@ public class SaveMovieDetail {
                 .videoPath(videoPath)
                 .movieDetailGenres(movieDetailGenreList)
                 .movieDetailWatchProviders(movieDetailWatchProviders)
+                .releaseDate(releaseDate)
                 .build();
     }
 
@@ -151,40 +145,38 @@ public class SaveMovieDetail {
 
         JsonObject watchProvidersObject = jsonObject.getAsJsonObject("watch/providers");
         JsonObject resultsObject = watchProvidersObject.getAsJsonObject("results");
-        if (resultsObject.isJsonNull()) {
-            return movieDetailWatchProviders;
-        }
         JsonObject koreaObject = resultsObject.getAsJsonObject("KR");
-        if (koreaObject.isJsonNull()) {
+        if (koreaObject == null) {
             return movieDetailWatchProviders;
         }
 
-        JsonArray ottArray = ottArray = koreaObject.getAsJsonArray("flatrate");
+        JsonArray ottArray = koreaObject.getAsJsonArray("flatrate");
+        if (ottArray == null) {
+            return movieDetailWatchProviders;
+        }
 
-        if (!ottArray.isJsonNull()) {
-            for (JsonElement element : ottArray) {
-                JsonObject ottObject = element.getAsJsonObject();
+        for (JsonElement element : ottArray) {
+            JsonObject ottObject = element.getAsJsonObject();
 
-                WatchProvider watchProvider = new WatchProvider();
-                long providerId = ottObject.get("provider_id").getAsLong();
+            WatchProvider watchProvider = new WatchProvider();
+            long providerId = ottObject.get("provider_id").getAsLong();
 
-                if (watchProviderRepository.existsById(providerId)) {
-                    watchProvider = watchProviderRepository.findById(providerId).get();
-                } else {
-                    watchProvider.setProviderId(providerId);
-                    watchProvider.setProviderName(ottObject.get("provider_name").getAsString());
-                    watchProvider.setLogoPath(ottObject.get("logo_path").getAsString());
-                    watchProviderRepository.save(watchProvider);
-                }
-
-                movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
-
-                MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
-                movieDetailWatchProvider.setWatchProvider(watchProvider);
-                movieDetailWatchProvider.setMovieDetail(movieDetail);
-
-                movieDetailWatchProviders.add(movieDetailWatchProvider);
+            if (watchProviderRepository.existsById(providerId)) {
+                watchProvider = watchProviderRepository.findById(providerId).get();
+            } else {
+                watchProvider.setProviderId(providerId);
+                watchProvider.setProviderName(ottObject.get("provider_name").getAsString());
+                watchProvider.setLogoPath(ottObject.get("logo_path").getAsString());
+                watchProviderRepository.save(watchProvider);
             }
+
+            movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
+
+            MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
+            movieDetailWatchProvider.setWatchProvider(watchProvider);
+            movieDetailWatchProvider.setMovieDetail(movieDetail);
+
+            movieDetailWatchProviders.add(movieDetailWatchProvider);
         }
 
         return movieDetailWatchProviders;
@@ -261,6 +253,26 @@ public class SaveMovieDetail {
                 .findFirst();
 
         return certificationOptional.orElse("");
+    }
+
+    private String parseReleaseDate(JsonObject jsonObject) {
+        String releaseDate = jsonObject.get("release_date").getAsString();
+
+        JsonObject releaseDatesObject = jsonObject.getAsJsonObject("release_dates");
+        JsonArray resultsArray = releaseDatesObject.getAsJsonArray("results");
+
+        Stream<JsonElement> releaseDateStream = StreamSupport.stream(resultsArray.spliterator(), false);
+
+        Optional<String> releaseDateOptional = releaseDateStream
+                .map(JsonElement::getAsJsonObject)
+                .filter(resultObject -> resultObject.get("iso_3166_1").getAsString().equals("KR"))
+                .flatMap(resultObject -> StreamSupport.stream(resultObject.getAsJsonArray("release_dates").spliterator(), false)
+                        .map(JsonElement::getAsJsonObject)
+                        .filter(releaseDateObject -> releaseDateObject.get("type").getAsLong() == 3)
+                        .map(releaseDateObject -> releaseDateObject.get("release_date").getAsString().substring(0, 10)))
+                .findFirst();
+
+        return releaseDateOptional.orElse(releaseDate);
     }
 }
 

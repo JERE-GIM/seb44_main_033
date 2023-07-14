@@ -3,10 +3,13 @@ package com.cinemaprincess.helper;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.LinkedHashMap;
+
 public interface MovieTestHelper {
     String key = "8799558ac2f2609cd5ff89aa63a87f10";
 
     RestTemplate restTemplate = new RestTemplate();
+    LinkedHashMap<String, String> dateMap = new LinkedHashMap<>();
 
     // api url
     default String buildMovieListUrl(String startDate, String endDate, int page) {

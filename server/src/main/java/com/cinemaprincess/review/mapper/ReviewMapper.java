@@ -14,13 +14,14 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
-//    Review reviewPostDtoToReview(ReviewPostDto reviewPostDto);
+    //    Review reviewPostDtoToReview(ReviewPostDto reviewPostDto);
     Review reviewPatchDtoToReview(ReviewPatchDto reviewPatchDto);
-//    @Mapping(source = "user.username", target = "username")
+
+    //    @Mapping(source = "user.username", target = "username")
 //    ReviewResponseDto reviewToReviewResponseDto(Review review);
     List<ReviewResponseDto> reviewsToReviewResponseDtos(List<Review> reviews);
 
-        default Review reviewPostDtoToReview(ReviewPostDto reviewPostDto){
+    default Review reviewPostDtoToReview(ReviewPostDto reviewPostDto) {
         Review review = new Review();
         MovieDetail movieDetail = new MovieDetail();
         User user = new User();
@@ -34,7 +35,7 @@ public interface ReviewMapper {
         return review;
     }
 
-        default ReviewResponseDto reviewToReviewResponseDto(Review review){
+    default ReviewResponseDto reviewToReviewResponseDto(Review review) {
         ReviewResponseDto responseDto = new ReviewResponseDto();
         responseDto.setReviewId(review.getReviewId());
         responseDto.setUserId(review.getUserId());
