@@ -1,6 +1,7 @@
 package com.cinemaprincess.review.entity;
 
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,8 +46,8 @@ public class Review {
 //    @ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name = "MOVIE_ID")
-    private Movie movie;
+    private MovieDetail movieDetail;
     public long getMovieId(){
-        return movie.getMovieId();
+        return movieDetail.getId();
     }
 }
