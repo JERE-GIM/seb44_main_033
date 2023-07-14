@@ -2,6 +2,7 @@ package com.cinemaprincess.movie.entity;
 
 import com.cinemaprincess.review.entity.Review;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import javax.persistence.*;
 import java.util.List;
@@ -52,6 +53,6 @@ public class MovieDetail {
     @OneToMany(mappedBy = "movieDetail")
     private List<MovieDetailWatchProvider> movieDetailWatchProviders;
 
-//    @OneToMany(mappedBy = "movieDetail", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private List<Review> reviews;
+    @OneToMany(mappedBy = "movieDetail", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Review> reviews;
 }

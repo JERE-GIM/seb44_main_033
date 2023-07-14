@@ -10,6 +10,7 @@ import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
 import com.cinemaprincess.review.entity.Review;
+import com.cinemaprincess.review.repository.ReviewRepository;
 import com.cinemaprincess.watch_provider.WatchProvider;
 import com.cinemaprincess.watch_provider.WatchProviderRepository;
 import com.google.gson.JsonArray;
@@ -43,6 +44,7 @@ public class SaveMovieDetail {
     private final MovieDetailRepository movieDetailRepository;
     private final GenreRepository genreRepository;
     private final WatchProviderRepository watchProviderRepository;
+    private final ReviewRepository reviewRepository;
     private MovieDetail movieDetail;
 
     RestTemplate restTemplate = new RestTemplate();
@@ -75,6 +77,7 @@ public class SaveMovieDetail {
             e.printStackTrace();
         }
 //        movieJdbcRepository.saveMovieDetail(movieDetail);
+        movieDetail.setReviews(reviewRepository.findByMovieDetail_Id(movieId));
         return movieDetail;
     }
 

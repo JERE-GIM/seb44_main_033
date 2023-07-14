@@ -6,9 +6,15 @@ import com.cinemaprincess.movie.dto.MovieDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
+import com.cinemaprincess.review.repository.ReviewRepository;
+import com.cinemaprincess.review.service.ReviewService;
 import com.cinemaprincess.watch_provider.WatchProviderDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,8 +47,8 @@ public interface MovieMapper {
 //                    reviewDto.setScore(review.getScore());
 //                    reviewDto.setUsername(review.getUser().getUsername());
 //                    reviewDto.setVotesCount(10);
-//                    reviewDto.setCreatedAt(review.getCreatedAt());
-//                    reviewDto.setModifiedAt(review.getModifiedAt());
+//                    reviewDto.setCreatedAt(String.valueOf(review.getCreatedAt()));
+//                    reviewDto.setModifiedAt(String.valueOf(review.getModifiedAt()));
 //                    return reviewDto;
 //                })
 //                .collect(Collectors.toList());

@@ -23,9 +23,9 @@ public class ServerApplication {
         SpringApplication.run(ServerApplication.class, args);
     }
 
-    @PostConstruct
-    public void initialize() {
-        genreService.getGenreList();
-        saveMovieList.setDateMap();
-    }
+//    @PostConstruct
+//    public void initialize() {
+//        genreService.getGenreList();
+//        saveMovieList.setDateMap();
+//    }
 }

@@ -96,10 +96,10 @@ public class SaveMovieList {
             }
             movieJdbcRepository.saveMovieDetails(movieDetails);
 //
-//            for (MovieDetail movieDetail : movieDetails) {
-//                movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
+            for (MovieDetail movieDetail : movieDetails) {
+                movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
 //                movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
-//            }
+            }
 
 //            List<CompletableFuture<MovieDetail>> detailFutures = allMovies.stream()
 //                    .map(movie -> CompletableFuture.supplyAsync(() -> {

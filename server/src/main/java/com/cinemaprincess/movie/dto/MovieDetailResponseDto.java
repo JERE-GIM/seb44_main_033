@@ -2,11 +2,13 @@ package com.cinemaprincess.movie.dto;
 
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreDto;
+import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.watch_provider.WatchProviderDto;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -27,5 +29,5 @@ public class MovieDetailResponseDto {
     private String videoPath;
     private List<GenreDto.Response> genres;
     private List<WatchProviderDto.Response> watchProviders;
-//    private List<ReviewResponseDto> reviews;
+    private List<Movie> similarMovies;
 }
