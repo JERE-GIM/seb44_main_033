@@ -37,7 +37,6 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 @Transactional
 public class SaveMovieDetail {
-    String key = "8799558ac2f2609cd5ff89aa63a87f10";
     private final MovieRepository movieRepository;
     private final MovieJdbcRepository movieJdbcRepository;
     private final MovieDetailRepository movieDetailRepository;
@@ -50,6 +49,7 @@ public class SaveMovieDetail {
     RestTemplate restTemplate = new RestTemplate();
 
     public String buildMovieDetailUrl(long movieId, String language) {
+        String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + movieId)
                 .queryParam("api_key", key)
                 .queryParam("language", language)
@@ -84,9 +84,7 @@ public class SaveMovieDetail {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        movieJdbcRepository.saveMovieDetail(movieDetail);
-//        movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
-//        movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
+//        movieJdbcRepository.saveMovieDetail(movieDetail);
         return movieDetail;
     }
 
@@ -156,7 +154,7 @@ public class SaveMovieDetail {
             return movieDetailWatchProviders;
         }
 
-        JsonArray ottArray = ottArray = koreaObject.getAsJsonArray("flatrate");
+        JsonArray ottArray = koreaObject.getAsJsonArray("flatrate");
         if (ottArray == null) {
             return movieDetailWatchProviders;
         }

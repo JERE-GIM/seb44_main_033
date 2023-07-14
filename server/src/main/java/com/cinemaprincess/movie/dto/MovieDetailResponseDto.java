@@ -15,7 +15,7 @@ public class MovieDetailResponseDto {
     private String backdropPath;
     private String posterPath;
     private String title;
-    private float voteAverage;
+    private double voteAverage;
     private String releaseDate;
     private String overview;
     private Integer runtime;

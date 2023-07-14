@@ -26,6 +26,9 @@ spring:
     url: ${SQL_URL}
     username: ${SQL_USERNAME}
     password: ${SQL_PASSWORD}
+  mvc:
+    converters:
+      preferred-json-mapper: gson
 
   security:
     oauth2:

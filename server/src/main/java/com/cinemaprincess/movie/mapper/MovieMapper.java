@@ -2,6 +2,8 @@ package com.cinemaprincess.movie.mapper;
 
 import com.cinemaprincess.genre.GenreDto;
 import com.cinemaprincess.movie.dto.MovieDetailResponseDto;
+import com.cinemaprincess.movie.dto.MovieDto;
+import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.watch_provider.WatchProviderDto;
 import org.mapstruct.Mapper;
@@ -51,4 +53,8 @@ public interface MovieMapper {
 
         return movieDetailResponseDto.build();
     }
+
+    MovieDto.Response movieToMovieResponseDto(Movie movie);
+
+    List<MovieDto.Response> moviesToMovieResponseDtos(List<Movie> movies);
 }

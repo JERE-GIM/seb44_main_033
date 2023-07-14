@@ -1,6 +1,9 @@
 package com.cinemaprincess.movie.entity;
 
 import com.cinemaprincess.review.entity.Review;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,17 +18,26 @@ import java.util.List;
 @Entity
 @Builder
 @Table(indexes = {
-        @Index(name = "idx_title", columnList = "title"),
-        @Index(name = "idx_releaseDate", columnList = "releaseDate")
+        @Index(name = "idx_releaseDate_title", columnList = "releaseDate, title")
 })
 public class Movie {
     @Id
-    @Column(name = "movie_id")
     private long movieId;
-    private float voteAverage;
+
+    @JsonProperty("vote_average")
+    private double voteAverage;
+
+    @JsonProperty
     private String title;
+
+    @JsonProperty("poster_path")
     private String posterPath;
+
+    @JsonProperty("release_date")
     private String releaseDate;
+
+    @JsonProperty
+    private double popularity;
 
     @OneToOne(mappedBy = "movie", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private MovieDetail movieDetail;
@@ -38,5 +50,4 @@ public class Movie {
     }
     @OneToMany(mappedBy = "movie")
     private List<Review> reviews;
-
 }

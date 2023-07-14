@@ -19,12 +19,13 @@ public class MovieJdbcRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public void saveMovies(List<Movie> movies) {
-        String sql = "INSERT INTO movie (vote_average, poster_path, release_date, title, movie_id) "
-                + "VALUES (?, ?, ?, ?, ?) "
+        String sql = "INSERT INTO movie (vote_average, poster_path, release_date, title, movie_id, popularity) "
+                + "VALUES (?, ?, ?, ?, ?, ?) "
                 + "ON DUPLICATE KEY UPDATE vote_average = VALUES(vote_average), "
                 + "poster_path = VALUES(poster_path), "
                 + "release_date = VALUES(release_date), "
                 + "title = VALUES(title), "
+                + "popularity = VALUES(popularity), "
                 + "movie_id = VALUES(movie_id)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -34,7 +35,8 @@ public class MovieJdbcRepository {
                 ps.setString(2, movie.getPosterPath());
                 ps.setString(3, movie.getReleaseDate());
                 ps.setString(4, movie.getTitle());
-                ps.setFloat(1, movie.getVoteAverage());
+                ps.setDouble(1, movie.getVoteAverage());
+                ps.setDouble(6, movie.getPopularity());
                 ps.setLong(5, movie.getMovieId());
             }
 
