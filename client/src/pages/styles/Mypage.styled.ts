@@ -8,9 +8,25 @@ export const Info = styled.section`
   margin-top: 30px;
 `;
 
-export const Profile = styled.img`
+export const ProfileContainer = styled.div`
+  position: relative;
   width: 150px;
   height: 150px;
+`;
+
+export const Profile = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+export const ProfileEditButton = styled.button`
+  background-color: var(--gray);
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 `;
 
 export const InfoCol = styled.div`

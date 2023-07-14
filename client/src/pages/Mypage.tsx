@@ -7,6 +7,8 @@ import {
   InfoCol,
   MyReviews,
   Profile,
+  ProfileContainer,
+  ProfileEditButton,
   ReviewList,
   SectionHeader,
   Username,
@@ -19,6 +21,7 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import UserInfoEditModal from '../components/mypage/UserInfoEditModal';
+import ProfileUploadModal from '../components/mypage/ProfileUploadModal';
 
 export default function Mypage() {
   const user = dummyUser;
@@ -37,10 +40,19 @@ export default function Mypage() {
     dispatch(modalAction.open(MODAL_ROLE.ACCOUNT_DELETE));
   };
 
+  const handleClickUploadProfile = () => {
+    dispatch(modalAction.open(MODAL_ROLE.PROFILE_UPLOAD));
+  };
+
   return (
     <>
       <Info>
-        <Profile src={profile} alt="profile image" />
+        <ProfileContainer>
+          <Profile src={profile} alt="profile image" />
+          <ProfileEditButton onClick={handleClickUploadProfile}>
+            변경
+          </ProfileEditButton>
+        </ProfileContainer>
         <InfoCol>
           <Username>{user.username}</Username>
           <Genres>
@@ -70,6 +82,9 @@ export default function Mypage() {
           message="Cinema Princess에서 탈퇴하시겠습니까?"
           callback={deleteMyAccount}
         />
+      )}
+      {openModal.status && openModal.role === MODAL_ROLE.PROFILE_UPLOAD && (
+        <ProfileUploadModal />
       )}
     </>
   );
