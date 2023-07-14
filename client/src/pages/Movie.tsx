@@ -27,6 +27,8 @@ import {
   MovieReviews,
   StarsContainer,
   ReviewList,
+  PrevButtonTransformed,
+  NextButtonTransformed,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import elementalPoster from '../assets/elemental_poster.png';
@@ -35,6 +37,8 @@ import starIcon from '../assets/starIcon.svg';
 import ReviewListitem from '../components/movie/ReviewListitem';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
+import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
+import Slider from 'react-slick';
 
 export default function Movie() {
   // 더미데이터 사용
@@ -63,6 +67,29 @@ export default function Movie() {
   const deleteMyReview = () => {
     console.log('내가 작성한 리뷰 삭제');
   }; // api 요청 함수
+
+  const SLIDE_SETTINGS = {
+    dots: false,
+    arrows: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    rows: 2,
+    slidesPerRow: 1,
+    swipe: true,
+    draggable: false,
+    prevArrow: (
+      <PrevButtonTransformed>
+        <MdArrowBackIos />
+      </PrevButtonTransformed>
+    ),
+    nextArrow: (
+      <NextButtonTransformed>
+        <MdArrowForwardIos />
+      </NextButtonTransformed>
+    ),
+  };
 
   return (
     <>
@@ -157,9 +184,11 @@ export default function Movie() {
       </MovieDetail>
       <MovieReviews>
         <ReviewList>
-          {dummyReviews.map((review) => (
-            <ReviewListitem key={review.id} review={review} />
-          ))}
+          <Slider {...SLIDE_SETTINGS}>
+            {dummyReviews.map((review) => (
+              <ReviewListitem key={review.id} review={review} />
+            ))}
+          </Slider>
         </ReviewList>
       </MovieReviews>
       {modal.status && modal.role === MODAL_ROLE.REVIEW_WRITE && (

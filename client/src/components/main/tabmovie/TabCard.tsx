@@ -16,7 +16,7 @@ interface Props {
   country: string;
 }
 
-const Card: React.FC<Props> = ({ poster, title, country, openat }) => (
+const TabCard: React.FC<Props> = ({ poster, title, country, openat }) => (
   <Container>
     <Base>
       <ImageWrapper>
@@ -31,4 +31,4 @@ const Card: React.FC<Props> = ({ poster, title, country, openat }) => (
   </Container>
 );
 
-export default Card;
+export default TabCard;

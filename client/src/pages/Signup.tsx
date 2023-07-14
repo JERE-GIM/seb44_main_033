@@ -4,8 +4,11 @@ import { SignupStyle } from './styles/Signup.styled';
 export default function Signup() {
   return (
     <SignupStyle>
-      <SignupForm1 />
-      <SignupForm1 />
+      <SignupForm1
+        onClose={function (): void {
+          throw new Error('Function not implemented.');
+        }}
+      />
     </SignupStyle>
   );
 }

@@ -6,7 +6,8 @@ public enum
 ExceptionCode {
     USER_NOT_FOUND(404, "찾는 멤버가 없습니다."),
     USER_EMAIL_EXISTS(409, "이메일이 중복됩니다."),
-    REVIEW_NOT_FOUND(404,"리뷰가 없습니다.");
+    REVIEW_NOT_FOUND(404,"리뷰가 없습니다."),
+    MOVIE_NOT_FOUND(404,"영화가 없습니다.");
 
 
     @Getter

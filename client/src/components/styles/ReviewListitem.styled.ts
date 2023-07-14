@@ -5,6 +5,7 @@ export const Wrapper = styled.li`
   padding: 20px;
   background-color: var(--gray-light);
   border-radius: 10px;
+  margin-bottom: 10px;
 `;
 
 export const ReviewTop = styled.div`
