@@ -18,6 +18,7 @@ import { dummyReviews } from '../dummy/dummyReview';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import ConfirmModal from '../components/movie/ConfirmModal';
+import UserInfoEditModal from '../components/mypage/UserInfoEditModal';
 
 export default function Mypage() {
   const user = dummyUser;
@@ -61,6 +62,9 @@ export default function Mypage() {
           ))}
         </ReviewList>
       </MyReviews>
+      {openModal.status && openModal.role === MODAL_ROLE.USER_INFO_EDIT && (
+        <UserInfoEditModal user={user} />
+      )}
       {openModal.status && openModal.role === MODAL_ROLE.ACCOUNT_DELETE && (
         <ConfirmModal
           message="Cinema Princess에서 탈퇴하시겠습니까?"
