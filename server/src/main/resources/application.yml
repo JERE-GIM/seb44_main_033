@@ -4,7 +4,7 @@ spring:
 #      enabled: true
 #      path: /h2
 #  datasource:
-#    url: jdbc:h2:mem:test
+#    url: jdbc:h2:mem:test;NON_KEYWORDS=USER
   jackson:
     serialization:
       fail-on-empty-beans: false
@@ -23,9 +23,51 @@ spring:
     generate-ddl: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/moviedb?&rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999
-    username: root
-    password: 12345678
+    url: ${SQL_URL}
+    username: ${SQL_USERNAME}
+    password: ${SQL_PASSWORD}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_SECRET}
+            scope:
+              - email
+          naver:
+            clientId: ${NAVER_CLIENT_ID}
+            clientSecret: ${NAVER_SECRET}
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirectUri: ${NAVER_REDIRECT}
+            scope:
+              - nickname
+              - email
+            clientName: Naver
+          kakao:
+            clientId: ${KAKAO_CLIENT_ID}
+            clientSecret: ${KAKAO_SECRET}
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirectUri: ${KAKAO_REDIRECT}
+            scope:
+              - profile_nickname
+              - account_email
+            clientName: Kakao
+        provider:
+          naver:
+            authorizationUri: https://nid.naver.com/oauth2.0/authorize
+            tokenUri: https://nid.naver.com/oauth2.0/token
+            userInfoUri: https://openapi.naver.com/v1/nid/me
+            userNameAttribute: response
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
+
 logging:
   level:
     org:
@@ -38,7 +80,6 @@ server:
       force-response: true
 
 jwt:
-#  배포 시 환경 변수로 설정 해야함 !
-  key: team033team033team033team033team033team033team033team033team033team033team033team033
-  accessTokenExpirationMinutes: 30
-  refreshTokenExpirationMinutes: 420
+  key: ${JWT_KET}
+  accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
+  refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}

@@ -2,12 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   currentPage: 1,
-  displayName: '',
+  username: '',
   email: '',
   password: '',
   gender: '',
   age: '',
-  genre: '',
+  genres: [], // 변경: genre -> genres로 수정
 };
 
 const signupSlice = createSlice({
@@ -20,8 +20,8 @@ const signupSlice = createSlice({
     prevPage: (state) => {
       state.currentPage -= 1;
     },
-    setDisplayName: (state, action) => {
-      state.displayName = action.payload;
+    setUsername: (state, action) => {
+      state.username = action.payload;
     },
     setEmail: (state, action) => {
       state.email = action.payload;
@@ -35,8 +35,8 @@ const signupSlice = createSlice({
     setAge: (state, action) => {
       state.age = action.payload;
     },
-    setGenre: (state, action) => {
-      state.genre = action.payload;
+    setGenres: (state, action) => {
+      state.genres = action.payload; // 변경: setGenre -> setGenres로 수정
     },
   },
 });
@@ -44,20 +44,20 @@ const signupSlice = createSlice({
 export const {
   nextPage,
   prevPage,
-  setDisplayName,
+  setUsername,
   setEmail,
   setPassword,
   setGender,
   setAge,
-  setGenre,
+  setGenres, // 변경: setGenre -> setGenres로 수정
 } = signupSlice.actions;
 export const signupaction = {
   nextPage,
-  setDisplayName,
+  setUsername,
   setEmail,
   setPassword,
   setGender,
   setAge,
-  setGenre,
+  setGenres, // 변경: setGenre -> setGenres로 수정
 };
 export default signupSlice.reducer;

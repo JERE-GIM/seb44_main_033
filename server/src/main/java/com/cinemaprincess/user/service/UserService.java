@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.Getter;
+import com.cinemaprincess.statistics.dto.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 
 import lombok.Setter;
@@ -54,8 +55,6 @@ public class UserService {
                 .ifPresent(userName -> findUser.setUsername(userName));
         Optional.ofNullable(user.getGenre())
                 .ifPresent(genre -> findUser.setGenre(genre));
-        Optional.ofNullable(user.getPreferredOtt())
-                .ifPresent(preferredOtt -> findUser.setPreferredOtt(preferredOtt));
 
         return userRepository.save(findUser);
     }
@@ -87,5 +86,14 @@ public class UserService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 
         return findUser;
+    }
+
+    public StatisticsDto getUsersStatistics() {
+        List<User> allUsers = userRepository.findAll();
+        System.out.println("findall~");
+        for (User user : allUsers){
+            System.out.println(user);
+        }
+        return new StatisticsDto();
     }
 }
