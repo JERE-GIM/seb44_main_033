@@ -44,8 +44,9 @@ public class StatisticsController {
     */
 
     @GetMapping("/users")
-    public ResponseEntity getUsersStatistics() {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUsersStatistics());
+    public ResponseEntity getUsersStatistics(@RequestParam("gender") String gender,
+                                             @RequestParam("age") String age) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUsersStatistics(gender, age));
     }
 
     /*

@@ -1,16 +1,18 @@
 package com.cinemaprincess.user.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.genre.GenreRepository;
+import com.cinemaprincess.user.dto.UserStatisticsDto;
 import lombok.Getter;
 import com.cinemaprincess.statistics.dto.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -27,6 +29,7 @@ public class UserService {
     private final CustomAuthorityUtils customAuthorityUtils;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final GenreRepository genreRepository;
 
     // 회원가입
     public User createUser(User user) {
@@ -47,14 +50,24 @@ public class UserService {
     // 회원정보 수정
     public User updateUser(User user) {
         User findUser = findVerifiedUser(user.getUserId());
-        Optional.ofNullable(user.getPassword())
-                .ifPresent(password -> findUser.setPassword(password));
         Optional.ofNullable(user.getAge())
                 .ifPresent(age -> findUser.setAge(age));
         Optional.ofNullable(user.getUsername())
                 .ifPresent(userName -> findUser.setUsername(userName));
         Optional.ofNullable(user.getGenre())
                 .ifPresent(genre -> findUser.setGenre(genre));
+
+        return userRepository.save(findUser);
+    }
+
+    // password 수정
+    public User updatePasswordToUser(User user) {
+        User findUser = findVerifiedUser(user.getUserId());
+        Optional.ofNullable(user.getPassword())
+                .ifPresent(password -> findUser.setPassword(password));
+
+        String encryptedPassword = passwordEncoder.encode(findUser.getPassword());
+        findUser.setPassword(encryptedPassword);
 
         return userRepository.save(findUser);
     }
@@ -88,12 +101,38 @@ public class UserService {
         return findUser;
     }
 
-    public StatisticsDto getUsersStatistics() {
-        List<User> allUsers = userRepository.findAll();
-        System.out.println("findall~");
-        for (User user : allUsers){
-            System.out.println(user);
+    public Map<String, Integer> getUsersStatistics(String gender, String age) {
+        int minAge = calculateMinAge(age);
+        int maxAge = calculateMaxAge(age);
+        User.Gender genderEnum = User.Gender.valueOf(gender);
+
+        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
+                .map(user -> new UserStatisticsDto(user.getGenre()))
+                .collect(Collectors.toList());
+
+        Map<String, Integer> genreCount = new HashMap<>();
+
+        for (UserStatisticsDto userStatistics : allUsersGenre) {
+            for (Long genreId : userStatistics.getGenreIds()) {
+                Genre genre = genreRepository.getGenreNameByGenreId(genreId);
+                String genreName = genre.getGenreName();
+                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
+            }
         }
-        return new StatisticsDto();
+
+        return genreCount;
     }
+
+    private int calculateMinAge(String age){
+        int ageGroup = Integer.parseInt(age);
+        return ageGroup / 10 * 10;
+    }
+
+    private int calculateMaxAge(String age){
+        int ageGroup = Integer.parseInt(age);
+        return (ageGroup / 10 * 10) + 9;
+    }
+
+
+
 }
