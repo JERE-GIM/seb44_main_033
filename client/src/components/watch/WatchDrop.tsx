@@ -20,6 +20,8 @@ export default function WatchDrop() {
   const [isOpen, setIsopen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>('이름순');
   const [sortedMovies, setSortedMovies] = useState<ITop[]>(dummyTopMovie);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState<number>(1);
 
   const onToggle = () => setIsopen(!isOpen);
   const onOptionClicked = (value: string) => () => {
@@ -27,20 +29,50 @@ export default function WatchDrop() {
     setIsopen(false);
   };
 
+  // 무한스크롤
+  useEffect(() => {
+    function handleScroll() {
+      const { scrollTop, clientHeight, scrollHeight } =
+        document.documentElement;
+      if (scrollHeight - (scrollTop + clientHeight) < 100 && !isLoading) {
+        setIsLoading(true);
+        setTimeout(() => {
+          const start = page * 4;
+          const end = start + 4;
+          if (start >= dummyTopMovie.length) {
+            setIsLoading(false);
+            return;
+          }
+          const newData = dummyTopMovie.slice(start, end);
+          setSortedMovies((prevMovies) => [...prevMovies, ...newData]);
+          setIsLoading(false);
+          setPage((prevPage) => prevPage + 1);
+        }, 1000);
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [page, isLoading]);
+
+  //필터기능
   useEffect(() => {
     if (selectedOption === '이름순') {
       const sortedByTitle = [...dummyTopMovie].sort((a, b) =>
         a.title.localeCompare(b.title),
       );
-      setSortedMovies(sortedByTitle);
+      setSortedMovies(sortedByTitle.slice(0, 12));
     } else if (selectedOption === '신작순') {
       const sortedByOpenAt = [...dummyTopMovie].sort(
         (a, b) => new Date(b.openat).getTime() - new Date(a.openat).getTime(),
       );
-      setSortedMovies(sortedByOpenAt);
+      setSortedMovies(sortedByOpenAt.slice(0, 12));
     } else {
-      setSortedMovies(dummyTopMovie);
+      setSortedMovies(dummyTopMovie.slice(0, 12));
     }
+    setPage(1);
   }, [selectedOption]);
 
   return (
