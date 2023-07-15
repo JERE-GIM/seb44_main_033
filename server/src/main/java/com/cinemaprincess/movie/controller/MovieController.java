@@ -35,7 +35,7 @@ public class MovieController {
     @GetMapping("/{movie-id}")
     public ResponseEntity getMovie(@PathVariable("movie-id") long movieId,
                                    @RequestParam(value = "page", defaultValue = "1") int page) {
-        MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movieId);
+        MovieDetail movieDetail = movieService.findMovie(movieId);
         Page<ReviewResponseDto> reviewPage = reviewService.findReviewsByMovieId(movieId, page - 1);
         List<ReviewResponseDto> responseDtos = reviewPage.getContent();
 
@@ -44,6 +44,7 @@ public class MovieController {
         return new ResponseEntity<>(new MovieMultiResponseDto<>(movieDetailResponseDto, responseDtos, reviewPage), HttpStatus.OK);
     }
 
+    // 개봉 예정
     @GetMapping("/upcoming")
     public ResponseEntity getUpcomingMovie() {
         Page<Movie> pageMovies = movieService.findUpcomingMovies();

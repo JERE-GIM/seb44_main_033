@@ -29,5 +29,5 @@ public class MovieDetailResponseDto {
     private String videoPath;
     private List<GenreDto.Response> genres;
     private List<WatchProviderDto.Response> watchProviders;
-    private List<Movie> similarMovies;
+    private List<MovieDto.Response> similarMovies;
 }

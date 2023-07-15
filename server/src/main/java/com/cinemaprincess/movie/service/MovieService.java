@@ -2,8 +2,11 @@ package com.cinemaprincess.movie.service;
 
 import com.cinemaprincess.exception.BusinessLogicException;
 import com.cinemaprincess.exception.ExceptionCode;
+import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.entity.MovieDetailGenre;
+import com.cinemaprincess.movie.repository.MovieDetailGenreRepository;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
@@ -30,6 +33,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieDetailRepository movieDetailRepository;
     private final MovieJdbcRepository movieJdbcRepository;
+    private final MovieDetailGenreRepository movieDetailGenreRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
     public String buildUpcomingMovieUrl() {
@@ -62,6 +66,15 @@ public class MovieService {
 
         return new PageImpl<>(movies);
     }
+
+    public MovieDetail getSimilarMovies(long movieId) {
+        MovieDetail movieDetail = findVerifiedMovie(movieId);
+        MovieDetailGenre movieDetailGenre = new MovieDetailGenre();
+        movieDetailGenre.setMovieDetail(movieDetail);
+        movieDetailGenre.getGenre().getGenreId();
+
+    }
+
 
     public MovieDetail findMovie(Long movieId) {
         return findVerifiedMovie(movieId);
