@@ -2,6 +2,7 @@ package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.vote.MovieVote;
 import com.cinemaprincess.movie.vote.MovieVoteRepository;
 import com.cinemaprincess.movie.vote.SaveMovieVote;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
@@ -87,7 +88,6 @@ public class SaveMovieList {
             List<Movie> allMovies = combinedFuture.get();
 
             movieJdbcRepository.saveMovies(allMovies);
-            log.info("Movie 저장 완료");
 
             List<MovieDetail> movieDetails = new ArrayList<>();
             log.info("Movie_detail 저장 시작");
@@ -100,7 +100,13 @@ public class SaveMovieList {
 
             log.info("MovieDetail 저장 완료");
             for (MovieDetail movieDetail : movieDetails) {
-                saveMovieVote.getMovieVote(movieDetail.getId());
+                // 무비보트에서 무비아이디가 이미 존재하는지 확인
+                boolean movieVoteExists = saveMovieVote.checkMovieVoteExists(movieDetail.getId());
+                if (!movieVoteExists) {
+                    // 존재하지 않는 경우에만 실행
+                    MovieVote movieVote = saveMovieVote.getMovieVote(movieDetail.getId());
+                    movieDetail.setMovieVote(movieVote);
+                }
                 movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
 //                movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
             }

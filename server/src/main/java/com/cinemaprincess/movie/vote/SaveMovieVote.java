@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +23,8 @@ public class SaveMovieVote {
     private final MovieDetailRepository movieDetailRepository;
     RestTemplate restTemplate = new RestTemplate();
 
-    public void getMovieVote(long movieId) {
+    public MovieVote getMovieVote(long movieId) {
+        MovieVote movieVote = new MovieVote();
         try {
             String url = saveMovieDetail.buildMovieDetailUrl(movieId, "ko");
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
@@ -32,21 +34,20 @@ public class SaveMovieVote {
 
             float voteAverage = Math.round(jsonObject.get("vote_average").getAsFloat() * 10.0f) / 10.0f;
 
-            MovieDetail movieDetail = movieDetailRepository.getReferenceById(movieId);
-            MovieVote movieVote = MovieVote.builder()
+            movieVote = MovieVote.builder()
                     .id(movieId)
                     .voteAverage(voteAverage)
                     .voteCount(jsonObject.get("vote_count").getAsInt())
                     .build();
 
-            if(movieDetail.getMovieVote() == null) {
-                movieDetail.setMovieVote(movieVote);
-            }
-
-            movieVoteRepository.save(movieDetail.getMovieVote());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return movieVoteRepository.save(movieVote);
+    }
+
+    public boolean checkMovieVoteExists(long movieId) {
+        Optional<MovieVote> existingMovieVote = movieVoteRepository.findById(movieId);
+        return existingMovieVote.isPresent();
     }
 }

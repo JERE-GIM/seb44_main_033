@@ -57,6 +57,6 @@ public class MovieDetail {
     @OneToMany(mappedBy = "movieDetail", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
-    @OneToOne(mappedBy = "movieDetail", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "movieDetail", cascade = CascadeType.ALL)
     private MovieVote movieVote;
 }
