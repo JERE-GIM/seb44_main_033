@@ -5,37 +5,38 @@ import com.cinemaprincess.movie.dto.MovieDetailResponseDto;
 import com.cinemaprincess.movie.dto.MovieDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
-import com.cinemaprincess.review.dto.ReviewResponseDto;
-import com.cinemaprincess.review.repository.ReviewRepository;
-import com.cinemaprincess.review.service.ReviewService;
-import com.cinemaprincess.watch_provider.WatchProviderDto;
+import com.cinemaprincess.movie.entity.MovieDetailGenre;
+import com.cinemaprincess.movie.service.MovieService;
+import com.cinemaprincess.movie.vote.MovieVoteDto;
+import com.cinemaprincess.movie.watch_provider.WatchProviderDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MovieMapper {
     default MovieDetailResponseDto MovieDetailToMovieDetailResponseDto(MovieDetail movieDetail) {
-        MovieDetailResponseDto.MovieDetailResponseDtoBuilder movieDetailResponseDto = MovieDetailResponseDto.builder();
+        MovieDetailResponseDto.MovieDetailResponseDtoBuilder response = MovieDetailResponseDto.builder();
 
-        movieDetailResponseDto.movieId(movieDetail.getMovie().getMovieId());
-        movieDetailResponseDto.backdropPath(movieDetail.getBackdropPath());
-        movieDetailResponseDto.posterPath(movieDetail.getMovie().getPosterPath());
-        movieDetailResponseDto.title(movieDetail.getMovie().getTitle());
-        movieDetailResponseDto.voteAverage(movieDetail.getMovie().getVoteAverage());
-        movieDetailResponseDto.releaseDate(movieDetail.getReleaseDate());
-        movieDetailResponseDto.overview(movieDetail.getOverview());
-        movieDetailResponseDto.runtime(movieDetail.getRuntime());
-        movieDetailResponseDto.certification(movieDetail.getCertification());
-        movieDetailResponseDto.actors(movieDetail.getActors());
-        movieDetailResponseDto.director(movieDetail.getDirector());
-        movieDetailResponseDto.videoPath(movieDetail.getVideoPath());
+        response.movieId(movieDetail.getMovie().getMovieId());
+        response.backdropPath(movieDetail.getBackdropPath());
+        response.posterPath(movieDetail.getMovie().getPosterPath());
+        response.title(movieDetail.getMovie().getTitle());
+        response.releaseDate(movieDetail.getReleaseDate());
+        response.overview(movieDetail.getOverview());
+        response.runtime(movieDetail.getRuntime());
+        response.certification(movieDetail.getCertification());
+        response.actors(movieDetail.getActors());
+        response.director(movieDetail.getDirector());
+        response.videoPath(movieDetail.getVideoPath());
+
+        MovieVoteDto.Response movieVoteDto = new MovieVoteDto.Response();
+        movieVoteDto.setVoteAverage(movieDetail.getMovieVote().getVoteAverage());
+        movieVoteDto.setVoteCount(movieDetail.getMovieVote().getVoteCount());
+        response.movieVote(movieVoteDto);
 
 //        List<ReviewResponseDto> reviewDtos = movieDetail.getReviews().stream()
 //                .map(review -> {
@@ -62,7 +63,7 @@ public interface MovieMapper {
                     return genreDto;
                 })
                 .collect(Collectors.toList());
-        movieDetailResponseDto.genres(genreDtos);
+        response.genres(genreDtos);
 
         List<WatchProviderDto.Response> watchProviders = movieDetail.getMovieDetailWatchProviders().stream()
                 .map(movieDetailWatchProvider -> {
@@ -73,9 +74,9 @@ public interface MovieMapper {
                     return watchProviderDto;
                 })
                 .collect(Collectors.toList());
-        movieDetailResponseDto.watchProviders(watchProviders);
+        response.watchProviders(watchProviders);
 
-        return movieDetailResponseDto.build();
+        return response.build();
     }
 
     default MovieDto.Response movieToMovieResponseDto(Movie movie) {

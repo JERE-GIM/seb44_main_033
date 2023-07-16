@@ -2,10 +2,9 @@ package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.vote.MovieVoteRepository;
+import com.cinemaprincess.movie.vote.SaveMovieVote;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,6 +38,8 @@ import java.util.stream.StreamSupport;
 public class SaveMovieList {
     private final MovieJdbcRepository movieJdbcRepository;
     private final SaveMovieDetail saveMovieDetail;
+    private final SaveMovieVote saveMovieVote;
+    private final MovieVoteRepository movieVoteRepository;
 
     RestTemplate restTemplate = new RestTemplate();
     LinkedHashMap<String, String> dateMap = new LinkedHashMap<>();
@@ -95,8 +96,9 @@ public class SaveMovieList {
                 movieDetails.add(movieDetail);
             }
             movieJdbcRepository.saveMovieDetails(movieDetails);
-//
+
             for (MovieDetail movieDetail : movieDetails) {
+                saveMovieVote.getMovieVote(movieDetail.getId());
                 movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
 //                movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
             }

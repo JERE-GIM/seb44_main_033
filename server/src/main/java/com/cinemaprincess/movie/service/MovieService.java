@@ -2,21 +2,22 @@ package com.cinemaprincess.movie.service;
 
 import com.cinemaprincess.exception.BusinessLogicException;
 import com.cinemaprincess.exception.ExceptionCode;
-import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.movie.dto.MovieDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
+import com.cinemaprincess.movie.mapper.MovieMapper;
 import com.cinemaprincess.movie.repository.MovieDetailGenreRepository;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,8 @@ public class MovieService {
     private final MovieDetailRepository movieDetailRepository;
     private final MovieJdbcRepository movieJdbcRepository;
     private final MovieDetailGenreRepository movieDetailGenreRepository;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final MovieMapper movieMapper;
+    RestTemplate restTemplate = new RestTemplate();
 
     public String buildUpcomingMovieUrl() {
         String key = "8799558ac2f2609cd5ff89aa63a87f10";
@@ -59,7 +61,6 @@ public class MovieService {
             JsonArray resultsArray = jsonObject.getAsJsonArray("results");
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,12 +68,22 @@ public class MovieService {
         return new PageImpl<>(movies);
     }
 
-    public MovieDetail getSimilarMovies(long movieId) {
+    public List<MovieDto.Response> getSimilarMovies(long movieId) {
         MovieDetail movieDetail = findVerifiedMovie(movieId);
-        MovieDetailGenre movieDetailGenre = new MovieDetailGenre();
-        movieDetailGenre.setMovieDetail(movieDetail);
-        movieDetailGenre.getGenre().getGenreId();
 
+        MovieDetailGenre movieDetailGenre = movieDetailGenreRepository.findByMovieDetail(movieDetail).get(0);
+        long genreId = movieDetailGenre.getGenre().getGenreId();
+
+        List<MovieDetail> similarMovieDetails = movieDetailGenreRepository.findSimilarMovieDetails(genreId, movieId, Pageable.ofSize(10));
+
+        // 유사 영화 DTO 리스트 생성
+        List<MovieDto.Response> similarMovieDTOs = new ArrayList<>();
+        for (MovieDetail similarMovieDetail : similarMovieDetails) {
+            Movie movie = similarMovieDetail.getMovie();
+            similarMovieDTOs.add(movieMapper.movieToMovieResponseDto(movie));
+        }
+
+        return similarMovieDTOs;
     }
 
 

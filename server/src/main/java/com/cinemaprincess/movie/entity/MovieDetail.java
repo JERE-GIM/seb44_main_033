@@ -1,5 +1,6 @@
 package com.cinemaprincess.movie.entity;
 
+import com.cinemaprincess.movie.vote.MovieVote;
 import com.cinemaprincess.review.entity.Review;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -53,6 +54,9 @@ public class MovieDetail {
     @OneToMany(mappedBy = "movieDetail")
     private List<MovieDetailWatchProvider> movieDetailWatchProviders;
 
-    @OneToMany(mappedBy = "movieDetail", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "movieDetail", cascade = CascadeType.ALL)
     private List<Review> reviews;
+
+    @OneToOne(mappedBy = "movieDetail", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private MovieVote movieVote;
 }

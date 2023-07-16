@@ -40,6 +40,7 @@ public class MovieController {
         List<ReviewResponseDto> responseDtos = reviewPage.getContent();
 
         MovieDetailResponseDto movieDetailResponseDto = movieMapper.MovieDetailToMovieDetailResponseDto(movieDetail);
+        movieDetailResponseDto.setSimilarMovies(movieService.getSimilarMovies(movieId));
 
         return new ResponseEntity<>(new MovieMultiResponseDto<>(movieDetailResponseDto, responseDtos, reviewPage), HttpStatus.OK);
     }
