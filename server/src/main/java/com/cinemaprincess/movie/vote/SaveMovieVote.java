@@ -1,6 +1,7 @@
 package com.cinemaprincess.movie.vote;
 
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.save.SaveMovieDetail;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 public class SaveMovieVote {
     private final SaveMovieDetail saveMovieDetail;
     private final MovieVoteRepository movieVoteRepository;
+    private final MovieDetailRepository movieDetailRepository;
     RestTemplate restTemplate = new RestTemplate();
 
     public void getMovieVote(long movieId) {
@@ -30,7 +32,7 @@ public class SaveMovieVote {
 
             float voteAverage = Math.round(jsonObject.get("vote_average").getAsFloat() * 10.0f) / 10.0f;
 
-            MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movieId);
+            MovieDetail movieDetail = movieDetailRepository.getReferenceById(movieId);
             MovieVote movieVote = MovieVote.builder()
                     .id(movieId)
                     .voteAverage(voteAverage)

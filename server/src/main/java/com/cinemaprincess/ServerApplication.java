@@ -12,18 +12,8 @@ import javax.annotation.PostConstruct;
 
 @EnableJpaAuditing
 @SpringBootApplication
-@RequiredArgsConstructor
 public class ServerApplication {
-    private final SaveMovieList saveMovieList;
-    private final GenreService genreService;
-
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
-    }
-
-    @PostConstruct
-    public void initialize() {
-        genreService.getGenreList();
-        saveMovieList.setDateMap();
     }
 }

@@ -86,17 +86,19 @@ public class SaveMovieList {
 
             List<Movie> allMovies = combinedFuture.get();
 
-            movieJdbcRepository.saveMovies(allMovies); // DB에 저장
+            movieJdbcRepository.saveMovies(allMovies);
             log.info("Movie 저장 완료");
 
             List<MovieDetail> movieDetails = new ArrayList<>();
             log.info("Movie_detail 저장 시작");
             for (Movie movie : allMovies) {
                 MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
+                movieDetail.setMovie(movie);
                 movieDetails.add(movieDetail);
             }
             movieJdbcRepository.saveMovieDetails(movieDetails);
 
+            log.info("MovieDetail 저장 완료");
             for (MovieDetail movieDetail : movieDetails) {
                 saveMovieVote.getMovieVote(movieDetail.getId());
                 movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
