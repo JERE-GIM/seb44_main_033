@@ -42,6 +42,7 @@ public interface ReviewMapper {
         responseDto.setScore(review.getScore());
         responseDto.setContent(review.getContent());
         responseDto.setUsername(review.getUser().getUsername());
+        responseDto.setVotesCount(review.getVotesCount());
         responseDto.setCreatedAt(String.valueOf(review.getCreatedAt()));
         responseDto.setModifiedAt(String.valueOf(review.getModifiedAt()));
         return responseDto;

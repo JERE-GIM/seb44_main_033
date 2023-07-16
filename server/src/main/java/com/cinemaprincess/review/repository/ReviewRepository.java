@@ -14,26 +14,26 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findById(Long id);
 
-    @Query(value = "SELECT m.releaseDate as releaseDate, m.title AS title, m.posterPath as posterPath, COUNT(r.reviewId) AS reviewCount " +
-                    "FROM Review r JOIN r.movie m " +
-                    "WHERE DATE(r.createdAt) = DATE(:today) " +
-                    "GROUP BY m.movieId " +
-                    "ORDER BY reviewCount DESC")
-    List<TopReviewedMoviesResponse> findReviewsByDay(@Param("today") LocalDateTime today);
-
-    @Query(value = "SELECT m.releaseDate as releaseDate, m.title AS title, m.posterPath as posterPath, COUNT(r.reviewId) AS reviewCount " +
-            "FROM Review r JOIN r.movie m " +
-            "WHERE DATE(r.createdAt) >= DATE(:weekAgo) " +
-            "GROUP BY m.movieId " +
-            "ORDER BY reviewCount DESC")
-    List<TopReviewedMoviesResponse> findReviewsByWeek(@Param("weekAgo") LocalDateTime weekAgo);
-
-    @Query(value = "SELECT m.releaseDate as releaseDate, m.title AS title, m.posterPath as posterPath, COUNT(r.reviewId) AS reviewCount " +
-            "FROM Review r JOIN r.movie m " +
-            "WHERE DATE(r.createdAt) >= DATE(:monthAgo) " +
-            "GROUP BY m.movieId " +
-            "ORDER BY reviewCount DESC")
-    List<TopReviewedMoviesResponse> findReviewsByMonth(@Param("monthAgo") LocalDateTime monthAgo);
-/*
-*/
+//    @Query(value = "SELECT m.releaseDate as releaseDate, m.title AS title, m.posterPath as posterPath, COUNT(r.reviewId) AS reviewCount " +
+//                    "FROM Review r JOIN r.movie m " +
+//                    "WHERE DATE(r.createdAt) = DATE(:today) " +
+//                    "GROUP BY m.movieId " +
+//                    "ORDER BY reviewCount DESC")
+//    List<TopReviewedMoviesResponse> findReviewsByDay(@Param("today") LocalDateTime today);
+//
+//    @Query(value = "SELECT m.releaseDate as releaseDate, m.title AS title, m.posterPath as posterPath, COUNT(r.reviewId) AS reviewCount " +
+//            "FROM Review r JOIN r.movie m " +
+//            "WHERE DATE(r.createdAt) >= DATE(:weekAgo) " +
+//            "GROUP BY m.movieId " +
+//            "ORDER BY reviewCount DESC")
+//    List<TopReviewedMoviesResponse> findReviewsByWeek(@Param("weekAgo") LocalDateTime weekAgo);
+//
+//    @Query(value = "SELECT m.releaseDate as releaseDate, m.title AS title, m.posterPath as posterPath, COUNT(r.reviewId) AS reviewCount " +
+//            "FROM Review r JOIN r.movie m " +
+//            "WHERE DATE(r.createdAt) >= DATE(:monthAgo) " +
+//            "GROUP BY m.movieId " +
+//            "ORDER BY reviewCount DESC")
+//    List<TopReviewedMoviesResponse> findReviewsByMonth(@Param("monthAgo") LocalDateTime monthAgo);
+///*
+//*/
 }

@@ -1,7 +1,10 @@
 package com.cinemaprincess.review.entity;
 
 import com.cinemaprincess.user.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -13,7 +16,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 public class ReviewVote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +29,14 @@ public class ReviewVote {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    @Builder
+    public ReviewVote(boolean isReviewVoted, Review review, User user) {
+        this.isReviewVoted = true;
+        this.review = review;
+        this.user = user;
+    }
+    public void updateVote(){
+        this.isReviewVoted = !isReviewVoted;
+    }
 }
