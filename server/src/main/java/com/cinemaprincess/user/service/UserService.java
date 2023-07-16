@@ -73,7 +73,7 @@ public class UserService {
     public void deleteUser(Long userId) {
         User user = findVerifiedUser(userId);
 
-        userRepository.deleteById(userId);
+        userRepository.delete(user);
     }
 
     // 중복된 이메일인지 확인

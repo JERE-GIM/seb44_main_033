@@ -20,52 +20,50 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://cinemaprincess-db.cs2fh6hlv7up.ap-northeast-2.rds.amazonaws.com:13306/test
-    username: root
-    password: 12345678
+    url: ${SQL_URL}
+    username: ${SQL_USERNAME}
+    password: ${SQL_PASSWORD}
 
   security:
     oauth2:
       client:
         registration:
           google:
-            clientId: 665056397916-c7bf8852rg8tpsrssnf5nbqv8q5v10va.apps.googleusercontent.com
-            clientSecret: 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
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_SECRET}
             scope:
               - email
-
-          kakao:
-            clientId: af3226b758eb5aad6d425db0445c13d7
-            clientSecret: 59wb3hhtZ7kKeARzIjGW6PvxOxtqe9oy
-            clientAuthenticationMethod: post
-            authorizationGrantType: authorization_code
-            redirectUri: "http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/kakao"
-            scope:
-              - account_email
-            clientName: Kakao
-
           naver:
-            clientId: kf2OUTY3_j68eCBWML9c
-            clientSecret: O2wLr6v208
+            clientId: ${NAVER_CLIENT_ID}
+            clientSecret: ${NAVER_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: "http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/naver"
+            redirectUri: ${NAVER_REDIRECT}
             scope:
+              - nickname
               - email
             clientName: Naver
-
-        provider:
           kakao:
-            authorizationUri: https://kauth.kakao.com/oauth/authorize
-            tokenUri: https://kauth.kakao.com/oauth/token
-            userInfoUri: https://kapi.kakao.com/v2/user/me
-            userNameAttribute: id
-
+            clientId: ${KAKAO_CLIENT_ID}
+            clientSecret: ${KAKAO_SECRET}
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirectUri: ${KAKAO_REDIRECT}
+            scope:
+              - profile_nickname
+              - account_email
+            clientName: Kakao
+        provider:
           naver:
             authorizationUri: https://nid.naver.com/oauth2.0/authorize
             tokenUri: https://nid.naver.com/oauth2.0/token
             userInfoUri: https://openapi.naver.com/v1/nid/me
             userNameAttribute: response
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
 
 logging:
   level:
@@ -73,13 +71,12 @@ logging:
       springframework:
         orm:
           jpa: DEBUG
-
 server:
   servlet:
     encoding:
       force-response: true
 
 jwt:
-  key: team033team033team033team033team033team033team033team033
-  accessTokenExpirationMinutes: 30
-  refreshTokenExpirationMinutes: 420
+  key: ${JWT_KET}
+  accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
+  refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}
