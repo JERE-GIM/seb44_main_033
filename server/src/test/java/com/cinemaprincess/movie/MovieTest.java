@@ -2,10 +2,12 @@ package com.cinemaprincess.movie;
 
 
 import com.cinemaprincess.helper.MovieTestHelper;
+import com.cinemaprincess.movie.dto.MovieDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.save.SaveMovieDetail;
 import com.cinemaprincess.movie.save.SaveMovieList;
+import com.cinemaprincess.movie.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +39,9 @@ public class MovieTest implements MovieTestHelper {
 
     @Autowired
     private MovieJdbcRepository movieJdbcRepository;
+
+    @Autowired
+    private MovieService movieService;
 
     @Test
     @DisplayName("페이지 수 구하는 메서드 테스트, 응답 요청 시간")
@@ -73,4 +78,13 @@ public class MovieTest implements MovieTestHelper {
             assertThat(title, Matchers.matchesPattern("^[a-zA-Z0-9가-힣\\s\\p{Punct}]+$"));
         }
     }
+
+//    @Test
+//    @DisplayName("비슷한 장르 목록 응답 테스트")
+//    public void testSimilarMovieList() {
+//        // given
+//        List<MovieDto.Response> responses = movieService.getSimilarMovies(881302);
+//
+//
+//    }
 }
