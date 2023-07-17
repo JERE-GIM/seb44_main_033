@@ -76,6 +76,16 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
     // api 로직 추가
   };
 
+  const handleChangeUserInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setUserInfo({ ...userInfo, [name]: value });
+  };
+
+  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setEditPassword({ ...editPassword, [name]: value });
+  };
+
   const handleUpdatePassword = () => {
     if (editPassword.newPassword === editPassword.newPasswordConfirm)
       console.log(editPassword);
@@ -108,17 +118,17 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
             <TextInputLabel htmlFor="username">닉네임</TextInputLabel>
             <TextInput
               id="username"
+              name="username"
               autoComplete="off"
               value={userInfo.username}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setUserInfo({ ...userInfo, username: event.target.value })
-              }
+              onChange={handleChangeUserInfo}
             />
           </TextInputContainer>
           <TextInputContainer>
             <TextInputLabel htmlFor="email">이메일</TextInputLabel>
             <TextInput
               id="email"
+              name="email"
               autoComplete="off"
               value={userInfo.email}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -149,12 +159,8 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
                     <TextInput
                       type="password"
                       id="currentPassword"
-                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setEditPassword({
-                          ...editPassword,
-                          currentPassword: event.target.value,
-                        })
-                      }
+                      name="currentPassword"
+                      onChange={handleChangePassword}
                     />
                   </TextInputContainer>
                   <TextInputContainer>
@@ -164,12 +170,8 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
                     <TextInput
                       type="password"
                       id="newPassword"
-                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setEditPassword({
-                          ...editPassword,
-                          newPassword: event.target.value,
-                        })
-                      }
+                      name="newPassword"
+                      onChange={handleChangePassword}
                     />
                   </TextInputContainer>
                   <TextInputContainer>
@@ -179,12 +181,8 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
                     <TextInput
                       type="password"
                       id="newPasswordConfirm"
-                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setEditPassword({
-                          ...editPassword,
-                          newPasswordConfirm: event.target.value,
-                        })
-                      }
+                      name="newPasswordConfirm"
+                      onChange={handleChangePassword}
                     />
                   </TextInputContainer>
                   <PasswordButton type="button" onClick={handleUpdatePassword}>
@@ -203,9 +201,7 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
                     type="radio"
                     name="gender"
                     value={gender}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      setUserInfo({ ...userInfo, gender: event.target.value });
-                    }}
+                    onChange={handleChangeUserInfo}
                   />
                   {gender}
                 </RadioLabel>
@@ -222,11 +218,7 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
                       type="radio"
                       name="age"
                       value={age}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>,
-                      ) => {
-                        setUserInfo({ ...userInfo, age: event.target.value });
-                      }}
+                      onChange={handleChangeUserInfo}
                     />
                     {age}
                   </RadioLabel>
