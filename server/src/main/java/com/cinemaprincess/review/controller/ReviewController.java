@@ -4,6 +4,7 @@ import com.cinemaprincess.response.MultiResponseDto;
 import com.cinemaprincess.review.dto.ReviewPatchDto;
 import com.cinemaprincess.review.dto.ReviewPostDto;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
+import com.cinemaprincess.review.dto.ReviewVoteDto;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.review.mapper.ReviewMapper;
 import com.cinemaprincess.review.service.ReviewService;
@@ -75,6 +76,12 @@ public class ReviewController {
         reviewService.deleteReview(reviewId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("/votes/{review-id}/{user-id}")
+    public ResponseEntity votesCount(@PathVariable("review-id") long reviewId,
+                                       @PathVariable("user-id") long userId){
+        ReviewVoteDto reviewVoteDto = reviewService.votesCount(reviewId, userId);
+        return new ResponseEntity<>(reviewVoteDto,HttpStatus.OK);
     }
 }
 

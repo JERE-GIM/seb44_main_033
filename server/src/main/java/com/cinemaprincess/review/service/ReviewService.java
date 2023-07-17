@@ -9,10 +9,14 @@ import com.cinemaprincess.movie.vote.MovieVoteRepository;
 import com.cinemaprincess.review.dto.ReviewPatchDto;
 import com.cinemaprincess.review.dto.ReviewPostDto;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
+import com.cinemaprincess.review.dto.ReviewVoteDto;
 import com.cinemaprincess.review.entity.Review;
+import com.cinemaprincess.review.entity.ReviewVote;
 import com.cinemaprincess.review.mapper.ReviewMapper;
 import com.cinemaprincess.review.repository.ReviewRepository;
+import com.cinemaprincess.review.repository.ReviewVoteRepository;
 import com.cinemaprincess.user.entity.User;
+import com.cinemaprincess.user.repository.UserRepository;
 import com.cinemaprincess.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +34,8 @@ import java.util.Optional;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper mapper;
+    private final UserRepository userRepository;
+    private final ReviewVoteRepository reviewVoteRepository;
     private final UserService userService;
     private final MovieService movieService;
     private final MovieVoteRepository movieVoteRepository;
@@ -78,10 +84,15 @@ public class ReviewService {
     private Review findVerifiedReview(long reviewId) {
         Optional<Review> optionalReview =
                 reviewRepository.findById(reviewId);
-        Review findReview =
-                optionalReview.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
-        return findReview;
+        return optionalReview.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
+    }
+    private User findVerifiedUser(long userId){
+        Optional<User> optionalUser =
+                userRepository.findById(userId);
+        return optionalUser.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+
     }
 
     public void deleteReview(long reviewId) {
@@ -91,7 +102,6 @@ public class ReviewService {
 
         reviewRepository.delete(review);
     }
-
     public Page<ReviewResponseDto> findReviewsByMovieId(long movieId, int page) {
         Page<Review> reviewPage = reviewRepository.findByMovieDetail_Id(movieId, PageRequest.of(page, 40));
         List<ReviewResponseDto> reviewDtos = mapper.reviewsToReviewResponseDtos(reviewPage.getContent());
