@@ -1,13 +1,12 @@
 package com.cinemaprincess.movie.entity;
 
 import com.cinemaprincess.review.entity.Review;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.cinemaprincess.watchlist.entity.WatchlistMovie;
 import lombok.*;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,6 +33,8 @@ public class Movie {
 
     @OneToOne(mappedBy = "movie", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private MovieDetail movieDetail;
+    @OneToMany(mappedBy = "movie")
+    private List<WatchlistMovie> watchlistMovies = new ArrayList<>();
 
     public void setMovieDetail(MovieDetail movieDetail) {
         this.movieDetail = movieDetail;
