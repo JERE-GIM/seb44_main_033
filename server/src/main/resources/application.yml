@@ -81,12 +81,6 @@ server:
       force-response: true
 
 jwt:
-<<<<<<< HEAD
   key: team033team033team033team033team033team033team033team033
   accessTokenExpirationMinutes: 30
   refreshTokenExpirationMinutes: 420
-=======
-  key: ${JWT_KEY}
-  accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
-  refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}
->>>>>>> upstream/dev
