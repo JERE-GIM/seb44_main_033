@@ -29,6 +29,10 @@ import {
   ReviewList,
   PrevButtonTransformed,
   NextButtonTransformed,
+  MovieRecommend,
+  RecommendList,
+  RecommentListItem,
+  SectionTitle,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import elementalPoster from '../assets/elemental_poster.png';
@@ -39,6 +43,8 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 import Slider from 'react-slick';
+import Card from '../components/main/movierank/Card';
+import defaultPoster from '../assets/default_poster.png';
 
 export default function Movie() {
   // 더미데이터 사용
@@ -185,12 +191,31 @@ export default function Movie() {
       <MovieReviews>
         <ReviewList>
           <Slider {...SLIDE_SETTINGS}>
-            {dummyReviews.map((review) => (
-              <ReviewListitem key={review.id} review={review} />
+            {dummyReviews.map((review, index) => (
+              <ReviewListitem key={review.id + index} review={review} />
             ))}
           </Slider>
         </ReviewList>
       </MovieReviews>
+      <MovieRecommend>
+        <SectionTitle>비슷한 영화 추천</SectionTitle>
+        <RecommendList>
+          {movie.similarMovies.map((similarMovie, index) => (
+            <RecommentListItem key={similarMovie.movieId + index}>
+              <Card
+                poster={
+                  similarMovie.posterPath
+                    ? `https://image.tmdb.org/t/p/w200/${similarMovie.posterPath}`
+                    : defaultPoster
+                }
+                title={similarMovie.title}
+                country={'미국'}
+                openat={Number(similarMovie.releaseDate.slice(0, 4))}
+              />
+            </RecommentListItem>
+          ))}
+        </RecommendList>
+      </MovieRecommend>
       {modal.status && modal.role === MODAL_ROLE.REVIEW_WRITE && (
         <ReviewRegisterModal
           movie={movie}

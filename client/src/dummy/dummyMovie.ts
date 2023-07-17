@@ -1,3 +1,10 @@
+export interface ISimilarMovie {
+  movieId: number;
+  posterPath: string;
+  title: string;
+  releaseDate: string;
+}
+
 export interface IMovie {
   id: string;
   title: string;
@@ -14,6 +21,7 @@ export interface IMovie {
   ratedUsers: number;
   audience: number;
   boxOffice: number;
+  similarMovies: Array<ISimilarMovie>;
 }
 
 export const dummyMovie = {
@@ -32,4 +40,66 @@ export const dummyMovie = {
   ratedUsers: 40000,
   audience: 1982492,
   boxOffice: 1,
+  similarMovies: [
+    {
+      movieId: 631831,
+      posterPath: '/AfV8M9SWczAnrKyOjusFt9iueOW.jpg',
+      title: '꿈을 향해 달리다',
+      releaseDate: '2023-07-20',
+    },
+    {
+      movieId: 1114775,
+      posterPath: '/sUNr6nOlGOGhpzy329TL9NUDM7p.jpg',
+      title: '우리의 하루',
+      releaseDate: '2023-07-19',
+    },
+    {
+      movieId: 995396,
+      posterPath: '/rdNB3YhphjcTXlDup78Xzot3hOi.jpg',
+      title: 'Sous le tapis',
+      releaseDate: '2023-07-19',
+    },
+    {
+      movieId: 1146254,
+      posterPath: '',
+      title: 'Deadly DILF',
+      releaseDate: '2023-07-20',
+    },
+    {
+      movieId: 1000130,
+      posterPath: '/cawhzgmFJl4bFXvFao7FM2R4uNP.jpg',
+      title: 'Les meutes',
+      releaseDate: '2023-07-19',
+    },
+    {
+      movieId: 967591,
+      posterPath: '/aAKjzFs7KVWEyOJFd28sJ91Jn0s.jpg',
+      title: 'Paula',
+      releaseDate: '2023-07-19',
+    },
+    {
+      movieId: 1051674,
+      posterPath: '/bTw97hDCT7bOCIDQ6fI8xku9Gt2.jpg',
+      title: 'Freno & Reversa',
+      releaseDate: '2023-07-19',
+    },
+    {
+      movieId: 1046558,
+      posterPath: '/7hJP5WcQmEDYAYSBCvbiS4adR4h.jpg',
+      title: 'Canary',
+      releaseDate: '2023-07-19',
+    },
+    {
+      movieId: 1128841,
+      posterPath: '/n7w3oTAxbNwVVHLKI5ADQP44Fyx.jpg',
+      title: "What's The Matter?",
+      releaseDate: '2023-07-19',
+    },
+    {
+      movieId: 881302,
+      posterPath: '/pwkwHvdJOH7BeUj3az5XulTspXx.jpg',
+      title: 'Kutukan Peti Mati',
+      releaseDate: '2023-07-20',
+    },
+  ],
 };

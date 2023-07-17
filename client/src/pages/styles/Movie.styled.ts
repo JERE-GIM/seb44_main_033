@@ -14,7 +14,7 @@ export const MovieCoverImage = styled.img`
   object-fit: cover;
 `;
 
-export const MovieTitle = styled.p`
+export const MovieTitle = styled.h1`
   position: absolute;
   top: 50%;
   left: 40px;
@@ -186,4 +186,29 @@ export const PrevButtonTransformed = styled(PrevButton)`
 
 export const NextButtonTransformed = styled(NextButton)`
   transform: translate(50%, 100%);
+`;
+
+export const MovieRecommend = styled.section`
+  width: 1320px;
+  margin: 0 auto;
+  padding-top: 20px;
+`;
+
+export const RecommendList = styled.ul`
+  width: 100%;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+`;
+
+export const RecommentListItem = styled.li`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
+export const SectionTitle = styled.h2`
+  font-size: 25px;
+  font-weight: 600;
+  margin-bottom: 20px;
 `;
