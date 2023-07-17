@@ -87,7 +87,8 @@ public class ReviewService {
         return optionalReview.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
     }
-    private User findVerifiedUser(long userId){
+
+    private User findVerifiedUser(long userId) {
         Optional<User> optionalUser =
                 userRepository.findById(userId);
         return optionalUser.orElseThrow(() ->
@@ -102,6 +103,7 @@ public class ReviewService {
 
         reviewRepository.delete(review);
     }
+
     public Page<ReviewResponseDto> findReviewsByMovieId(long movieId, int page) {
         Page<Review> reviewPage = reviewRepository.findByMovieDetail_Id(movieId, PageRequest.of(page, 40));
         List<ReviewResponseDto> reviewDtos = mapper.reviewsToReviewResponseDtos(reviewPage.getContent());
@@ -146,4 +148,29 @@ public class ReviewService {
 //    }
     /*
      */
+
+    public ReviewVoteDto votesCount(long reviewId, long userId) {
+        Review findReview = findVerifiedReview(reviewId);
+        User findUser = findVerifiedUser(userId);
+        Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
+        ReviewVote saveReview;
+
+        if (optionalReviewVote.isEmpty()) {
+            ReviewVote reviewVote = ReviewVote.builder().review(findReview).user(findUser).build();
+            findReview.updateVoteCount(true);
+            saveReview = reviewVoteRepository.save(reviewVote);
+        } else {
+            ReviewVote findReviewVote = optionalReviewVote.get();
+            findReviewVote.updateVote();
+            saveReview = reviewVoteRepository.save(findReviewVote);
+            findReview.updateVoteCount(findReviewVote.isReviewVoted());
+        }
+
+        Review updatedReview = reviewRepository.save(findReview);
+        ReviewVoteDto reviewVoteDto = new ReviewVoteDto();
+        reviewVoteDto.setReviewVoteStatus(saveReview.isReviewVoted());
+        reviewVoteDto.setTotalVoteCount(updatedReview.getVotesCount());
+
+        return reviewVoteDto;
+    }
 }
