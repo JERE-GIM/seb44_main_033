@@ -35,6 +35,26 @@ export const ConfirmMessage = styled.p`
   font-weight: 600;
 `;
 
+export const ConfirmCheckbox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+`;
+
+export const ConfirmCheckboxText = styled.span`
+  font-size: 15px;
+  height: 15px;
+  vertical-align: text-bottom;
+`;
+
+export const ConfirmCheckboxInput = styled.input`
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  margin-left: 5px;
+  cursor: pointer;
+`;
+
 export const ConfirmButtons = styled.div`
   display: flex;
   justify-content: center;

@@ -1,4 +1,8 @@
 import { styled } from 'styled-components';
+import {
+  NextButton,
+  PrevButton,
+} from '../../components/styles/rankmovie/Slider.styled';
 
 export const MovieCover = styled.div`
   position: relative;
@@ -171,8 +175,15 @@ export const MovieReviews = styled.section`
 `;
 
 export const ReviewList = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  grid-gap: 10px;
+  .slick-active:not(:first-child) {
+    padding-left: 10px;
+  }
+`;
+
+export const PrevButtonTransformed = styled(PrevButton)`
+  transform: translate(-50%, 100%);
+`;
+
+export const NextButtonTransformed = styled(NextButton)`
+  transform: translate(50%, 100%);
 `;

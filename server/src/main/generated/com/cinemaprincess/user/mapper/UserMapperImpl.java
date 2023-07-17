@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-07-12T19:52:12+0900",
+    date = "2023-07-13T20:01:36+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 11.0.19 (Azul Systems, Inc.)"
 )
 @Component
@@ -28,9 +28,9 @@ public class UserMapperImpl implements UserMapper {
         user.gender( userPostDto.getGender() );
         user.age( userPostDto.getAge() );
         user.username( userPostDto.getUsername() );
-        List<String> list = userPostDto.getGenre();
+        List<Long> list = userPostDto.getGenre();
         if ( list != null ) {
-            user.genre( new ArrayList<String>( list ) );
+            user.genre( new ArrayList<Long>( list ) );
         }
 
         return user.build();
@@ -45,14 +45,26 @@ public class UserMapperImpl implements UserMapper {
         User.UserBuilder user = User.builder();
 
         user.userId( userPatchDto.getUserId() );
-        user.email( userPatchDto.getEmail() );
-        user.password( userPatchDto.getPassword() );
         user.age( userPatchDto.getAge() );
         user.username( userPatchDto.getUsername() );
-        List<String> list = userPatchDto.getGenre();
+        List<Long> list = userPatchDto.getGenre();
         if ( list != null ) {
-            user.genre( new ArrayList<String>( list ) );
+            user.genre( new ArrayList<Long>( list ) );
         }
+
+        return user.build();
+    }
+
+    @Override
+    public User patchPasswordToUser(UserDto.PatchToPassword userPatchToPassword) {
+        if ( userPatchToPassword == null ) {
+            return null;
+        }
+
+        User.UserBuilder user = User.builder();
+
+        user.userId( userPatchToPassword.getUserId() );
+        user.password( userPatchToPassword.getPassword() );
 
         return user.build();
     }
@@ -72,9 +84,9 @@ public class UserMapperImpl implements UserMapper {
         response.setUsername( user.getUsername() );
         response.setCreatedAt( user.getCreatedAt() );
         response.setModifiedAt( user.getModifiedAt() );
-        List<String> list = user.getGenre();
+        List<Long> list = user.getGenre();
         if ( list != null ) {
-            response.setGenre( new ArrayList<String>( list ) );
+            response.setGenre( new ArrayList<Long>( list ) );
         }
 
         return response;

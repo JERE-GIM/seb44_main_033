@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class MovieDto {
-
-    String title;
-
     @Getter
     @Builder
     public static class Response {
-
+        private long movieId;
+        private String posterPath;
+        private String title;
+        private String releaseDate;
     }
 }

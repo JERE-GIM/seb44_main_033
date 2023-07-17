@@ -1,8 +1,15 @@
 package com.cinemaprincess.user.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.genre.GenreRepository;
+import com.cinemaprincess.user.dto.UserStatisticsDto;
+import lombok.Getter;
 import com.cinemaprincess.statistics.dto.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +29,7 @@ public class UserService {
     private final CustomAuthorityUtils customAuthorityUtils;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final GenreRepository genreRepository;
 
     // 회원가입
     public User createUser(User user) {
@@ -93,12 +101,38 @@ public class UserService {
         return findUser;
     }
 
-    public StatisticsDto getUsersStatistics() {
-        List<User> allUsers = userRepository.findAll();
-        System.out.println("findall~");
-        for (User user : allUsers){
-            System.out.println(user);
+    public Map<String, Integer> getUsersStatistics(String gender, String age) {
+        int minAge = calculateMinAge(age);
+        int maxAge = calculateMaxAge(age);
+        User.Gender genderEnum = User.Gender.valueOf(gender);
+
+        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
+                .map(user -> new UserStatisticsDto(user.getGenre()))
+                .collect(Collectors.toList());
+
+        Map<String, Integer> genreCount = new HashMap<>();
+
+        for (UserStatisticsDto userStatistics : allUsersGenre) {
+            for (Long genreId : userStatistics.getGenreIds()) {
+                Genre genre = genreRepository.getGenreNameByGenreId(genreId);
+                String genreName = genre.getGenreName();
+                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
+            }
         }
-        return new StatisticsDto();
+
+        return genreCount;
     }
+
+    private int calculateMinAge(String age){
+        int ageGroup = Integer.parseInt(age);
+        return ageGroup / 10 * 10;
+    }
+
+    private int calculateMaxAge(String age){
+        int ageGroup = Integer.parseInt(age);
+        return (ageGroup / 10 * 10) + 9;
+    }
+
+
+
 }

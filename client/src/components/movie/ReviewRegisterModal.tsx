@@ -14,13 +14,14 @@ import {
   SubmitButton,
 } from '../styles/ReviewRegisterModal.styled';
 import closeButton from '../../assets/closeButton.svg';
+import { useAppDispatch } from '../../redux/store';
+import { modalAction } from '../../redux/reducers/modal';
 
 interface IReviewRegister {
   movie: IMovie;
   review?: IReview;
   rating: number;
   setRating: React.Dispatch<React.SetStateAction<number>>;
-  setIsOpenReviewModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ReviewRegister({
@@ -28,14 +29,14 @@ export default function ReviewRegister({
   review,
   rating,
   setRating,
-  setIsOpenReviewModal,
 }: IReviewRegister) {
   const [comment, setComment] = useState(review ? review.comment : '');
+  const dispatch = useAppDispatch();
 
   const handleCloseModalUnsaved = () => {
     if (review) setRating(review.rating);
     else setRating(0);
-    setIsOpenReviewModal(false);
+    dispatch(modalAction.close());
   };
 
   const handleClickModal = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -45,7 +46,6 @@ export default function ReviewRegister({
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // api 로직 추가
-    setIsOpenReviewModal(false);
   };
 
   const handleChangeTextarea = (
