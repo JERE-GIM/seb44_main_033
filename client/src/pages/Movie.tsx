@@ -33,6 +33,10 @@ import {
   RecommendList,
   RecommentListItem,
   SectionTitle,
+  MovieOTTInfo,
+  OTTContainer,
+  OTTImage,
+  OTTText,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import elementalPoster from '../assets/elemental_poster.png';
@@ -197,6 +201,23 @@ export default function Movie() {
           </Slider>
         </ReviewList>
       </MovieReviews>
+      <MovieOTTInfo>
+        <SectionTitle>보러가기</SectionTitle>
+        {movie.watchProviders.map((provider) => (
+          <OTTContainer key={provider.providerId}>
+            <OTTImage
+              src={`https://image.tmdb.org/t/p/w200/${provider.logoPath}`}
+            />
+            <OTTText
+              to={provider.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {provider.providerName}
+            </OTTText>
+          </OTTContainer>
+        ))}
+      </MovieOTTInfo>
       <MovieRecommend>
         <SectionTitle>비슷한 영화 추천</SectionTitle>
         <RecommendList>

@@ -3,6 +3,7 @@ import {
   NextButton,
   PrevButton,
 } from '../../components/styles/rankmovie/Slider.styled';
+import { Link } from 'react-router-dom';
 
 export const MovieCover = styled.div`
   position: relative;
@@ -188,10 +189,36 @@ export const NextButtonTransformed = styled(NextButton)`
   transform: translate(50%, 100%);
 `;
 
+export const MovieOTTInfo = styled.section`
+  width: 1320px;
+  margin: 0 auto;
+  margin-top: 50px;
+`;
+
+export const OTTContainer = styled.div`
+  display: inline-block;
+  margin-right: 50px;
+`;
+
+export const OTTImage = styled.img`
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+`;
+
+export const OTTText = styled(Link)`
+  height: 32px;
+  line-height: 32px;
+  font-size: 20px;
+  vertical-align: top;
+  text-decoration: none;
+  color: var(--black);
+`;
+
 export const MovieRecommend = styled.section`
   width: 1320px;
   margin: 0 auto;
-  padding-top: 20px;
+  margin-top: 50px;
 `;
 
 export const RecommendList = styled.ul`

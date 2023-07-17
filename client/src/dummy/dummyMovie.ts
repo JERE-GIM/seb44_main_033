@@ -5,6 +5,13 @@ export interface ISimilarMovie {
   releaseDate: string;
 }
 
+export interface IMovieProvider {
+  providerId: number;
+  providerName: string;
+  logoPath: string;
+  url: string;
+}
+
 export interface IMovie {
   id: string;
   title: string;
@@ -22,6 +29,7 @@ export interface IMovie {
   audience: number;
   boxOffice: number;
   similarMovies: Array<ISimilarMovie>;
+  watchProviders: Array<IMovieProvider>;
 }
 
 export const dummyMovie = {
@@ -100,6 +108,20 @@ export const dummyMovie = {
       posterPath: '/pwkwHvdJOH7BeUj3az5XulTspXx.jpg',
       title: 'Kutukan Peti Mati',
       releaseDate: '2023-07-20',
+    },
+  ],
+  watchProviders: [
+    {
+      providerId: 111,
+      providerName: 'Netflix',
+      logoPath: '/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg',
+      url: 'https://www.netflix.com/browse',
+    },
+    {
+      providerId: 112,
+      providerName: 'Disney',
+      logoPath: '/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg',
+      url: 'https://www.disneyplus.com/home',
     },
   ],
 };
