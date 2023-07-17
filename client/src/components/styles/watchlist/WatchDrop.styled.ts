@@ -59,9 +59,10 @@ export const MovieItem = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 export const MovieImage = styled.img`
-  width: 60%;
+  width: 200px;
   margin-bottom: 10px;
 `;
