@@ -1,6 +1,10 @@
 package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.vote.MovieVote;
+import com.cinemaprincess.movie.vote.MovieVoteRepository;
+import com.cinemaprincess.movie.vote.SaveMovieVote;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,16 +35,19 @@ import java.util.stream.StreamSupport;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class SaveMovieList {
-    String key = "8799558ac2f2609cd5ff89aa63a87f10";
     private final MovieJdbcRepository movieJdbcRepository;
     private final SaveMovieDetail saveMovieDetail;
+    private final SaveMovieVote saveMovieVote;
+    private final MovieVoteRepository movieVoteRepository;
 
     RestTemplate restTemplate = new RestTemplate();
     LinkedHashMap<String, String> dateMap = new LinkedHashMap<>();
 
     // api url
     public String buildMovieListUrl(String startDate, String endDate, int page) {
+        String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
                 .queryParam("api_key", key)
                 .queryParam("primary_release_date.gte", startDate)
@@ -79,25 +87,50 @@ public class SaveMovieList {
 
             List<Movie> allMovies = combinedFuture.get();
 
-            movieJdbcRepository.saveMovies(allMovies); // DB에 저장
+            movieJdbcRepository.saveMovies(allMovies);
 
-/*            List<CompletableFuture<MovieDetail>> detailFutures = allMovies.stream()
-                    .map(movie -> CompletableFuture.supplyAsync(() -> {
-                        MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
-                        movieDetail.setMovie(movie);
-                        return movieDetail;
-                    }, executorService))
-                    .collect(Collectors.toList());
-
-            CompletableFuture<List<MovieDetail>> movieDetailsFuture = CompletableFuture.allOf(detailFutures.toArray(new CompletableFuture[0]))
-                    .thenApply(v -> detailFutures.stream()
-                            .map(CompletableFuture::join)
-                            .collect(Collectors.toList()));
-
-            List<MovieDetail> movieDetails = movieDetailsFuture.get();
-
+            List<MovieDetail> movieDetails = new ArrayList<>();
+            log.info("Movie_detail 저장 시작");
+            for (Movie movie : allMovies) {
+                MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
+                movieDetail.setMovie(movie);
+                movieDetails.add(movieDetail);
+            }
             movieJdbcRepository.saveMovieDetails(movieDetails);
-            log.info("=========================Movie_detail 저장 완료=========================");*/
+
+            log.info("MovieDetail 저장 완료");
+            for (MovieDetail movieDetail : movieDetails) {
+                // 무비보트에서 무비아이디가 이미 존재하는지 확인
+                boolean movieVoteExists = saveMovieVote.checkMovieVoteExists(movieDetail.getId());
+                if (!movieVoteExists) {
+                    // 존재하지 않는 경우에만 실행
+                    MovieVote movieVote = saveMovieVote.getMovieVote(movieDetail.getId());
+                    movieDetail.setMovieVote(movieVote);
+                }
+                movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
+//                movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
+            }
+
+//            List<CompletableFuture<MovieDetail>> detailFutures = allMovies.stream()
+//                    .map(movie -> CompletableFuture.supplyAsync(() -> {
+//                        MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
+//                        movieDetail.setMovie(movie);
+//                        movieDetail.setId(movie.getMovieId());
+//                        movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
+//                        movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
+//                        return movieDetail;
+//                    }, executorService))
+//                    .collect(Collectors.toList());
+//            log.info("detailFutures 리스트 완료");
+//            CompletableFuture<List<MovieDetail>> movieDetailsFuture = CompletableFuture.allOf(detailFutures.toArray(new CompletableFuture[0]))
+//                    .thenApply(v -> detailFutures.stream()
+//                            .map(CompletableFuture::join)
+//                            .collect(Collectors.toList()));
+//            log.info("movieDetailsFuture 리스트 완료");
+//            List<MovieDetail> movieDetails = movieDetailsFuture.get();
+//            log.info("MovieDetails 리스트 완료");
+//            movieJdbcRepository.saveMovieDetails(movieDetails);
+//            log.info("Movie_detail 저장 완료");
             executorService.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,15 +150,17 @@ public class SaveMovieList {
                     return title.matches("^[a-zA-Z0-9가-힣\\s\\p{Punct}]+$");
                 })
                 .map(contents -> {
-                    String posterPath = parsePosterPath(contents);
                     String title = contents.get("title").getAsString();
+                    String posterPath = parsePosterPath(contents);
+
                     return Movie.builder()
                             .movieId(contents.get("id").getAsLong())
                             .voteAverage(contents.get("vote_average").getAsFloat())
-                            .releaseDate(contents.get("release_date").getAsString())
+                            .popularity(contents.get("popularity").getAsFloat())
                             .title(title)
                             .posterPath(posterPath)
                             .build();
+
                 })
                 .collect(Collectors.toList());
     }
@@ -141,8 +176,8 @@ public class SaveMovieList {
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
     public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("2019-05-30");
-        LocalDate endDate = LocalDate.parse("2019-05-30");
+        LocalDate startDate = LocalDate.parse("2023-07-19");
+        LocalDate endDate = LocalDate.parse("2023-07-20");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         while (startDate.isBefore(endDate.plusDays(1))) {
@@ -172,7 +207,7 @@ public class SaveMovieList {
             dateMap.put(key, value);
 
             startDate = nextDate.plusDays(1);
-            System.out.printf("%s, %s, %dp%n", key, value, pages);
+            log.info("{}, {}, {}p", key, value, pages);
             // 500p가 되면 DB에 저장
             getMovieList();
         }

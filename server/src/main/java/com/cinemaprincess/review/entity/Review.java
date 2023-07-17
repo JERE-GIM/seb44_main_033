@@ -1,6 +1,7 @@
 package com.cinemaprincess.review.entity;
 
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,8 @@ public class Review {
     private String content;
     @Column(nullable = false)
     private int score;
+    @Column(nullable = false)
+    private int votesCount;
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(nullable = false)
@@ -45,8 +48,16 @@ public class Review {
 //    @ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name = "MOVIE_ID")
-    private Movie movie;
+    private MovieDetail movieDetail;
     public long getMovieId(){
-        return movie.getMovieId();
+        return movieDetail.getId();
+    }
+
+    public void updateVoteCount(boolean voted){
+        if(voted){
+            votesCount++;
+        } else {
+            votesCount--;
+        }
     }
 }
