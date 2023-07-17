@@ -82,7 +82,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   // 비번
   const isPasswordValid = (password: string): boolean => {
-    const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,20}$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9\s]).{8,20}$/;
     return password.trim() !== '' && passwordRegex.test(password);
   };
 
@@ -165,7 +165,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     axios
       .post(
-        `http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080//signup`,
+        `http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/signup`,
         formData,
       )
       .then(() => {
@@ -331,8 +331,8 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="action"
+                  name="genres"
+                  value="28"
                   checked={selectedGenres.includes('액션')}
                   onChange={() => handleGenreChange('액션')}
                 />
@@ -343,8 +343,8 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="fantasy"
+                  name="genres"
+                  value="14"
                   checked={selectedGenres.includes('판타지')}
                   onChange={() => handleGenreChange('판타지')}
                 />
@@ -355,8 +355,8 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="animation"
+                  name="genres"
+                  value="16"
                   checked={selectedGenres.includes('만화')}
                   onChange={() => handleGenreChange('만화')}
                 />
@@ -370,20 +370,20 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="melo"
-                  checked={selectedGenres.includes('멜로')}
-                  onChange={() => handleGenreChange('멜로')}
+                  name="genres"
+                  value="36"
+                  checked={selectedGenres.includes('역사')}
+                  onChange={() => handleGenreChange('역사')}
                 />
-                <GenreText selected={selectedGenres.includes('멜로')}>
-                  멜 로
+                <GenreText selected={selectedGenres.includes('역사')}>
+                  역 사
                 </GenreText>
               </GenreBoxLabel>
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="romance"
+                  name="genres"
+                  value="10749"
                   checked={selectedGenres.includes('로맨스')}
                   onChange={() => handleGenreChange('로맨스')}
                 />
@@ -394,8 +394,8 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="horror"
+                  name="genres"
+                  value="27"
                   checked={selectedGenres.includes('공포')}
                   onChange={() => handleGenreChange('공포')}
                 />
@@ -409,8 +409,8 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="comedy"
+                  name="genres"
+                  value="35"
                   checked={selectedGenres.includes('코미디')}
                   onChange={() => handleGenreChange('코미디')}
                 />
@@ -421,8 +421,8 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="documentary"
+                  name="genres"
+                  value="99"
                   checked={selectedGenres.includes('다큐')}
                   onChange={() => handleGenreChange('다큐')}
                 />
@@ -433,8 +433,8 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <GenreBoxLabel>
                 <GenreInput
                   type="checkbox"
-                  name="genre"
-                  value="null"
+                  name="genres"
+                  value=""
                   checked={selectedGenres.includes('기타')}
                   onChange={() => handleGenreChange('기타')}
                 />
