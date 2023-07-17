@@ -15,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.OneToOne;
 
+//import com.cinemaprincess.Image.entity.Image;
 import com.cinemaprincess.audit.Auditable;
 import com.cinemaprincess.watchlist.entity.Watchlist;
 
@@ -61,6 +62,9 @@ public class User extends Auditable {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Watchlist watchlist;
+
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    private Image image;
 
     public User(String email, String password, String username, List<String> roles) {
         this.email = email;
