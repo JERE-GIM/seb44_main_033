@@ -15,6 +15,7 @@ export interface IMovieProvider {
 export interface IMovie {
   id: string;
   title: string;
+  overview: string;
   coverUrl: string;
   posterUrl: string;
   openAt: number;
@@ -35,6 +36,7 @@ export interface IMovie {
 export const dummyMovie = {
   id: '1',
   title: '엘리멘탈',
+  overview: '엘리멘탈입니다. 아주 재미있습니다.',
   coverUrl: './assets/elemental_cover.png',
   posterUrl: './assets/elemental_poster.png',
   openAt: 1688450196434,

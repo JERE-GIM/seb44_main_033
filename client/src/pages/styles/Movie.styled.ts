@@ -15,13 +15,31 @@ export const MovieCoverImage = styled.img`
   object-fit: cover;
 `;
 
-export const MovieTitle = styled.h1`
+export const MovieHeader = styled.div`
+  width: 100%;
   position: absolute;
   top: 50%;
   left: 40px;
+  color: white;
+`;
+
+export const MovieTitle = styled.h1`
   font-size: 40px;
   font-weight: 800;
-  color: white;
+  margin-bottom: 20px;
+`;
+
+export const MovieDescription = styled.p`
+  width: 50%;
+  line-height: 25px;
+  font-size: 18px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 export const StarsContainer = styled.div`
@@ -172,7 +190,7 @@ export const MyReviewControlButton = styled.button`
 export const MovieReviews = styled.section`
   max-width: 1320px;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 50px;
 `;
 
 export const ReviewList = styled.ul`

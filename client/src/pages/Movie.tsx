@@ -37,6 +37,8 @@ import {
   OTTContainer,
   OTTImage,
   OTTText,
+  MovieHeader,
+  MovieDescription,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import elementalPoster from '../assets/elemental_poster.png';
@@ -105,7 +107,10 @@ export default function Movie() {
     <>
       <MovieCover>
         <MovieCoverImage src={elementalCover} alt="cover image" />
-        <MovieTitle>{movie.title}</MovieTitle>
+        <MovieHeader>
+          <MovieTitle>{movie.title}</MovieTitle>
+          <MovieDescription>{movie.overview}</MovieDescription>
+        </MovieHeader>
         <StarsContainer onClick={handleOpenReviewModal}>
           <Rating rating={rating} setRating={setRating} />
         </StarsContainer>
@@ -193,6 +198,7 @@ export default function Movie() {
         </MovieDetailCol>
       </MovieDetail>
       <MovieReviews>
+        <SectionTitle>코멘트</SectionTitle>
         <ReviewList>
           <Slider {...SLIDE_SETTINGS}>
             {dummyReviews.map((review, index) => (
