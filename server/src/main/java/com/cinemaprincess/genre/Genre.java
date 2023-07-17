@@ -1,6 +1,7 @@
 package com.cinemaprincess.genre;
 
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

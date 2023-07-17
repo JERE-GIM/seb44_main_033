@@ -1,4 +1,4 @@
-package com.cinemaprincess.watch_provider;
+package com.cinemaprincess.movie.watch_provider;
 
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import lombok.Getter;

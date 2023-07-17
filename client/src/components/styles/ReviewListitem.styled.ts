@@ -5,6 +5,7 @@ export const Wrapper = styled.li`
   padding: 20px;
   background-color: var(--gray-light);
   border-radius: 10px;
+  margin-bottom: 10px;
 `;
 
 export const ReviewTop = styled.div`
@@ -23,10 +24,13 @@ export const ProfileImage = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 50%;
+  margin-right: 5px;
 `;
 
-export const Username = styled.div`
-  margin-left: 5px;
+export const Username = styled.div``;
+
+export const MovieTitle = styled.div`
+  font-weight: 600;
 `;
 
 export const Stars = styled(ReviewStars)``;

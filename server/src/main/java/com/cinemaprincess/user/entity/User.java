@@ -3,6 +3,7 @@ package com.cinemaprincess.user.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -12,10 +13,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
+import javax.persistence.OneToOne;
 
 import com.cinemaprincess.audit.Auditable;
+import com.cinemaprincess.watchlist.entity.Watchlist;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Builder;
 
 @Entity
 @Getter
@@ -26,6 +33,7 @@ import lombok.*;
 public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(nullable = false, unique = true, updatable = false)
@@ -41,14 +49,18 @@ public class User extends Auditable {
 //    @Column(nullable = false)
     private Integer age;
 
-    @Column(nullable = false) // unique 옵션 프론트와 상의
+    @Column(nullable = false, unique = true)
     private String username;
 
     @ElementCollection()
-    private List<String> genre = new ArrayList<>();
+    @Column(name = "genreId")
+    private List<Long> genre = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Watchlist watchlist;
 
     public User(String email, String password, String username, List<String> roles) {
         this.email = email;

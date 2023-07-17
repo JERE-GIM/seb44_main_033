@@ -3,6 +3,8 @@ package com.cinemaprincess.review.repository;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.review.projection.TopReviewedMoviesResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,6 +36,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 //            "GROUP BY m.movieId " +
 //            "ORDER BY reviewCount DESC")
 //    List<TopReviewedMoviesResponse> findReviewsByMonth(@Param("monthAgo") LocalDateTime monthAgo);
-///*
-//*/
+/*
+*/
+    List<Review> findByMovieDetail_Id(long movieId);
+    Page<Review> findByMovieDetail_Id(long movieId, Pageable pageable);
+    List<Review> findByMovieDetail_IdIn(List<Long> movieDetailIds);
 }
