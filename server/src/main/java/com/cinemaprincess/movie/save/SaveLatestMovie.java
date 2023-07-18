@@ -3,18 +3,18 @@ package com.cinemaprincess.movie.save;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
-import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.vote.MovieVote;
 import com.cinemaprincess.movie.vote.MovieVoteRepository;
 import com.cinemaprincess.movie.vote.SaveMovieVote;
+import com.cinemaprincess.review.entity.Review;
+import com.cinemaprincess.review.repository.ReviewRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -25,8 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,25 +37,23 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class SaveMovieList {
+public class SaveLatestMovie {
     private final MovieJdbcRepository movieJdbcRepository;
     private final SaveMovieDetail saveMovieDetail;
     private final SaveMovieVote saveMovieVote;
     private final MovieVoteRepository movieVoteRepository;
-    private final MovieDetailRepository movieDetailRepository;
+    private final ReviewRepository reviewRepository;
 
-    @Value("${tmdb.key}")
-    String key;
+    String key = "8799558ac2f2609cd5ff89aa63a87f10";
     RestTemplate restTemplate = new RestTemplate();
     LinkedHashMap<String, String> dateMap = new LinkedHashMap<>();
 
-    public String buildMovieListUrl(String startDate, String endDate, int page) {
+    public String buildLatestMovieUrl(String startDate, String endDate, int page) {
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
                 .queryParam("api_key", key)
                 .queryParam("primary_release_date.gte", startDate)
                 .queryParam("primary_release_date.lte", endDate)
                 .queryParam("language", "ko")
-                .queryParam("vote_count.gte", 10)
                 .queryParam("page", page)
                 .build()
                 .toUriString();
@@ -65,7 +62,7 @@ public class SaveMovieList {
     // 멀티스레딩으로 DB에 저장
     public void getMovieList() {
         try {
-            ExecutorService executorService = Executors.newFixedThreadPool(20); // 적절한 스레드 풀 크기 선택
+            ExecutorService executorService = Executors.newFixedThreadPool(30); // 적절한 스레드 풀 크기 선택
 
             List<CompletableFuture<List<Movie>>> futures = dateMap.entrySet().stream()
                     .flatMap(entry -> {
@@ -75,7 +72,7 @@ public class SaveMovieList {
 
                         return IntStream.rangeClosed(1, pages)
                                 .mapToObj(i -> CompletableFuture.supplyAsync(() -> {
-                                    String url = buildMovieListUrl(startDate, endDate, i);
+                                    String url = buildLatestMovieUrl(startDate, endDate, i);
                                     ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
                                     String responseBody = response.getBody();
                                     return parseMovieList(responseBody);
@@ -93,6 +90,7 @@ public class SaveMovieList {
 
             movieJdbcRepository.saveMovies(allMovies);
             log.info("Movie 저장 완료");
+            executorService.shutdown();
 
 //            List<MovieDetail> movieDetails = new ArrayList<>();
 //            log.info("Movie_detail 저장 시작");
@@ -123,12 +121,14 @@ public class SaveMovieList {
 //            }
 //            movieJdbcRepository.saveMovieVote(movieVotes);
 //            movieJdbcRepository.saveMovieDetailGenres(movieDetailGenres);
+            ExecutorService executorService2 = Executors.newFixedThreadPool(30);
+
             List<CompletableFuture<MovieDetail>> detailFutures = allMovies.stream()
                     .map(movie -> CompletableFuture.supplyAsync(() -> {
                         MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
                         movieDetail.setMovie(movie);
                         return movieDetail;
-                    }, executorService))
+                    }, executorService2))
                     .collect(Collectors.toList());
 
             CompletableFuture<List<MovieDetail>> movieDetailsFuture = CompletableFuture.allOf(detailFutures.toArray(new CompletableFuture[0]))
@@ -141,6 +141,9 @@ public class SaveMovieList {
             movieJdbcRepository.saveMovieDetails(movieDetails);
 
             log.info("MovieDetail 저장 완료");
+            executorService2.shutdown();
+
+            ExecutorService executorService3 = Executors.newFixedThreadPool(30);
 
             List<Long> movieIds = movieDetails.stream()
                     .map(MovieDetail::getId)
@@ -153,7 +156,7 @@ public class SaveMovieList {
                         MovieVote movieVote = saveMovieVote.getMovieVote(movieDetail.getId());
                         movieVote.setMovieDetail(movieDetail);
                         return movieVote;
-                    }, executorService))
+                    }, executorService3))
                     .collect(Collectors.toList());
 
             CompletableFuture<List<MovieVote>> movieVotesFuture = CompletableFuture.allOf(voteFutures.toArray(new CompletableFuture[0]))
@@ -166,9 +169,12 @@ public class SaveMovieList {
             movieJdbcRepository.saveMovieVote(movieVotes);
 
             log.info("MovieVote 저장 완료");
+            executorService3.shutdown();
+
+            ExecutorService executorService4 = Executors.newFixedThreadPool(30);
 
             List<CompletableFuture<List<MovieDetailGenre>>> movieDetailGenreFutures = movieDetails.stream()
-                    .map(movieDetail -> CompletableFuture.supplyAsync(movieDetail::getMovieDetailGenres, executorService))
+                    .map(movieDetail -> CompletableFuture.supplyAsync(movieDetail::getMovieDetailGenres, executorService4))
                     .collect(Collectors.toList());
 
             CompletableFuture<Void> allMovieDetailGenresFuture = CompletableFuture.allOf(movieDetailGenreFutures.toArray(new CompletableFuture[0]));
@@ -185,8 +191,7 @@ public class SaveMovieList {
             movieJdbcRepository.saveMovieDetailGenres(movieDetailGenres);
 
             log.info("MovieDetailGenre 저장 완료");
-
-            executorService.shutdown();
+            executorService4.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -229,8 +234,8 @@ public class SaveMovieList {
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
     public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("1950-01-01");
-        LocalDate endDate = LocalDate.parse("2023-12-31");
+        LocalDate startDate = LocalDate.parse("2023-07-01");
+        LocalDate endDate = LocalDate.parse("2023-08-31");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         while (startDate.isBefore(endDate.plusDays(1))) {
@@ -269,7 +274,7 @@ public class SaveMovieList {
     // 페이지 수 계산
     public int getPages(String startDate, String endDate) {
         try {
-            String url = buildMovieListUrl(startDate, endDate, 1);
+            String url = buildLatestMovieUrl(startDate, endDate, 1);
 
             WebClient webClient = WebClient.create(url);
 

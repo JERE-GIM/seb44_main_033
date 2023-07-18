@@ -1,5 +1,7 @@
 package com.cinemaprincess.movie.save;
 
+import com.cinemaprincess.exception.BusinessLogicException;
+import com.cinemaprincess.exception.ExceptionCode;
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.movie.entity.Movie;
@@ -66,22 +68,16 @@ public class SaveMovieDetail {
             String responseBody = response.getBody();
             movieDetail = parseMovieDetail(responseBody);
 
-            if (movieDetail != null && movieDetail.getOverview().isEmpty()) { // 한글 개요가 없을때 영어 개요 가져오기
-                url = buildMovieDetailUrl(movieId, "en");
-                response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-                responseBody = response.getBody();
-                String overview = parseOverview(responseBody);
-                movieDetail.setOverview(overview);
-            }
+//            if (movieDetail != null && movieDetail.getOverview().isEmpty()) { // 한글 개요가 없을때 영어 개요 가져오기
+//                url = buildMovieDetailUrl(movieId, "en");
+//                response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+//                responseBody = response.getBody();
+//                String overview = parseOverview(responseBody);
+//                movieDetail.setOverview(overview);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        movieJdbcRepository.saveMovieDetail(movieDetail);
-//        movieDetail.setReviews(reviewRepository.findByMovieDetail_Id(movieId));
-        List<Long> movieDetailIds = Collections.singletonList(movieDetail.getId());
-        List<Review> reviews = reviewRepository.findByMovieDetail_IdIn(movieDetailIds);
-        movieDetail.setReviews(reviews);
-
         return movieDetail;
     }
 
@@ -108,11 +104,7 @@ public class SaveMovieDetail {
 
         String releaseDate = parseReleaseDate(jsonObject);
 
-//        Movie movie = movieRepository.findById(jsonObject.get("id").getAsLong()).get();
-
         return MovieDetail.builder()
-//                .id(movie.getMovieId())
-//                .movie(movie)
                 .id(jsonObject.get("id").getAsLong())
                 .backdropPath(backdropPath)
                 .overview(overview)
@@ -163,25 +155,18 @@ public class SaveMovieDetail {
         for (JsonElement element : ottArray) {
             JsonObject ottObject = element.getAsJsonObject();
 
-            WatchProvider watchProvider = new WatchProvider();
             long providerId = ottObject.get("provider_id").getAsLong();
+            Optional<WatchProvider> watchProviderOptional = watchProviderRepository.findById(providerId);
 
-            if (watchProviderRepository.existsById(providerId)) {
-                watchProvider = watchProviderRepository.findById(providerId).get();
-            } else {
-                watchProvider.setProviderId(providerId);
-                watchProvider.setProviderName(ottObject.get("provider_name").getAsString());
-                watchProvider.setLogoPath(ottObject.get("logo_path").getAsString());
-                watchProviderRepository.save(watchProvider);
-            }
+            watchProviderOptional.ifPresent(watchProvider -> {
+                movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
 
-            movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
+                MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
+                movieDetailWatchProvider.setWatchProvider(watchProvider);
+                movieDetailWatchProvider.setMovieDetail(movieDetail);
 
-            MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
-            movieDetailWatchProvider.setWatchProvider(watchProvider);
-            movieDetailWatchProvider.setMovieDetail(movieDetail);
-
-            movieDetailWatchProviders.add(movieDetailWatchProvider);
+                movieDetailWatchProviders.add(movieDetailWatchProvider);
+            });
         }
 
         return movieDetailWatchProviders;
