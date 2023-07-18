@@ -85,4 +85,4 @@ jwt:
   refreshTokenExpirationMinutes: 420
 
 file:
-  path: /home/ubuntu/images
+  path: /home/ubuntu/images/
