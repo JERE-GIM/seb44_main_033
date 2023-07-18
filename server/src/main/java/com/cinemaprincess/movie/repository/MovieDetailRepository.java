@@ -11,6 +11,6 @@ import java.time.Month;
 import java.util.List;
 
 public interface MovieDetailRepository extends JpaRepository<MovieDetail,Long> {
-    @Query(value = "SELECT md FROM MovieDetail md WHERE function('SUBSTRING', md.releaseDate, 6, 2) = :month")
-    List<MovieDetail> findByReleaseDateMonth(String month, Pageable pageable);
+    @Query(value = "SELECT md FROM MovieDetail md WHERE SUBSTRING(md.releaseDate, 6, 2) = :month AND SUBSTRING(md.releaseDate, 1, 4) = :year")
+    List<MovieDetail> findByReleaseDateMonth(String year, String month, Pageable pageable);
 }

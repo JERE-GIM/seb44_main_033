@@ -83,9 +83,10 @@ public class MovieService {
 
     public List<Movie> findMonthlyMovies() {
         List<Movie> movies = new ArrayList<>();
+        String year = String.format("%04d", LocalDateTime.now().getYear());
         String month = String.format("%02d", LocalDateTime.now().getMonthValue());
 
-        List<MovieDetail> movieDetails = movieDetailRepository.findByReleaseDateMonth(month, PageRequest.of(0, 5));
+        List<MovieDetail> movieDetails = movieDetailRepository.findByReleaseDateMonth(year, month, PageRequest.of(0, 5));
 
         for (MovieDetail movieDetail : movieDetails) {
             Optional<Movie> movie = movieRepository.findById(movieDetail.getId());

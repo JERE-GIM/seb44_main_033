@@ -98,9 +98,9 @@ public class MovieController {
     public ResponseEntity initialize() {
         genreService.getGenreList();
         watchProviderService.getProviderList();
-//        saveMovieList.setDateMap();
+        saveMovieList.setDateMap();
 //        saveKoreaMovie.setDateMap();
-        saveLatestMovie.setDateMap();
+//        saveLatestMovie.setDateMap();
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -1,21 +1,18 @@
 package com.cinemaprincess.movie.save;
 
-import com.cinemaprincess.exception.BusinessLogicException;
-import com.cinemaprincess.exception.ExceptionCode;
 import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.genre.GenreCache;
 import com.cinemaprincess.genre.GenreRepository;
-import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
-import com.cinemaprincess.movie.vote.MovieVote;
-import com.cinemaprincess.review.entity.Review;
-import com.cinemaprincess.review.repository.ReviewRepository;
 import com.cinemaprincess.movie.watch_provider.WatchProvider;
+import com.cinemaprincess.movie.watch_provider.WatchProviderCache;
 import com.cinemaprincess.movie.watch_provider.WatchProviderRepository;
+import com.cinemaprincess.review.repository.ReviewRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,7 +26,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,6 +44,8 @@ public class SaveMovieDetail {
     private final WatchProviderRepository watchProviderRepository;
     private final ReviewRepository reviewRepository;
     private MovieDetail movieDetail;
+    private final GenreCache genreCache;
+    private final WatchProviderCache watchProviderCache;
 
     RestTemplate restTemplate = new RestTemplate();
 
@@ -126,7 +124,7 @@ public class SaveMovieDetail {
                 .map(JsonElement::getAsJsonObject)
                 .map(genreObject -> {
                     long genreId = genreObject.get("id").getAsLong();
-                    Genre genre = genreRepository.findById(genreId).orElse(null);
+                    Genre genre = genreCache.getGenreById(genreId);
                     movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
 
                     MovieDetailGenre movieDetailGenre = new MovieDetailGenre();
@@ -156,9 +154,9 @@ public class SaveMovieDetail {
             JsonObject ottObject = element.getAsJsonObject();
 
             long providerId = ottObject.get("provider_id").getAsLong();
-            Optional<WatchProvider> watchProviderOptional = watchProviderRepository.findById(providerId);
+            WatchProvider watchProvider = watchProviderCache.getProviderById(providerId);
 
-            watchProviderOptional.ifPresent(watchProvider -> {
+            if (watchProvider != null) {
                 movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
 
                 MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
@@ -166,7 +164,7 @@ public class SaveMovieDetail {
                 movieDetailWatchProvider.setMovieDetail(movieDetail);
 
                 movieDetailWatchProviders.add(movieDetailWatchProvider);
-            });
+            }
         }
 
         return movieDetailWatchProviders;

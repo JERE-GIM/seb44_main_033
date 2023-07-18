@@ -23,6 +23,7 @@ public class WatchProviderService {
     String key = "8799558ac2f2609cd5ff89aa63a87f10";
     RestTemplate restTemplate = new RestTemplate();
     private final WatchProviderRepository watchProviderRepository;
+    private final WatchProviderCache watchProviderCache;
 
     public String buildProviderUrl() {
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/watch/providers/movie")
@@ -37,6 +38,11 @@ public class WatchProviderService {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
             String responseBody = response.getBody();
             List<WatchProvider> watchProviders = parseProviderList(responseBody);
+
+            for (WatchProvider provider : watchProviders) {
+                watchProviderCache.addWatchProvider(provider);
+            }
+
             watchProviderRepository.saveAll(watchProviders);
         } catch (Exception e) {
             e.printStackTrace();
