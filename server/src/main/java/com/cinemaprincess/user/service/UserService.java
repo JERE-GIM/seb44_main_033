@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//import com.cinemaprincess.Image.entity.Image;
-//import com.cinemaprincess.Image.repository.ImageRepository;
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.user.dto.UserStatisticsDto;
