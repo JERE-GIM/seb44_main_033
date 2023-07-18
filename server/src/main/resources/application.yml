@@ -85,4 +85,4 @@ jwt:
   refreshTokenExpirationMinutes: 420
 
 file:
-  path: D:/workspace/
+  path: /home/ubuntu/images

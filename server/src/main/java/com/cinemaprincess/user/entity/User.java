@@ -15,7 +15,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.OneToOne;
 
-//import com.cinemaprincess.Image.entity.Image;
 import com.cinemaprincess.audit.Auditable;
 import com.cinemaprincess.watchlist.entity.Watchlist;
 
@@ -63,14 +62,17 @@ public class User extends Auditable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Watchlist watchlist;
 
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-//    private Image image;
+    private String provider;
 
-    public User(String email, String password, String username, List<String> roles) {
+    private String profileImgName;
+    private String profileImgPath;
+
+    public User(String email, String password, String username, List<String> roles, String provider) {
         this.email = email;
         this.password = password;
         this.username = username;
         this.roles = roles;
+        this.provider = provider;
     }
 
     public enum Gender {
