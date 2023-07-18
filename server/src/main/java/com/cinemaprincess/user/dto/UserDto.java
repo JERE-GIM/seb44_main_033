@@ -83,5 +83,7 @@ public class UserDto {
         private LocalDateTime modifiedAt;
         private List<Long> genre;
         private String provider;
+        private String profileImgName;
+        private String profileImgPath;
     }
 }

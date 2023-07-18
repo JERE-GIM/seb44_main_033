@@ -65,6 +65,7 @@ public class User extends Auditable {
     private String provider;
 
     private String profileImgName;
+
     private String profileImgPath;
 
     public User(String email, String password, String username, List<String> roles, String provider) {
