@@ -18,11 +18,11 @@ import {
   TextInput,
   TextInputContainer,
   TextInputLabel,
-  PasswordButton,
-  PasswordEditContainer,
 } from '../styles/UserInfoEditModal.styled';
+import { PasswordButton } from '../styles/PasswordEditForm.styled';
 import closeButton from '../../assets/closeButton.svg';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import PasswordEditForm from './PasswordEditForm';
 
 interface IUserInfo {
   username: string;
@@ -48,12 +48,8 @@ const genreValues = [
 
 export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
   const dispatch = useAppDispatch();
-  const [editPassword, setEditPassword] = useState({
-    status: false,
-    currentPassword: '',
-    newPassword: '',
-    newPasswordConfirm: '',
-  });
+
+  const [isEditPassword, setIsEditPassword] = useState(false);
   const [userInfo, setUserInfo] = useState<IUserInfo>({
     username: '',
     email: '',
@@ -76,21 +72,13 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
     // api 로직 추가
   };
 
-  const handleChangeUserInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setUserInfo({ ...userInfo, [name]: value });
-  };
-
-  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setEditPassword({ ...editPassword, [name]: value });
-  };
-
-  const handleUpdatePassword = () => {
-    if (editPassword.newPassword === editPassword.newPasswordConfirm)
-      console.log(editPassword);
-    // 유효성검사 dev merge 후 추가
-  };
+  const handleChangeUserInfo = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setUserInfo({ ...userInfo, [name]: value });
+    },
+    [userInfo],
+  );
 
   useEffect(() => {
     const { username, email, gender, age, genres } = user;
@@ -141,55 +129,11 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
             <div>
               <PasswordButton
                 type="button"
-                onClick={() =>
-                  setEditPassword((prev) => ({
-                    ...prev,
-                    status: !prev.status,
-                  }))
-                }
+                onClick={() => setIsEditPassword((prev) => !prev)}
               >
                 비밀번호 변경
               </PasswordButton>
-              {editPassword.status && (
-                <PasswordEditContainer>
-                  <TextInputContainer>
-                    <TextInputLabel htmlFor="currentPassword">
-                      현재 비밀번호
-                    </TextInputLabel>
-                    <TextInput
-                      type="password"
-                      id="currentPassword"
-                      name="currentPassword"
-                      onChange={handleChangePassword}
-                    />
-                  </TextInputContainer>
-                  <TextInputContainer>
-                    <TextInputLabel htmlFor="newPassword">
-                      새 비밀번호
-                    </TextInputLabel>
-                    <TextInput
-                      type="password"
-                      id="newPassword"
-                      name="newPassword"
-                      onChange={handleChangePassword}
-                    />
-                  </TextInputContainer>
-                  <TextInputContainer>
-                    <TextInputLabel htmlFor="newPasswordConfirm">
-                      새 비밀번호 확인
-                    </TextInputLabel>
-                    <TextInput
-                      type="password"
-                      id="newPasswordConfirm"
-                      name="newPasswordConfirm"
-                      onChange={handleChangePassword}
-                    />
-                  </TextInputContainer>
-                  <PasswordButton type="button" onClick={handleUpdatePassword}>
-                    변경 완료
-                  </PasswordButton>
-                </PasswordEditContainer>
-              )}
+              {isEditPassword && <PasswordEditForm />}
             </div>
           </InputContainer>
           <InputContainer>
