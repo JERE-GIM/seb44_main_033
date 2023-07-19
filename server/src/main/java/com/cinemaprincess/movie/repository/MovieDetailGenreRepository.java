@@ -11,8 +11,17 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface MovieDetailGenreRepository extends JpaRepository<MovieDetailGenre, Long> {
-    @Query("SELECT mdg.movieDetail FROM MovieDetailGenre mdg WHERE mdg.genre.genreId = :genreId AND mdg.movieDetail.id <> :movieId  ")
+    @Query("SELECT mdg.movieDetail FROM MovieDetailGenre mdg WHERE mdg.genre.genreId = :genreId AND mdg.movieDetail.id <> :movieId")
     List<MovieDetail> findSimilarMovieDetails(@Param("genreId") long genreId, @Param("movieId") long movieId, Pageable pageable);
+
+    @Query("SELECT mdg.movieDetail " +
+            "FROM MovieDetailGenre mdg " +
+            "JOIN mdg.movieDetail.movieVote mv " +
+            "WHERE mdg.genre.genreId = :genreId " +
+            "AND mdg.movieDetail.id <> :movieId " +
+            "AND mv.voteAverage >= 5 " +
+            "AND mv.voteCount >= 10")
+    List<MovieDetail> findSimilarMovieDetailsWithVote(@Param("genreId") long genreId, @Param("movieId") long movieId, Pageable pageable);
 
     List<MovieDetailGenre> findByMovieDetail(MovieDetail movieDetail);
 }

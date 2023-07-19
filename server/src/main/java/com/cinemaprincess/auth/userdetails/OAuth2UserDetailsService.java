@@ -7,7 +7,7 @@ import com.cinemaprincess.auth.userInfo.KakaoUserInfo;
 import com.cinemaprincess.auth.userInfo.NaverUserInfo;
 import com.cinemaprincess.auth.userInfo.OAuth2UserInfo;
 import com.cinemaprincess.auth.utils.CustomAuthorityUtils;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import com.cinemaprincess.user.entity.User;
 import com.cinemaprincess.user.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +59,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService {
 
         // DB 에 존재하지 않는 Email 이라면 회원가입 처리
         Optional<User> findUser = userRepository.findByEmail(email);
-        User user = findUser.orElseGet(() -> new User(email, password, username, roles));
+        User user = findUser.orElseGet(() -> new User(email, password, username, roles, provider));
         userRepository.save(user);
 
         return new UsersDetails(user, oAuth2User.getAttributes());

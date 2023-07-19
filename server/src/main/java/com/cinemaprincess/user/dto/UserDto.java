@@ -4,10 +4,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import com.cinemaprincess.response.PageInfo;
+import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.user.entity.User;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,15 +61,22 @@ public class UserDto {
     public static class PatchToPassword {
         private Long userId;
 
+        @NotBlank
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$",
                 message = "password 길이는 최소 8자 이상 최대 20자 이하, 숫자 1자 이상, 대소문자 구분없이 영문자 1자 이상, 특수문자 1자 이상 입력해 주세요.")
         private String password;
+
+        @NotBlank
+        @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$",
+                message = "password 길이는 최소 8자 이상 최대 20자 이하, 숫자 1자 이상, 대소문자 구분없이 영문자 1자 이상, 특수문자 1자 이상 입력해 주세요.")
+        private String newPassword;
     }
 
 
     //회원정보 응답
     @Setter
     @Getter
+    @Builder
     public static class Response {
         private Long userId;
         private String email;
@@ -75,5 +86,23 @@ public class UserDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private List<Long> genre;
+        private String provider;
+        private String profileImgName;
+        private String profileImgPath;
+        private List<ReviewResponseDto> reviews;
+    }
+
+    @Getter
+    public static class UserMultiResponseDto<T> {
+        private T data;
+        private List<ReviewResponseDto> reviews;
+        private PageInfo pageInfo;
+
+        public UserMultiResponseDto(T data, List<ReviewResponseDto> reviews, Page page) {
+            this.data = data;
+            this.reviews = reviews;
+            this.pageInfo = new PageInfo(page.getNumber() + 1,
+                    page.getSize(), page.getTotalElements(), page.getTotalPages());
+        }
     }
 }
