@@ -73,7 +73,10 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       return;
     }
     axios
-      .post('/login', formData)
+      .post(
+        'http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/login',
+        formData,
+      )
       .then((response) => {
         const accessToken = response.data.accessToken;
         dispatch(setAccessToken(accessToken));
