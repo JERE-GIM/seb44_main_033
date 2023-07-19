@@ -4,6 +4,7 @@ import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreCache;
 import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.entity.MovieDetailCache;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
@@ -46,14 +47,15 @@ public class SaveMovieDetail {
     private MovieDetail movieDetail;
     private final GenreCache genreCache;
     private final WatchProviderCache watchProviderCache;
+    private final MovieDetailCache movieDetailCache;
 
     RestTemplate restTemplate = new RestTemplate();
 
-    public String buildMovieDetailUrl(long movieId, String language) {
+    public String buildMovieDetailUrl(long movieId) {
         String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + movieId)
                 .queryParam("api_key", key)
-                .queryParam("language", language)
+                .queryParam("language", "ko")
                 .queryParam("append_to_response", "credits,videos,watch/providers,release_dates")
                 .build()
                 .toUriString();
@@ -75,6 +77,19 @@ public class SaveMovieDetail {
 //            }
         } catch (Exception e) {
             e.printStackTrace();
+        MovieDetail movieDetail = movieDetailCache.getMovieDetailById(movieId);
+        if (movieDetail == null) {
+            try {
+                String url = buildMovieDetailUrl(movieId);
+                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+                String responseBody = response.getBody();
+                movieDetail = parseMovieDetail(responseBody);
+
+                // 캐시에 저장
+                movieDetailCache.addMovieDetail(movieDetail);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return movieDetail;
     }

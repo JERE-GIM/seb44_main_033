@@ -10,9 +10,9 @@ import com.cinemaprincess.movie.save.SaveLatestMovie;
 import com.cinemaprincess.movie.save.SaveMovieDetail;
 import com.cinemaprincess.movie.save.SaveMovieList;
 import com.cinemaprincess.movie.service.MovieService;
+import com.cinemaprincess.movie.vote.SaveMovieVote;
 import com.cinemaprincess.movie.watch_provider.WatchProviderService;
 import com.cinemaprincess.response.MovieMultiResponseDto;
-import com.cinemaprincess.response.MultiResponseDto;
 import com.cinemaprincess.response.SingleResponseDto;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.review.repository.ReviewRepository;
@@ -38,6 +38,10 @@ public class MovieController {
     private final SaveMovieList saveMovieList;
     private final SaveKoreaMovie saveKoreaMovie;
     private final SaveLatestMovie saveLatestMovie;
+
+    //    private final SaveKoreaMovie saveKoreaMovie;
+//    private final SaveLatestMovie saveLatestMovie;
+    private final SaveMovieVote movieVote;
     private final GenreService genreService;
     private final WatchProviderService watchProviderService;
 
@@ -53,6 +57,24 @@ public class MovieController {
         movieDetailResponseDto.setSimilarMovies(movieService.getSimilarMovies(movieId));
 
         return new ResponseEntity<>(new MovieMultiResponseDto<>(movieDetailResponseDto, responseDtos, reviewPage), HttpStatus.OK);
+    }
+
+    // 신작
+    @GetMapping("/new")
+    public ResponseEntity getNewMovies() {
+        List<Movie> movies = movieService.findMovieListByKeyword("now_playing");
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
+    }
+
+    // 인기작
+    @GetMapping("/popular")
+    public ResponseEntity getPopularMovies() {
+        List<Movie> movies = movieService.findMovieListByKeyword("top_rated");
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
     }
 
     // 개봉 예정
@@ -91,17 +113,34 @@ public class MovieController {
         List<Movie> movies = movieService.findMonthlyMovies();
 
         return new ResponseEntity<>(
+    public ResponseEntity getUpcomingMovies() {
+        List<Movie> movies = movieService.findMovieListByKeyword("upcoming");
+
+        return new ResponseEntity<>(
                 new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
     }
 
-    @GetMapping("/save")
+    @GetMapping("/monthly")
+    public ResponseEntity getMonthlyMovies() {
+        List<Movie> movies = movieService.findMonthlyMovies();
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
+    }
+
+    @PostMapping("/save")
     public ResponseEntity initialize() {
         genreService.getGenreList();
         watchProviderService.getProviderList();
         saveMovieList.setDateMap();
 //        saveKoreaMovie.setDateMap();
 //        saveLatestMovie.setDateMap();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    @PostMapping("/save/vote")
+    public ResponseEntity saveVote() {
+        movieVote.getMovieVote();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
