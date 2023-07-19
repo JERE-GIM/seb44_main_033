@@ -53,10 +53,8 @@ public class MovieService {
                 .toUriString();
     }
 
-    public Page<Movie> findMovieListByKeyword(int page, int size, String keyword) {
+    public List<Movie> findMovieListByKeyword(String keyword) {
         List<Movie> movies = new ArrayList<>();
-        Pageable pageable = PageRequest.of(page, size);
-
         try {
             String url = buildMovieUrl(keyword);
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
@@ -76,9 +74,7 @@ public class MovieService {
             e.printStackTrace();
         }
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), movies.size());
-        return new PageImpl<>(movies.subList(start,end), pageable, movies.size());
+        return movies;
     }
 
     public List<Movie> findMonthlyMovies() {

@@ -5,14 +5,12 @@ import com.cinemaprincess.movie.dto.MovieDetailResponseDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.mapper.MovieMapper;
-import com.cinemaprincess.movie.save.SaveKoreaMovie;
-import com.cinemaprincess.movie.save.SaveLatestMovie;
 import com.cinemaprincess.movie.save.SaveMovieDetail;
 import com.cinemaprincess.movie.save.SaveMovieList;
 import com.cinemaprincess.movie.service.MovieService;
+import com.cinemaprincess.movie.vote.SaveMovieVote;
 import com.cinemaprincess.movie.watch_provider.WatchProviderService;
 import com.cinemaprincess.response.MovieMultiResponseDto;
-import com.cinemaprincess.response.MultiResponseDto;
 import com.cinemaprincess.response.SingleResponseDto;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.review.repository.ReviewRepository;
@@ -23,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -36,8 +33,9 @@ public class MovieController {
     private final ReviewRepository reviewRepository;
     private final ReviewService reviewService;
     private final SaveMovieList saveMovieList;
-    private final SaveKoreaMovie saveKoreaMovie;
-    private final SaveLatestMovie saveLatestMovie;
+    //    private final SaveKoreaMovie saveKoreaMovie;
+//    private final SaveLatestMovie saveLatestMovie;
+    private final SaveMovieVote movieVote;
     private final GenreService genreService;
     private final WatchProviderService watchProviderService;
 
@@ -55,35 +53,31 @@ public class MovieController {
         return new ResponseEntity<>(new MovieMultiResponseDto<>(movieDetailResponseDto, responseDtos, reviewPage), HttpStatus.OK);
     }
 
+    // 신작
+    @GetMapping("/new")
+    public ResponseEntity getNewMovies() {
+        List<Movie> movies = movieService.findMovieListByKeyword("now_playing");
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
+    }
+
+    // 인기작
+    @GetMapping("/popular")
+    public ResponseEntity getPopularMovies() {
+        List<Movie> movies = movieService.findMovieListByKeyword("top_rated");
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
+    }
+
     // 개봉 예정
     @GetMapping("/upcoming")
-    public ResponseEntity getUpcomingMovies(@Positive @RequestParam int page,
-                                           @Positive @RequestParam int size) {
-        Page<Movie> pageMovies = movieService.findMovieListByKeyword(page - 1, size, "upcoming");
-        List<Movie> movies = pageMovies.getContent();
+    public ResponseEntity getUpcomingMovies() {
+        List<Movie> movies = movieService.findMovieListByKeyword("upcoming");
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies), pageMovies), HttpStatus.OK);
-    }
-
-    @GetMapping("/new")
-    public ResponseEntity getNewMovies(@Positive @RequestParam int page,
-                                           @Positive @RequestParam int size) {
-        Page<Movie> pageMovies = movieService.findMovieListByKeyword(page - 1, size, "now_playing");
-        List<Movie> movies = pageMovies.getContent();
-
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies), pageMovies), HttpStatus.OK);
-    }
-
-    @GetMapping("/popular")
-    public ResponseEntity getPopularMovies(@Positive @RequestParam int page,
-                                           @Positive @RequestParam int size) {
-        Page<Movie> pageMovies = movieService.findMovieListByKeyword(page - 1, size, "top_rated");
-        List<Movie> movies = pageMovies.getContent();
-
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies), pageMovies), HttpStatus.OK);
+                new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
     }
 
     @GetMapping("/monthly")
@@ -94,14 +88,19 @@ public class MovieController {
                 new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
     }
 
-    @GetMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity initialize() {
         genreService.getGenreList();
         watchProviderService.getProviderList();
         saveMovieList.setDateMap();
 //        saveKoreaMovie.setDateMap();
 //        saveLatestMovie.setDateMap();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    @PostMapping("/save/vote")
+    public ResponseEntity saveVote() {
+        movieVote.getMovieVote();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

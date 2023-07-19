@@ -3,6 +3,8 @@ package com.cinemaprincess.movie;
 
 import com.cinemaprincess.helper.MovieTestHelper;
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetailCache;
+import com.cinemaprincess.movie.save.SaveMovieDetail;
 import com.cinemaprincess.movie.save.SaveMovieList;
 import com.cinemaprincess.movie.watch_provider.WatchProvider;
 import com.cinemaprincess.movie.watch_provider.WatchProviderRepository;
@@ -32,6 +34,12 @@ public class MovieTest implements MovieTestHelper {
 
     @Autowired
     private WatchProviderRepository watchProviderRepository;
+
+    @Autowired
+    private SaveMovieDetail saveMovieDetail;
+
+    @Autowired
+    private MovieDetailCache movieDetailCache;
 
     @Test
     @DisplayName("페이지 수 구하는 메서드 테스트, 응답 요청 시간")
@@ -76,5 +84,13 @@ public class MovieTest implements MovieTestHelper {
         List<WatchProvider> watchProviders = watchProviderRepository.findAll();
 
         assertNotNull(watchProviders);
+    }
+
+    @Test
+    @DisplayName("MovieDetail 캐시 저장 테스트")
+    public void testMovieDetailCache() {
+        saveMovieDetail.getMovieDetail(155);
+
+        assertThat(152, is(equalTo(movieDetailCache.getMovieDetailById(155L).getRuntime())));
     }
 }
