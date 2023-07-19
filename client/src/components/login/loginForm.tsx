@@ -23,6 +23,7 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
+import jwt_decode from 'jwt-decode';
 
 const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -76,7 +77,9 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       .then((response) => {
         const accessToken = response.data.accessToken;
         dispatch(setAccessToken(accessToken));
-        localStorage.setItem('userId', accessToken);
+
+        const userId = UserIdFromAccessToken(accessToken);
+        localStorage.setItem('userId', userId);
 
         onClose();
         navigate('/');
@@ -84,6 +87,19 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       .catch(() => {
         alert('아이디와 비밀번호를 확인해주세요.');
       });
+  };
+  interface TokenPayload {
+    userId: string;
+  }
+  const UserIdFromAccessToken = (accessToken: string): string => {
+    try {
+      const tokenPayload: TokenPayload = jwt_decode(accessToken);
+      const userId = tokenPayload.userId;
+      return userId;
+    } catch (error) {
+      console.error('사용자 정보를 받아오는데 실패하였습니다:', error);
+      return '';
+    }
   };
 
   return (
