@@ -1,6 +1,5 @@
 package com.cinemaprincess.auth.userdetails;
 
-import com.cinemaprincess.auth.utils.CustomAuthorityUtils;
 import com.cinemaprincess.exception.BusinessLogicException;
 import com.cinemaprincess.exception.ExceptionCode;
 import com.cinemaprincess.user.entity.User;

@@ -2,7 +2,11 @@ package com.cinemaprincess.auth.config;
 
 import com.cinemaprincess.auth.filter.JwtAuthenticationFilter;
 import com.cinemaprincess.auth.filter.JwtVerificationFilter;
-import com.cinemaprincess.auth.handler.*;
+import com.cinemaprincess.auth.handler.OAuth2AuthenticationSuccessHandler;
+import com.cinemaprincess.auth.handler.UserAuthenticationSuccessHandler;
+import com.cinemaprincess.auth.handler.UserAuthenticationFailureHandler;
+import com.cinemaprincess.auth.handler.UserAccessDeniedHandler;
+import com.cinemaprincess.auth.handler.UserAuthenticationEntryPoint;
 import com.cinemaprincess.auth.userdetails.OAuth2UserDetailsService;
 import com.cinemaprincess.auth.utils.CustomAuthorityUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +26,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.cinemaprincess.auth.jwt.JwtTokenProvider;
 
 import java.util.List;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @RequiredArgsConstructor
@@ -76,6 +78,7 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://cinema-princess-s3-bucket.s3-website.ap-northeast-2.amazonaws.com/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000/"));
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Authorization");
