@@ -27,9 +27,6 @@ import {
   Loginmessage,
   Loginlink,
   OAuthbox,
-  KakaoLogo,
-  NaverLogo,
-  GoogleLogo,
   Container2page,
   UserInfoTitle,
   GenderBox,
@@ -56,6 +53,9 @@ import {
 import { RootState } from '../../redux/store';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import NaverLogin from '../login/Naverlogin';
+import KakaoLogin from '../login/Kakaologin';
+import GoogleLogin from '../login/Googlelogin';
 const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
   const { currentPage, username, email, password, gender, age, genres } =
@@ -169,6 +169,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         formData,
       )
       .then(() => {
+        alert('회원가입에 성공하였습니다.');
         onClose();
         navigate('/');
       })
@@ -208,22 +209,13 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <SignupButton onClick={handleNext}>다 음</SignupButton>
             <LoginmessageBox>
               <Loginmessage>Already haver an account?</Loginmessage>
-              <Loginlink>Login</Loginlink>
+              <Loginlink>Click Login</Loginlink>
             </LoginmessageBox>
             <div>or</div>
             <OAuthbox>
-              <KakaoLogo
-                src={process.env.PUBLIC_URL + '/images/Kakao.png'}
-                alt="Kakao"
-              />
-              <NaverLogo
-                src={process.env.PUBLIC_URL + '/images/Naver.png'}
-                alt="Naver"
-              />
-              <GoogleLogo
-                src={process.env.PUBLIC_URL + '/images/Google.png'}
-                alt="Google"
-              />
+              <KakaoLogin />
+              <NaverLogin />
+              <GoogleLogin />
             </OAuthbox>
           </Container1page>
         )}

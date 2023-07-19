@@ -16,14 +16,14 @@ import {
   Signupmessage,
   Signuplink,
   OAuthbox,
-  KakaoLogo,
-  NaverLogo,
-  GoogleLogo,
 } from '../styles/LoginForm.styled';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
 import jwt_decode from 'jwt-decode';
+import NaverLogin from './Naverlogin';
+import KakaoLogin from './Kakaologin';
+import GoogleLogin from './Googlelogin';
 
 const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -120,22 +120,13 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <LoginButton onClick={handleLogin}>로그인</LoginButton>
         <SignupmessageBox>
           <Signupmessage>Don&apos;t have an account?</Signupmessage>
-          <Signuplink>Sign up</Signuplink>
+          <Signuplink>Click Sign up</Signuplink>
         </SignupmessageBox>
         <div>or</div>
         <OAuthbox>
-          <KakaoLogo
-            src={process.env.PUBLIC_URL + '/images/Kakao.png'}
-            alt="Kakao"
-          />
-          <NaverLogo
-            src={process.env.PUBLIC_URL + '/images/Naver.png'}
-            alt="Naver"
-          />
-          <GoogleLogo
-            src={process.env.PUBLIC_URL + '/images/Google.png'}
-            alt="Google"
-          />
+          <KakaoLogin />
+          <NaverLogin />
+          <GoogleLogin />
         </OAuthbox>
       </ModalContainer>
     </ModalBackground>
