@@ -21,18 +21,15 @@ import java.util.List;
 })
 public class Movie {
     @Id
-    private Long movieId;
+    private long movieId;
 
     private String title;
 
     private String posterPath;
 
-    private float voteAverage;
-
-    private float popularity;
-
     @OneToOne(mappedBy = "movie", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private MovieDetail movieDetail;
+
     @OneToMany(mappedBy = "movie")
     private List<WatchlistMovie> watchlistMovies = new ArrayList<>();
 

@@ -71,6 +71,7 @@ public interface MovieMapper {
                     watchProviderDto.setProviderId(movieDetailWatchProvider.getWatchProvider().getProviderId());
                     watchProviderDto.setProviderName(movieDetailWatchProvider.getWatchProvider().getProviderName());
                     watchProviderDto.setLogoPath(movieDetailWatchProvider.getWatchProvider().getLogoPath());
+                    watchProviderDto.setLink(movieDetailWatchProvider.getWatchProvider().getLink());
                     return watchProviderDto;
                 })
                 .collect(Collectors.toList());

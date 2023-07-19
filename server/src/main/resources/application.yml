@@ -84,6 +84,9 @@ jwt:
   key: team033team033team033team033team033team033team033team033
   accessTokenExpirationMinutes: 30
   refreshTokenExpirationMinutes: 420
+  
+tmdb:
+  key: 8799558ac2f2609cd5ff89aa63a87f10
 
 file:
   path: /home/ubuntu/images/

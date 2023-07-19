@@ -36,7 +36,6 @@ public class UserDto {
         private String username;
 
         private List<Long> genre;
-        private String provider;
     }
 
     //회원정보 수정

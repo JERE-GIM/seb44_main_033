@@ -11,16 +11,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UsersDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final CustomAuthorityUtils customAuthorityUtils;
-
 
     // 유저 이름(username)에 해당하는 정보(email)를 DB 에서 조회하여
     // UserDetails 인터페이스 구현체 객체 리턴

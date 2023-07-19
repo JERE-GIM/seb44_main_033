@@ -48,6 +48,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         UsersDetails usersDetails = (UsersDetails) authentication.getPrincipal();
 
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", usersDetails.getUserId());
         claims.put("username", usersDetails.getEmail());
         claims.put("roles", usersDetails.getRoles());
 
@@ -77,7 +78,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         return UriComponentsBuilder
                 .newInstance()
-                .fromUriString("http://cinemaprincess.shop")
+                .fromUriString("http://localhost:3000")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
