@@ -7,14 +7,14 @@ import {
 } from '../../styles/monthmovie/Monthcard';
 
 interface Props {
-  poster: string;
+  posterPath: string;
 }
 
-const MonthCard: React.FC<Props> = ({ poster }) => (
+const MonthCard: React.FC<Props> = ({ posterPath }) => (
   <Container>
     <Base>
       <ImageWrapper>
-        <Image src={poster} alt="포스터" />
+        <Image src={`https://image.tmdb.org/t/p/w200/${posterPath}`} />
       </ImageWrapper>
     </Base>
   </Container>
