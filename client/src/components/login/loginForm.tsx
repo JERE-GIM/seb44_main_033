@@ -23,6 +23,7 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
+
 const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
   const { email, password } = useSelector((state: RootState) => state.signup);
@@ -31,6 +32,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
+
   // 이메일
   const isEmailValid = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -74,6 +76,8 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       .then((response) => {
         const accessToken = response.data.accessToken;
         dispatch(setAccessToken(accessToken));
+
+        localStorage.setItem('userId', accessToken);
 
         onClose();
         navigate('/');

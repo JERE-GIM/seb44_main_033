@@ -12,16 +12,17 @@ import {
   MovieItem,
   MovieImage,
 } from '../styles/watchlist/WatchDrop.styled';
+import { WatchBookmark } from './WatchBookMark';
 
 //dummy
-import { ITop, dummyTopMovie } from '../../dummy/dummyTop';
+import { ITop, dummyWatch } from '../../dummy/dummyWatch';
 
 export default function WatchDrop() {
-  const [isOpen, setIsopen] = useState<boolean>(false);
+  const [isOpen, setIsopen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string>('이름순');
-  const [sortedMovies, setSortedMovies] = useState<ITop[]>(dummyTopMovie);
+  const [sortedMovies, setSortedMovies] = useState<ITop[]>(dummyWatch);
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState(1);
 
   const onToggle = () => setIsopen(!isOpen);
   const onOptionClicked = (value: string) => () => {
@@ -39,11 +40,11 @@ export default function WatchDrop() {
         setTimeout(() => {
           const start = page * 4;
           const end = start + 4;
-          if (start >= dummyTopMovie.length) {
+          if (start >= dummyWatch.length) {
             setIsLoading(false);
             return;
           }
-          const newData = dummyTopMovie.slice(start, end);
+          const newData = dummyWatch.slice(start, end);
           setSortedMovies((prevMovies) => [...prevMovies, ...newData]);
           setIsLoading(false);
           setPage((prevPage) => prevPage + 1);
@@ -60,21 +61,28 @@ export default function WatchDrop() {
   //필터기능
   useEffect(() => {
     if (selectedOption === '이름순') {
-      const sortedByTitle = [...dummyTopMovie].sort((a, b) =>
+      const sortedByTitle = [...dummyWatch].sort((a, b) =>
         a.title.localeCompare(b.title),
       );
       setSortedMovies(sortedByTitle.slice(0, 12));
     } else if (selectedOption === '신작순') {
-      const sortedByOpenAt = [...dummyTopMovie].sort(
+      const sortedByOpenAt = [...dummyWatch].sort(
         (a, b) => new Date(b.openat).getTime() - new Date(a.openat).getTime(),
       );
       setSortedMovies(sortedByOpenAt.slice(0, 12));
     } else {
-      setSortedMovies(dummyTopMovie.slice(0, 12));
+      setSortedMovies(dummyWatch.slice(0, 12));
     }
     setPage(1);
   }, [selectedOption]);
 
+  //북마크 클릭 영화 제거
+  const handleBookmarkClick = (movieId: string) => {
+    setSortedMovies((prevMovies) => {
+      const updatedMovies = prevMovies.filter((movie) => movie.id !== movieId);
+      return updatedMovies;
+    });
+  };
   return (
     <>
       <Title>찜한영화</Title>
@@ -98,7 +106,10 @@ export default function WatchDrop() {
       <Container>
         {sortedMovies.map((movie) => (
           <MovieItem key={movie.id}>
-            <MovieImage src={movie.poster} alt={movie.title} />
+            <div style={{ position: 'relative' }}>
+              <MovieImage src={movie.poster} alt={movie.title} />
+              <WatchBookmark movieId={movie.id} onClick={handleBookmarkClick} />
+            </div>
             <p>{movie.title}</p>
             <p>{movie.openat}</p>
           </MovieItem>

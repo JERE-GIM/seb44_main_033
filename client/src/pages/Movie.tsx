@@ -29,6 +29,16 @@ import {
   ReviewList,
   PrevButtonTransformed,
   NextButtonTransformed,
+  MovieRecommend,
+  RecommendList,
+  RecommentListItem,
+  SectionTitle,
+  MovieOTTInfo,
+  OTTContainer,
+  OTTImage,
+  OTTText,
+  MovieHeader,
+  MovieDescription,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import elementalPoster from '../assets/elemental_poster.png';
@@ -39,6 +49,8 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 import Slider from 'react-slick';
+import Card from '../components/main/movierank/Card';
+import defaultPoster from '../assets/default_poster.png';
 
 export default function Movie() {
   // 더미데이터 사용
@@ -95,7 +107,10 @@ export default function Movie() {
     <>
       <MovieCover>
         <MovieCoverImage src={elementalCover} alt="cover image" />
-        <MovieTitle>{movie.title}</MovieTitle>
+        <MovieHeader>
+          <MovieTitle>{movie.title}</MovieTitle>
+          <MovieDescription>{movie.overview}</MovieDescription>
+        </MovieHeader>
         <StarsContainer onClick={handleOpenReviewModal}>
           <Rating rating={rating} setRating={setRating} />
         </StarsContainer>
@@ -183,14 +198,51 @@ export default function Movie() {
         </MovieDetailCol>
       </MovieDetail>
       <MovieReviews>
+        <SectionTitle>코멘트</SectionTitle>
         <ReviewList>
           <Slider {...SLIDE_SETTINGS}>
-            {dummyReviews.map((review) => (
-              <ReviewListitem key={review.id} review={review} />
+            {dummyReviews.map((review, index) => (
+              <ReviewListitem key={review.id + index} review={review} />
             ))}
           </Slider>
         </ReviewList>
       </MovieReviews>
+      <MovieOTTInfo>
+        <SectionTitle>보러가기</SectionTitle>
+        {movie.watchProviders.map((provider) => (
+          <OTTContainer key={provider.providerId}>
+            <OTTImage
+              src={`https://image.tmdb.org/t/p/w200/${provider.logoPath}`}
+            />
+            <OTTText
+              to={provider.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {provider.providerName}
+            </OTTText>
+          </OTTContainer>
+        ))}
+      </MovieOTTInfo>
+      <MovieRecommend>
+        <SectionTitle>비슷한 영화 추천</SectionTitle>
+        <RecommendList>
+          {movie.similarMovies.map((similarMovie, index) => (
+            <RecommentListItem key={similarMovie.movieId + index}>
+              <Card
+                poster={
+                  similarMovie.posterPath
+                    ? `https://image.tmdb.org/t/p/w200/${similarMovie.posterPath}`
+                    : defaultPoster
+                }
+                title={similarMovie.title}
+                country={'미국'}
+                openat={Number(similarMovie.releaseDate.slice(0, 4))}
+              />
+            </RecommentListItem>
+          ))}
+        </RecommendList>
+      </MovieRecommend>
       {modal.status && modal.role === MODAL_ROLE.REVIEW_WRITE && (
         <ReviewRegisterModal
           movie={movie}

@@ -12,11 +12,13 @@ import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.*;
 
 @Service
@@ -38,9 +43,9 @@ public class MovieService {
     private final MovieMapper movieMapper;
     RestTemplate restTemplate = new RestTemplate();
 
-    public String buildUpcomingMovieUrl() {
+    public String buildMovieUrl(String keyword) {
         String key = "8799558ac2f2609cd5ff89aa63a87f10";
-        return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/upcoming")
+        return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + keyword)
                 .queryParam("api_key", key)
                 .queryParam("language", "ko")
                 .queryParam("region", "kr")
@@ -48,11 +53,14 @@ public class MovieService {
                 .toUriString();
     }
 
-    public Page<Movie> findUpcomingMovies() {
+    public Page<Movie> findMovieListByKeyword(int page, int size, String keyword) {
         List<Movie> movies = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page, size);
 
+    public List<Movie> findMovieListByKeyword(String keyword) {
+        List<Movie> movies = new ArrayList<>();
         try {
-            String url = buildUpcomingMovieUrl();
+            String url = buildMovieUrl(keyword);
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
             String responseBody = response.getBody();
 
@@ -60,13 +68,53 @@ public class MovieService {
             JsonObject jsonObject = jsonParser.parse(responseBody).getAsJsonObject();
             JsonArray resultsArray = jsonObject.getAsJsonArray("results");
 
-
+            for (JsonElement element : resultsArray) {
+                JsonObject resultsObject = element.getAsJsonObject();
+                long movieId = resultsObject.get("id").getAsLong();
+                Optional<Movie> movie = movieRepository.findById(movieId);
+                movie.ifPresent(movies::add);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return new PageImpl<>(movies);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), movies.size());
+        return new PageImpl<>(movies.subList(start,end), pageable, movies.size());
     }
+
+    public List<Movie> findMonthlyMovies() {
+        List<Movie> movies = new ArrayList<>();
+        String year = String.format("%04d", LocalDateTime.now().getYear());
+        String month = String.format("%02d", LocalDateTime.now().getMonthValue());
+
+        List<MovieDetail> movieDetails = movieDetailRepository.findByReleaseDateMonth(year, month, PageRequest.of(0, 5));
+
+        for (MovieDetail movieDetail : movieDetails) {
+            Optional<Movie> movie = movieRepository.findById(movieDetail.getId());
+            movie.ifPresent(movies::add);
+        }
+
+        return movies;
+    }
+
+        return movies;
+    }
+
+    public List<Movie> findMonthlyMovies() {
+        List<Movie> movies = new ArrayList<>();
+        String year = String.format("%04d", LocalDateTime.now().getYear());
+        String month = String.format("%02d", LocalDateTime.now().getMonthValue());
+
+        List<MovieDetail> movieDetails = movieDetailRepository.findByReleaseDateMonth(year, month, PageRequest.of(0, 5));
+
+        for (MovieDetail movieDetail : movieDetails) {
+            Optional<Movie> movie = movieRepository.findById(movieDetail.getId());
+            movie.ifPresent(movies::add);
+        }
+
+        return movies;
+    }
+
 
     public List<MovieDto.Response> getSimilarMovies(long movieId) {
         MovieDetail movieDetail = findVerifiedMovie(movieId);
@@ -74,7 +122,7 @@ public class MovieService {
         MovieDetailGenre movieDetailGenre = movieDetailGenreRepository.findByMovieDetail(movieDetail).get(0);
         long genreId = movieDetailGenre.getGenre().getGenreId();
 
-        List<MovieDetail> similarMovieDetails = movieDetailGenreRepository.findSimilarMovieDetails(genreId, movieId, Pageable.ofSize(10));
+        List<MovieDetail> similarMovieDetails = movieDetailGenreRepository.findSimilarMovieDetailsWithVote(genreId, movieId, Pageable.ofSize(10));
 
         // 유사 영화 DTO 리스트 생성
         List<MovieDto.Response> similarMovieDTOs = new ArrayList<>();

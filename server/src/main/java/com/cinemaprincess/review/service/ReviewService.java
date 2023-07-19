@@ -113,6 +113,13 @@ public class ReviewService {
         return new PageImpl<>(reviewDtos, reviewPage.getPageable(), reviewPage.getTotalElements());
     }
 
+    public Page<ReviewResponseDto> findReviewsByUserId(long userId, int page) {
+        Page<Review> reviewPage = reviewRepository.findByMovieDetail_Id(userId, PageRequest.of(page, 40));
+        List<ReviewResponseDto> reviewDtos = mapper.reviewsToReviewResponseDtos(reviewPage.getContent());
+
+        return new PageImpl<>(reviewDtos, reviewPage.getPageable(), reviewPage.getTotalElements());
+    }
+
     public void updateMovieVote(MovieDetail movieDetail, int oldScore, int newScore, int voteChange) {
         MovieVote movieVote = movieVoteRepository.findById(movieDetail.getId()).get();
         float voteAverage = movieVote.getVoteAverage();
