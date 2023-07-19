@@ -30,6 +30,7 @@ export default function Header() {
   const handleLogout = () => {
     setusername('');
     dispatch(logout());
+    localStorage.removeItem('userId');
     navigate('/');
   };
   const handleLoginModalOpen = () => {
