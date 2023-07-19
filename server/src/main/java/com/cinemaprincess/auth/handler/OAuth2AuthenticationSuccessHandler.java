@@ -77,7 +77,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         return UriComponentsBuilder
                 .newInstance()
-                .fromUriString("http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080")
+                .fromUriString("http://cinemaprincess.shop")
                 .queryParams(queryParams)
                 .build()
                 .toUri();

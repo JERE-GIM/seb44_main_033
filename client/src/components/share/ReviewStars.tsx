@@ -6,14 +6,13 @@ import {
   Star,
 } from '../styles/ReviewStars.styled';
 import halfStarIcon from '../../assets/halfStarIcon.png';
+import { ratingValues } from './Rating';
 
 interface IStars {
   rating: number;
 }
 
 export default function ReviewStars({ rating }: IStars) {
-  const ratingValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
   return (
     <Background>
       {ratingValues.map((ratingValue) => {

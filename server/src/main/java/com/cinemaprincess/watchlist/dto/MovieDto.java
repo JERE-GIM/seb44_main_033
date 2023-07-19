@@ -10,5 +10,8 @@ import java.time.LocalDateTime;
 public class MovieDto {
     private Long watchlistId;
     private Long movieId;
+    private String posterPath;
+    private String title;
+    private String releaseDate;
     private LocalDateTime createdAt;
 }

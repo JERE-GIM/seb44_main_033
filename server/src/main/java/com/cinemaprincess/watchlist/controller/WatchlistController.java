@@ -13,12 +13,11 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/mypage/watchlist")
 public class WatchlistController {
     private final WatchlistService watchlistService;
 
     // Watchlist Movie 추가
-    @PostMapping("/{user-id}/{movie-id}")
+    @PostMapping("/movies/{movie-id}/{user-id}")
     public ResponseEntity postWatchlist(@PathVariable("user-id") @Positive Long userId,
                                         @PathVariable("movie-id") @Positive Long movieId) {
         watchlistService.addMovieToWatchlist(userId, movieId);
@@ -27,15 +26,24 @@ public class WatchlistController {
     }
 
     // Watchlist 조회
-    @GetMapping("/{user-id}")
+    @GetMapping("/users/mypage/watchlist/{user-id}")
     public ResponseEntity getWatchList(@PathVariable("user-id") @Positive Long userId) {
         WatchlistDto watchlistDto = watchlistService.findUserWatchlist(userId);
 
         return new ResponseEntity(watchlistDto, HttpStatus.OK);
     }
 
-    // Watchlist Movie 개별 삭제
-    @DeleteMapping("/{user-id}/{movie-id}")
+    // MovieDetail Page 에서 Watchlist Movie 개별 삭제
+    @DeleteMapping("/movies/{movie-id}/{user-id}")
+    public ResponseEntity deleteWatchListFromMoviePage(@PathVariable("user-id") @Positive Long userId,
+                                          @PathVariable("movie-id") @Positive Long movieId) {
+        watchlistService.deleteMovieFromWatchlist(userId, movieId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+    }
+
+    // user 의 Watchlist Page 에서  Watchlist Movie 개별 삭제
+    @DeleteMapping("/users/mypage/watchlist/{movie-id}/{user-id}")
     public ResponseEntity deleteWatchList(@PathVariable("user-id") @Positive Long userId,
                                           @PathVariable("movie-id") @Positive Long movieId) {
         watchlistService.deleteMovieFromWatchlist(userId, movieId);
@@ -43,11 +51,12 @@ public class WatchlistController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
     }
 
+    // 미사용 기능
     // Watchlist Movie 전체 삭제
-    @DeleteMapping("/{user-id}")
-    public ResponseEntity deleteAllWatchList(@PathVariable("user-id") @Positive Long userId) {
-        watchlistService.deleteAllMovieFromWatchlist(userId);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
-    }
+//    @DeleteMapping("/{user-id}")
+//    public ResponseEntity deleteAllWatchList(@PathVariable("user-id") @Positive Long userId) {
+//        watchlistService.deleteAllMovieFromWatchlist(userId);
+//
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+//    }
 }
