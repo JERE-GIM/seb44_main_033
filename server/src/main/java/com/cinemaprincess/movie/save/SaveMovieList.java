@@ -229,8 +229,8 @@ public class SaveMovieList {
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
     public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("1950-01-01");
-        LocalDate endDate = LocalDate.parse("1976-12-31");
+        LocalDate startDate = LocalDate.parse("2022-01-01");
+        LocalDate endDate = LocalDate.parse("2023-12-31");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         while (startDate.isBefore(endDate.plusDays(1))) {
