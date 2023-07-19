@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
+    Optional<User> findByUsername(String username);
     User findByUserId(Long userId);
     @Query("SELECT u FROM User u WHERE u.gender = :genderEnum AND u.age >= :minAge AND u.age <= :maxAge")
     List<User> findByAgeRangeAndGender(@Param("genderEnum") User.Gender gender,

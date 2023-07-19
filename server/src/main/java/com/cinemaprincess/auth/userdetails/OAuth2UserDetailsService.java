@@ -57,7 +57,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService {
 
         // DB 에 존재하지 않는 Email 이라면 회원가입 처리
         Optional<User> findUser = userRepository.findByEmail(email);
-        User user = findUser.orElseGet(() -> new User(email, password, username, roles));
+        User user = findUser.orElseGet(() -> new User(email, password, username, roles, provider));
         userRepository.save(user);
 
         return new UsersDetails(user, oAuth2User.getAttributes());

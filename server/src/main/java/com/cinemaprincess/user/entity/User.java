@@ -62,11 +62,18 @@ public class User extends Auditable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Watchlist watchlist;
 
-    public User(String email, String password, String username, List<String> roles) {
+    private String provider;
+
+    private String profileImgName;
+
+    private String profileImgPath;
+
+    public User(String email, String password, String username, List<String> roles, String provider) {
         this.email = email;
         this.password = password;
         this.username = username;
         this.roles = roles;
+        this.provider = provider;
     }
 
     public enum Gender {

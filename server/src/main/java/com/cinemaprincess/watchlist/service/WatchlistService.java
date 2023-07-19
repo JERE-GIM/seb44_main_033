@@ -107,6 +107,9 @@ public class WatchlistService {
             dto.setWatchlistId(watchlist.getWatchlistId());
             dto.setMovieId(watchlistMovie.getMovie().getMovieId());
             dto.setCreatedAt(watchlistMovie.getCreatedAt());
+            dto.setTitle(watchlistMovie.getMovie().getTitle());
+            dto.setPosterPath(watchlistMovie.getMovie().getPosterPath());
+            dto.setReleaseDate(watchlistMovie.getMovie().getMovieDetail().getReleaseDate());
             dtoList.add(dto);
         }
 

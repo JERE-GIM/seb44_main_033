@@ -36,6 +36,7 @@ public class UserDto {
         private String username;
 
         private List<Long> genre;
+        private String provider;
     }
 
     //회원정보 수정
@@ -57,9 +58,15 @@ public class UserDto {
     public static class PatchToPassword {
         private Long userId;
 
+        @NotBlank
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$",
                 message = "password 길이는 최소 8자 이상 최대 20자 이하, 숫자 1자 이상, 대소문자 구분없이 영문자 1자 이상, 특수문자 1자 이상 입력해 주세요.")
         private String password;
+
+        @NotBlank
+        @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$",
+                message = "password 길이는 최소 8자 이상 최대 20자 이하, 숫자 1자 이상, 대소문자 구분없이 영문자 1자 이상, 특수문자 1자 이상 입력해 주세요.")
+        private String newPassword;
     }
 
 
@@ -75,5 +82,8 @@ public class UserDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private List<Long> genre;
+        private String provider;
+        private String profileImgName;
+        private String profileImgPath;
     }
 }
