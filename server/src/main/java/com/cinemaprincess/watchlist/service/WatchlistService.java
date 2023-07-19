@@ -82,7 +82,6 @@ public class WatchlistService {
         Watchlist watchlist = user.getWatchlist();
         List<MovieDto> dtoList = findMovieFromWatchlist(userId);
 
-        // mapper 사용하는법 공부 필요함....
         WatchlistDto watchlistDto = new WatchlistDto();
         watchlistDto.setWatchlistId(watchlist.getWatchlistId());
         watchlistDto.setUserId(watchlist.getUser().getUserId());
@@ -100,7 +99,6 @@ public class WatchlistService {
 
         List<WatchlistMovie> watchlistMovies = watchlist.getWatchlistMovies();
 
-        // mapper 사용하는법 공부 필요함....
         List<MovieDto> dtoList = new ArrayList<>();
         for(WatchlistMovie watchlistMovie : watchlistMovies) {
             MovieDto dto = new MovieDto();

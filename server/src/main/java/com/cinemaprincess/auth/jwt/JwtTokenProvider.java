@@ -37,6 +37,7 @@ public class JwtTokenProvider {
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    // AccessToken 생성
     public String generateAccessToken(Map<String, Object> claims,
                                       String subject,
                                       Date expiration,
@@ -52,6 +53,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // RefreshToken 생성
     public String generateRefreshToken(String subject, Date expiration, String base64EncodedSecretKey) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
 
@@ -70,6 +72,7 @@ public class JwtTokenProvider {
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jws);
+
         return claims;
     }
 

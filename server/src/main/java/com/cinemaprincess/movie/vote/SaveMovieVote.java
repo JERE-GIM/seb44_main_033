@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -78,6 +80,12 @@ public class SaveMovieVote {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return movieVote;
+    }
+
+    public List<Long> getExistingMovieIds(List<Long> movieIds) {
+        // findByIdIn 메소드를 사용하여 존재하는 movieId들을 반환
+        return movieVoteRepository.findByIdIn(movieIds);
 
         executorService.shutdown();
     }

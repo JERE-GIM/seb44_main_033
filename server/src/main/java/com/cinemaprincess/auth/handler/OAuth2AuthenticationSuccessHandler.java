@@ -48,6 +48,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         UsersDetails usersDetails = (UsersDetails) authentication.getPrincipal();
 
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", usersDetails.getUserId());
         claims.put("username", usersDetails.getEmail());
         claims.put("roles", usersDetails.getRoles());
 
@@ -72,12 +73,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("access_token", accessToken);
+        queryParams.add("access_token", "Bearer " + accessToken);
         queryParams.add("refresh_token", refreshToken);
 
         return UriComponentsBuilder
                 .newInstance()
-                .fromUriString("http://cinemaprincess.shop")
+                .fromUriString("http://localhost:3000")
                 .queryParams(queryParams)
                 .build()
                 .toUri();

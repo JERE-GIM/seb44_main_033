@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//import com.cinemaprincess.Image.entity.Image;
-//import com.cinemaprincess.Image.repository.ImageRepository;
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.user.dto.UserStatisticsDto;
@@ -78,9 +76,9 @@ public class UserService {
     // password 수정
     public User updatePasswordToUser(User user, String newPassword) {
         User findUser = findVerifiedUser(user.getUserId());
-        String currentPassword = findUser.getPassword(); // 현재 비밀번호
-        String checkPassword = user.getPassword(); // 현재 비밀번호 확인
-        String changePassword = newPassword; // 새로운 비밀번호
+        String currentPassword = findUser.getPassword(); // DB에 저장된 비밀번호
+        String checkPassword = user.getPassword(); // 입력받은 현재 비밀번호
+        String changePassword = newPassword; // 입력받은 새로운 비밀번호
 
         // DB 에 저장된 현재 user 의 비밀번호와 입력받은 현재 비밀번호가 일치한다면 비밀번호 수정, 틀릴 시 예외처리
         if(passwordEncoder.matches(checkPassword, currentPassword)) {

@@ -62,6 +62,21 @@ public class SaveMovieDetail {
     }
 
     public MovieDetail getMovieDetail(long movieId) {
+        try {
+            String url = buildMovieDetailUrl(movieId, "ko");
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+            String responseBody = response.getBody();
+            movieDetail = parseMovieDetail(responseBody);
+
+//            if (movieDetail != null && movieDetail.getOverview().isEmpty()) { // 한글 개요가 없을때 영어 개요 가져오기
+//                url = buildMovieDetailUrl(movieId, "en");
+//                response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+//                responseBody = response.getBody();
+//                String overview = parseOverview(responseBody);
+//                movieDetail.setOverview(overview);
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
         MovieDetail movieDetail = movieDetailCache.getMovieDetailById(movieId);
         if (movieDetail == null) {
             try {

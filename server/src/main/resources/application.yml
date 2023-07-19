@@ -74,6 +74,7 @@ logging:
       springframework:
         orm:
           jpa: DEBUG
+
 server:
   servlet:
     encoding:
@@ -84,6 +85,9 @@ jwt:
   accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
   refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}
   
+tmdb:
+  key: ${TMDB_KEY}
+
 tmdb:
   key: ${TMDB_KEY}
 

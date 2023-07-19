@@ -76,6 +76,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       .then((response) => {
         const accessToken = response.data.accessToken;
         dispatch(setAccessToken(accessToken));
+
         localStorage.setItem('userId', accessToken);
 
         onClose();

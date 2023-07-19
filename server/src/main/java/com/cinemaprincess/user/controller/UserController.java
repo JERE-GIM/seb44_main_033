@@ -2,14 +2,15 @@ package com.cinemaprincess.user.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
-import com.cinemaprincess.exception.BusinessLogicException;
-import com.cinemaprincess.exception.ExceptionCode;
-import com.cinemaprincess.genre.GenreService;
+import com.cinemaprincess.review.dto.ReviewResponseDto;
+import com.cinemaprincess.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final ReviewService reviewService;
 
     // 회원가입
     @PostMapping("/signup")
@@ -75,10 +77,15 @@ public class UserController {
 
     // 회원 조회
     @GetMapping("/users/mypage/{user-id}")
-    public ResponseEntity getUser(@PathVariable("user-id") @Positive Long userId) {
+    public ResponseEntity getUser(@PathVariable("user-id") @Positive Long userId,
+                                  @RequestParam(value = "page", defaultValue = "1") int page) {
         User user = userService.findUser(userId);
+        Page<ReviewResponseDto> reviewPage = reviewService.findReviewsByUserId(userId, page - 1);
+        List<ReviewResponseDto> reviews = reviewPage.getContent();
 
-        return new ResponseEntity<>(userMapper.userToResponse(user), HttpStatus.OK);
+        UserDto.Response response = userMapper.userToReviewResponseDto(user);
+
+        return new ResponseEntity<>(new UserDto.UserMultiResponseDto<>(response, reviews, reviewPage), HttpStatus.OK);
     }
 
     // 회원 탈퇴
