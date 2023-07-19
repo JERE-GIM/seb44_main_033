@@ -6,6 +6,7 @@ import com.cinemaprincess.movie.service.MovieService;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.review.service.ReviewService;
 import com.cinemaprincess.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RestController
 @Validated
 @RequestMapping("/statistics")
+@RequiredArgsConstructor
 public class StatisticsController {
 
     private final ReviewService reviewService;
@@ -29,19 +31,7 @@ public class StatisticsController {
     private final MovieService movieService;
     private final GenreService genreService;
 
-    /*
-        DI
-    */
-
-    public StatisticsController(ReviewService reviewService, UserService userService, MovieService movieService, GenreService genreService) {
-        this.reviewService = reviewService;
-        this.userService = userService;
-        this.movieService = movieService;
-        this.genreService = genreService;
-    }
-
-//TODO: 결제 구현시 인터셉터 추가...
-
+    // TODO: 결제 구현시 인터셉터 추가...
 
     /*
         사용자들의 연령별, 성별별 선호 장르 통계
@@ -55,36 +45,18 @@ public class StatisticsController {
 
     /*
         일/주/월별 가장 많이 리뷰를 받은 영화들의 순위
+    */
     @GetMapping("/reviews")
     public ResponseEntity getTopReviewedMovies(@RequestParam("period") String period) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.searchMoviesWithReviewsByPeriod(period));
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getMoviesWithReviewsByPeriod(period));
     }
-    */
 
     /*
         연도별 가장 많이 개봉된 장르 차트
+    */
     @GetMapping("/genres")
-    public ResponseEntity getGenresByYear(int year) {
-        return ResponseEntity.status(HttpStatus.OK).body(genreService.searchGenresByYear(year));
+    public ResponseEntity getGenresByYear(@RequestParam("year") int year) {
+        return ResponseEntity.status(HttpStatus.OK).body(genreService.getGenresByYear(year));
     }
-    */
-
-    /*
-    ===============개발보류===============
-    @GetMapping("/watchlists")
-    public ResponseEntity getWatchlistsByPeriod() {
-        return ResponseEntity.status(HttpStatus.OK).body(watchlistService.searchWatchlists);
-    }
-
-    @GetMapping("/views")
-    public ResponseEntity getViewsOfMoviesByPeriod() {
-        return ResponseEntity.status(HttpStatus.OK).body(movieService.searchViewsOfMovies);
-    }
-
-    @GetMapping("/otts")
-    public ResponseEntity getOttsByPeriod() {
-        return ResponseEntity.status(HttpStatus.OK).body(ottService.searchOtts);
-    }
-    */
 
 }

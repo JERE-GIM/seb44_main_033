@@ -1,6 +1,6 @@
 package com.cinemaprincess.movie.entity;
 
-import com.cinemaprincess.watch_provider.WatchProvider;
+import com.cinemaprincess.movie.watch_provider.WatchProvider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

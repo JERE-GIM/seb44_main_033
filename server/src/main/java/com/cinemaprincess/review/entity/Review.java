@@ -32,6 +32,8 @@ public class Review {
     private String content;
     @Column(nullable = false)
     private int score;
+    @Column(nullable = false)
+    private int votesCount;
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(nullable = false)
@@ -49,5 +51,13 @@ public class Review {
     private MovieDetail movieDetail;
     public long getMovieId(){
         return movieDetail.getId();
+    }
+
+    public void updateVoteCount(boolean voted){
+        if(voted){
+            votesCount++;
+        } else {
+            votesCount--;
+        }
     }
 }

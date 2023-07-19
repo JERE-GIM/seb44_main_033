@@ -4,5 +4,6 @@ public interface TopReviewedMoviesResponse {
     String getTitle();
     String getPosterPath();
     String getReleaseDate();
+    String getOverview();
     int getReviewCount();
 }

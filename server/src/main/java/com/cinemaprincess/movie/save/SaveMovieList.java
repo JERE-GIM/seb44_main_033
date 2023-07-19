@@ -2,10 +2,10 @@ package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.vote.MovieVote;
+import com.cinemaprincess.movie.vote.MovieVoteRepository;
+import com.cinemaprincess.movie.vote.SaveMovieVote;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,6 +39,8 @@ import java.util.stream.StreamSupport;
 public class SaveMovieList {
     private final MovieJdbcRepository movieJdbcRepository;
     private final SaveMovieDetail saveMovieDetail;
+    private final SaveMovieVote saveMovieVote;
+    private final MovieVoteRepository movieVoteRepository;
 
     RestTemplate restTemplate = new RestTemplate();
     LinkedHashMap<String, String> dateMap = new LinkedHashMap<>();
@@ -85,18 +87,26 @@ public class SaveMovieList {
 
             List<Movie> allMovies = combinedFuture.get();
 
-            movieJdbcRepository.saveMovies(allMovies); // DB에 저장
-            log.info("Movie 저장 완료");
+            movieJdbcRepository.saveMovies(allMovies);
 
             List<MovieDetail> movieDetails = new ArrayList<>();
             log.info("Movie_detail 저장 시작");
             for (Movie movie : allMovies) {
                 MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
+                movieDetail.setMovie(movie);
                 movieDetails.add(movieDetail);
             }
             movieJdbcRepository.saveMovieDetails(movieDetails);
-//
+
+            log.info("MovieDetail 저장 완료");
             for (MovieDetail movieDetail : movieDetails) {
+                // 무비보트에서 무비아이디가 이미 존재하는지 확인
+                boolean movieVoteExists = saveMovieVote.checkMovieVoteExists(movieDetail.getId());
+                if (!movieVoteExists) {
+                    // 존재하지 않는 경우에만 실행
+                    MovieVote movieVote = saveMovieVote.getMovieVote(movieDetail.getId());
+                    movieDetail.setMovieVote(movieVote);
+                }
                 movieJdbcRepository.saveMovieDetailGenres(movieDetail.getMovieDetailGenres());
 //                movieJdbcRepository.saveMovieDetailWatchProviders(movieDetail.getMovieDetailWatchProviders());
             }
@@ -166,8 +176,8 @@ public class SaveMovieList {
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
     public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("2023-07-19");
-        LocalDate endDate = LocalDate.parse("2023-07-20");
+        LocalDate startDate = LocalDate.parse("2023-05-01");
+        LocalDate endDate = LocalDate.parse("2023-12-31");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         while (startDate.isBefore(endDate.plusDays(1))) {

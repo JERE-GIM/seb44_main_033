@@ -3,12 +3,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import isLoginReducer from './reducers/isLogin';
 import signupReducer from './reducers/singupSlice';
 import modalReducer from './reducers/modal';
-
+import authReducer from './reducers/authSlice';
 const store = configureStore({
   reducer: {
     isLogin: isLoginReducer,
     signup: signupReducer,
     modal: modalReducer,
+    auth: authReducer,
   },
 });
 

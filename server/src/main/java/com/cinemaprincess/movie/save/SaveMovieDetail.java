@@ -9,10 +9,11 @@ import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
+import com.cinemaprincess.movie.vote.MovieVote;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.review.repository.ReviewRepository;
-import com.cinemaprincess.watch_provider.WatchProvider;
-import com.cinemaprincess.watch_provider.WatchProviderRepository;
+import com.cinemaprincess.movie.watch_provider.WatchProvider;
+import com.cinemaprincess.movie.watch_provider.WatchProviderRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,10 +27,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -77,7 +77,11 @@ public class SaveMovieDetail {
             e.printStackTrace();
         }
 //        movieJdbcRepository.saveMovieDetail(movieDetail);
-        movieDetail.setReviews(reviewRepository.findByMovieDetail_Id(movieId));
+//        movieDetail.setReviews(reviewRepository.findByMovieDetail_Id(movieId));
+        List<Long> movieDetailIds = Collections.singletonList(movieDetail.getId());
+        List<Review> reviews = reviewRepository.findByMovieDetail_IdIn(movieDetailIds);
+        movieDetail.setReviews(reviews);
+
         return movieDetail;
     }
 
@@ -104,11 +108,12 @@ public class SaveMovieDetail {
 
         String releaseDate = parseReleaseDate(jsonObject);
 
-        Movie movie = movieRepository.findById(jsonObject.get("id").getAsLong()).get();
+//        Movie movie = movieRepository.findById(jsonObject.get("id").getAsLong()).get();
 
         return MovieDetail.builder()
-                .id(movie.getMovieId())
-                .movie(movie)
+//                .id(movie.getMovieId())
+//                .movie(movie)
+                .id(jsonObject.get("id").getAsLong())
                 .backdropPath(backdropPath)
                 .overview(overview)
                 .runtime(jsonObject.get("runtime").getAsInt())

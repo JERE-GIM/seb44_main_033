@@ -1,7 +1,11 @@
 package com.cinemaprincess.genre;
 
+import com.cinemaprincess.movie.dto.MovieStatisticsDto;
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.entity.MovieDetailGenre;
 import com.cinemaprincess.movie.repository.MovieRepository;
+import com.cinemaprincess.user.dto.UserStatisticsDto;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,19 +69,11 @@ public class GenreService {
 
         return genres;
     }
-/*
-    public Map<String, Integer> searchGenresByYear(int year) {
-        // 2023년 개봉 모든 영화들의 목록 불러오기
+    public Map<String, Long> getGenresByYear(int year) {
         List<Movie> movies = movieRepository.getMoviesByYear(year);
-        System.out.println("성공~!");
-        for( Movie movie : movies){
-            System.out.println(movie.getMovieId());
-        }
-        // 장르별로 분류하기 스트림 이용
-        Map<String, Integer> movieCount = new HashMap<>();
-        // movieCount에 넣기
-
-        return movieCount;
+        return movies.stream()
+                .flatMap(movie -> movie.getMovieDetail().getMovieDetailGenres().stream())
+                .map(movieDetailGenre -> movieDetailGenre.getGenre().getGenreName())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
-  */
 }
