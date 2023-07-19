@@ -21,36 +21,36 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://cinemaprincess-db.cs2fh6hlv7up.ap-northeast-2.rds.amazonaws.com:13306/test
-    username: root
-    password: 12345678
+    url: ${SQL_URL}
+    username: ${SQL_USERNAME}
+    password: ${SQL_PASSWORD}
 
   security:
     oauth2:
       client:
         registration:
           google:
-            clientId: 665056397916-c7bf8852rg8tpsrssnf5nbqv8q5v10va.apps.googleusercontent.com
-            clientSecret: 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
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_SECRET}
             scope:
               - email
 
           kakao:
-            clientId: af3226b758eb5aad6d425db0445c13d7
-            clientSecret: 59wb3hhtZ7kKeARzIjGW6PvxOxtqe9oy
+            clientId: ${KAKAO_CLIENT_ID}
+            clientSecret: ${KAKAO_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: "http://cinemaprincess.shop/login/oauth2/code/kakao"
+            redirectUri: ${KAKAO_REDIRECT}
             scope:
               - account_email
             clientName: Kakao
 
           naver:
-            clientId: kf2OUTY3_j68eCBWML9c
-            clientSecret: O2wLr6v208
+            clientId: ${NAVER_CLIENT_ID}
+            clientSecret: ${NAVER_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: "http://cinemaprincess.shop/login/oauth2/code/naver"
+            redirectUri: ${NAVER_REDIRECT}
             scope:
               - email
             clientName: Naver
@@ -81,12 +81,12 @@ server:
       force-response: true
 
 jwt:
-  key: team033team033team033team033team033team033team033team033
-  accessTokenExpirationMinutes: 30
-  refreshTokenExpirationMinutes: 420
-  
+  key: ${JWT_KEY}
+  accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
+  refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}
+
 tmdb:
-  key: 8799558ac2f2609cd5ff89aa63a87f10
+  key: ${TMDB_KEY}
 
 file:
-  path: /home/ubuntu/images/
+  path: ${IMAGE_PATH}

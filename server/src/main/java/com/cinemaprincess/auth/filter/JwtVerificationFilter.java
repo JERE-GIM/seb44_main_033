@@ -22,7 +22,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 
 
-// Client 에서 전송하는  Authorization header 의 AccessToken 검증
+// Client 에서 전송하는 Authorization header 의 AccessToken 검증
 @RequiredArgsConstructor
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
