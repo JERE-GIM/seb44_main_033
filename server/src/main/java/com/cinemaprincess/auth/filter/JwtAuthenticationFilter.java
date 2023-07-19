@@ -57,14 +57,14 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
     private String delegateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getUserId());
         claims.put("username", user.getEmail());
         claims.put("roles", user.getRoles());
 
         String subject = user.getEmail();
-        Date expiration = jwtTokenProvider.getTokenExpiration(jwtTokenProvider.getAccessTokenExpirationMinutes());
 
         String base64EncodedSecretKey = jwtTokenProvider.encodeBase64SecretKey(jwtTokenProvider.getSecretKey());
-
+        Date expiration = jwtTokenProvider.getTokenExpiration(jwtTokenProvider.getAccessTokenExpirationMinutes());
         String accessToken = jwtTokenProvider.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
 
         return accessToken;
@@ -72,9 +72,9 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
     private String delegateRefreshToken(User user) {
         String subject = user.getEmail();
-        Date expiration = jwtTokenProvider.getTokenExpiration(jwtTokenProvider.getRefreshTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenProvider.encodeBase64SecretKey(jwtTokenProvider.getSecretKey());
 
+        String base64EncodedSecretKey = jwtTokenProvider.encodeBase64SecretKey(jwtTokenProvider.getSecretKey());
+        Date expiration = jwtTokenProvider.getTokenExpiration(jwtTokenProvider.getRefreshTokenExpirationMinutes());
         String refreshToken = jwtTokenProvider.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
         return refreshToken;

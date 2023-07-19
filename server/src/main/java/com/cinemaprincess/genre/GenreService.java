@@ -11,14 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GenreService {
     String key = "8799558ac2f2609cd5ff89aa63a87f10";
     private final GenreRepository genreRepository;
+    private final GenreCache genreCache;
     RestTemplate restTemplate = new RestTemplate();
 
     public String buildGenreListUrl() {
@@ -35,6 +38,12 @@ public class GenreService {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
             String responseBody = response.getBody();
             List<Genre> genres = parseGenreList(responseBody);
+
+            // 장르를 캐시에 추가
+            for (Genre genre : genres) {
+                genreCache.addGenre(genre);
+            }
+
             genreRepository.saveAll(genres);
         } catch (Exception e) {
             e.printStackTrace();

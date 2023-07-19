@@ -1,16 +1,21 @@
 package com.cinemaprincess.user.controller;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
-import com.cinemaprincess.genre.GenreService;
+import com.cinemaprincess.review.dto.ReviewResponseDto;
+import com.cinemaprincess.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.cinemaprincess.user.dto.UserDto;
@@ -28,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final ReviewService reviewService;
 
     // 회원가입
     @PostMapping("/signup")
@@ -62,18 +68,24 @@ public class UserController {
                                     @Valid @RequestBody UserDto.PatchToPassword patchToPasswordDto) {
         User user = userMapper.patchPasswordToUser(patchToPasswordDto);
         user.setUserId(userId);
+        String newPassword = patchToPasswordDto.getNewPassword();
 
-        userService.updatePasswordToUser(user);
+        userService.updatePasswordToUser(user, newPassword);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 회원 조회
     @GetMapping("/users/mypage/{user-id}")
-    public ResponseEntity getUser(@PathVariable("user-id") @Positive Long userId) {
+    public ResponseEntity getUser(@PathVariable("user-id") @Positive Long userId,
+                                  @RequestParam(value = "page", defaultValue = "1") int page) {
         User user = userService.findUser(userId);
+        Page<ReviewResponseDto> reviewPage = reviewService.findReviewsByUserId(userId, page - 1);
+        List<ReviewResponseDto> reviews = reviewPage.getContent();
 
-        return new ResponseEntity<>(userMapper.userToResponse(user), HttpStatus.OK);
+        UserDto.Response response = userMapper.userToReviewResponseDto(user);
+
+        return new ResponseEntity<>(new UserDto.UserMultiResponseDto<>(response, reviews, reviewPage), HttpStatus.OK);
     }
 
     // 회원 탈퇴
@@ -82,5 +94,23 @@ public class UserController {
         userService.deleteUser(userId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // 프로필 사진 업로드
+    @PostMapping("/users/mypage/edit/{user-id}/upload")
+    public ResponseEntity profileImgUpload(@PathVariable("user-id") @Positive Long userId,
+                                           @RequestPart(value="imgFile", required=false) MultipartFile imgFile) throws IOException {
+        User user = userService.findUser(userId);
+        userService.imgFileUpload(user, imgFile);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("users/mypage/edit/{user-id}/upload")
+    public ResponseEntity getProfileImg(@PathVariable("user-id") @Positive Long userId) throws IOException {
+        User user = userService.findUser(userId);
+        byte[] imageByteArray = userService.getImgFile(user);
+
+        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
     }
 }

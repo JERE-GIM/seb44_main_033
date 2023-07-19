@@ -8,6 +8,7 @@ import Watchlist from './pages/Watchlist';
 import Movie from './pages/Movie';
 import Search from './pages/Search';
 import Statistics from './pages/Statistics';
+import YearlyGenres from './pages/YearlyGenres';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { path: 'movie/:id', element: <Movie /> },
       { path: 'search', element: <Search /> },
       { path: 'statistics', element: <Statistics /> },
+      { path: 'statistics/genre', element: <YearlyGenres /> },
     ],
   },
 ]);

@@ -1,19 +1,19 @@
 package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.genre.GenreCache;
 import com.cinemaprincess.genre.GenreRepository;
-import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.entity.MovieDetailCache;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
-import com.cinemaprincess.movie.vote.MovieVote;
-import com.cinemaprincess.review.entity.Review;
-import com.cinemaprincess.review.repository.ReviewRepository;
 import com.cinemaprincess.movie.watch_provider.WatchProvider;
+import com.cinemaprincess.movie.watch_provider.WatchProviderCache;
 import com.cinemaprincess.movie.watch_provider.WatchProviderRepository;
+import com.cinemaprincess.review.repository.ReviewRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,7 +27,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,42 +45,37 @@ public class SaveMovieDetail {
     private final WatchProviderRepository watchProviderRepository;
     private final ReviewRepository reviewRepository;
     private MovieDetail movieDetail;
+    private final GenreCache genreCache;
+    private final WatchProviderCache watchProviderCache;
+    private final MovieDetailCache movieDetailCache;
 
     RestTemplate restTemplate = new RestTemplate();
 
-    public String buildMovieDetailUrl(long movieId, String language) {
+    public String buildMovieDetailUrl(long movieId) {
         String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + movieId)
                 .queryParam("api_key", key)
-                .queryParam("language", language)
+                .queryParam("language", "ko")
                 .queryParam("append_to_response", "credits,videos,watch/providers,release_dates")
                 .build()
                 .toUriString();
     }
 
     public MovieDetail getMovieDetail(long movieId) {
-        try {
-            String url = buildMovieDetailUrl(movieId, "ko");
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-            String responseBody = response.getBody();
-            movieDetail = parseMovieDetail(responseBody);
+        MovieDetail movieDetail = movieDetailCache.getMovieDetailById(movieId);
+        if (movieDetail == null) {
+            try {
+                String url = buildMovieDetailUrl(movieId);
+                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+                String responseBody = response.getBody();
+                movieDetail = parseMovieDetail(responseBody);
 
-            if (movieDetail != null && movieDetail.getOverview().isEmpty()) { // 한글 개요가 없을때 영어 개요 가져오기
-                url = buildMovieDetailUrl(movieId, "en");
-                response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-                responseBody = response.getBody();
-                String overview = parseOverview(responseBody);
-                movieDetail.setOverview(overview);
+                // 캐시에 저장
+                movieDetailCache.addMovieDetail(movieDetail);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-//        movieJdbcRepository.saveMovieDetail(movieDetail);
-//        movieDetail.setReviews(reviewRepository.findByMovieDetail_Id(movieId));
-        List<Long> movieDetailIds = Collections.singletonList(movieDetail.getId());
-        List<Review> reviews = reviewRepository.findByMovieDetail_IdIn(movieDetailIds);
-        movieDetail.setReviews(reviews);
-
         return movieDetail;
     }
 
@@ -108,11 +102,7 @@ public class SaveMovieDetail {
 
         String releaseDate = parseReleaseDate(jsonObject);
 
-//        Movie movie = movieRepository.findById(jsonObject.get("id").getAsLong()).get();
-
         return MovieDetail.builder()
-//                .id(movie.getMovieId())
-//                .movie(movie)
                 .id(jsonObject.get("id").getAsLong())
                 .backdropPath(backdropPath)
                 .overview(overview)
@@ -134,7 +124,7 @@ public class SaveMovieDetail {
                 .map(JsonElement::getAsJsonObject)
                 .map(genreObject -> {
                     long genreId = genreObject.get("id").getAsLong();
-                    Genre genre = genreRepository.findById(genreId).orElse(null);
+                    Genre genre = genreCache.getGenreById(genreId);
                     movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
 
                     MovieDetailGenre movieDetailGenre = new MovieDetailGenre();
@@ -163,25 +153,18 @@ public class SaveMovieDetail {
         for (JsonElement element : ottArray) {
             JsonObject ottObject = element.getAsJsonObject();
 
-            WatchProvider watchProvider = new WatchProvider();
             long providerId = ottObject.get("provider_id").getAsLong();
+            WatchProvider watchProvider = watchProviderCache.getProviderById(providerId);
 
-            if (watchProviderRepository.existsById(providerId)) {
-                watchProvider = watchProviderRepository.findById(providerId).get();
-            } else {
-                watchProvider.setProviderId(providerId);
-                watchProvider.setProviderName(ottObject.get("provider_name").getAsString());
-                watchProvider.setLogoPath(ottObject.get("logo_path").getAsString());
-                watchProviderRepository.save(watchProvider);
+            if (watchProvider != null) {
+                movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
+
+                MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
+                movieDetailWatchProvider.setWatchProvider(watchProvider);
+                movieDetailWatchProvider.setMovieDetail(movieDetail);
+
+                movieDetailWatchProviders.add(movieDetailWatchProvider);
             }
-
-            movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
-
-            MovieDetailWatchProvider movieDetailWatchProvider = new MovieDetailWatchProvider();
-            movieDetailWatchProvider.setWatchProvider(watchProvider);
-            movieDetailWatchProvider.setMovieDetail(movieDetail);
-
-            movieDetailWatchProviders.add(movieDetailWatchProvider);
         }
 
         return movieDetailWatchProviders;
@@ -280,5 +263,3 @@ public class SaveMovieDetail {
         return releaseDateOptional.orElse(releaseDate);
     }
 }
-
-

@@ -20,6 +20,7 @@ public class WatchProvider {
     private long providerId;
     private String providerName;
     private String logoPath;
+    private String link;
 
     @OneToMany(mappedBy = "watchProvider")
     private List<MovieDetailWatchProvider> movieDetailWatchProviders;

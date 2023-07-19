@@ -13,10 +13,10 @@ interface IStars {
   setRating: React.Dispatch<React.SetStateAction<number>>;
 }
 
+export const ratingValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
 export default function Stars({ rating, setRating }: IStars) {
   const [hoverValue, setHoverValue] = useState(0);
-
-  const ratingValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   return (
     <Background>
