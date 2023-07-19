@@ -83,6 +83,9 @@ jwt:
   key: ${JWT_KEY}
   accessTokenExpirationMinutes: ${ACCESS_EXPIRE_TIME}
   refreshTokenExpirationMinutes: ${REFRESH_EXPIRE_TIME}
+  
+tmdb:
+  key: ${TMDB_KEY}
 
 file:
   path: ${IMAGE_PATH}

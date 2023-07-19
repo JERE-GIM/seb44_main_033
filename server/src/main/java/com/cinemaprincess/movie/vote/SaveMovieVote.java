@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -43,11 +44,11 @@ public class SaveMovieVote {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return movieVoteRepository.save(movieVote);
+        return movieVote;
     }
 
-    public boolean checkMovieVoteExists(long movieId) {
-        Optional<MovieVote> existingMovieVote = movieVoteRepository.findById(movieId);
-        return existingMovieVote.isPresent();
+    public List<Long> getExistingMovieIds(List<Long> movieIds) {
+        // findByIdIn 메소드를 사용하여 존재하는 movieId들을 반환
+        return movieVoteRepository.findByIdIn(movieIds);
     }
 }
