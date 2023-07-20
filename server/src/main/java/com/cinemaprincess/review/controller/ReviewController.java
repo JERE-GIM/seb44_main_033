@@ -58,7 +58,13 @@ public class ReviewController {
 
         return new ResponseEntity<>(mapper.reviewToReviewResponseDto(review),HttpStatus.OK);
     }
+    @GetMapping("/{movie-id}/{user-id}")
+    public ResponseEntity getReviewByUserMovie(@PathVariable("movie-id") long movieId,
+                                               @PathVariable("user-id") long userId){
+        Review review = reviewService.findReviewByUserAndMovieDetail(userId,movieId);
 
+        return new ResponseEntity<>(mapper.reviewToReviewResponseDto(review),HttpStatus.OK);
+    }
     @GetMapping
     public ResponseEntity getReviews(@Positive @RequestParam int page,
                                        @Positive @RequestParam int size){

@@ -8,6 +8,8 @@ import Watchlist from './pages/Watchlist';
 import Movie from './pages/Movie';
 import Search from './pages/Search';
 import Statistics from './pages/Statistics';
+import YearlyGenres from './pages/YearlyGenres';
+import { OauthHandler } from './components/login/OauthHandler';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +24,8 @@ const router = createBrowserRouter([
       { path: 'movie/:id', element: <Movie /> },
       { path: 'search', element: <Search /> },
       { path: 'statistics', element: <Statistics /> },
+      { path: 'statistics/genre', element: <YearlyGenres /> },
+      { path: 'oauth2/redirect', element: <OauthHandler /> }, //추가
     ],
   },
 ]);

@@ -10,22 +10,20 @@ import {
 } from '../../styles/tabmovie/Tabcard.styled';
 
 interface Props {
-  poster: string;
+  posterPath: string;
   title: string;
-  openat: number;
-  country: string;
+  releaseDate: string;
 }
 
-const TabCard: React.FC<Props> = ({ poster, title, country, openat }) => (
+const TabCard: React.FC<Props> = ({ posterPath, title, releaseDate }) => (
   <Container>
     <Base>
       <ImageWrapper>
-        <Image src={poster} alt={`${title} 의 포스터`} />
+        <Image src={`https://image.tmdb.org/t/p/w200/${posterPath}`} />
       </ImageWrapper>
       <Info>
         <Title>{title}</Title>
-        <Keyword>{openat}</Keyword>
-        <Keyword>{country}</Keyword>
+        <Keyword>{releaseDate}</Keyword>
       </Info>
     </Base>
   </Container>
