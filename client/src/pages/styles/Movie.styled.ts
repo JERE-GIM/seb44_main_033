@@ -84,18 +84,17 @@ export const AverageRatingSpan = styled.span`
 `;
 
 export const MovieDetail = styled.section`
-  max-width: 1320px;
+  width: 1320px;
   display: flex;
   margin: 0 auto;
   padding-top: 20px;
 
   & > div:first-child {
     width: 280px;
-    background-color: navy;
   }
   & > div:last-child {
-    flex-grow: 1;
     margin-left: 20px;
+    flex-grow: 1;
   }
 `;
 
@@ -109,20 +108,18 @@ export const MoviePoster = styled.img`
 `;
 
 export const MovieInfo = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   margin-top: 20px;
   padding: 0 20px;
-  flex-grow: 1;
 `;
 
 export const MovieInfoContainer = styled.div`
   width: 100%;
   display: flex;
-`;
-
-export const MovieInfoCol = styled.div`
-  flex-grow: 1;
+  flex-direction: column;
 `;
 
 export const MovieInfoText = styled.div`
@@ -138,6 +135,7 @@ export const MovieInfoSpan = styled.span`
 `;
 
 export const MyReviewContainer = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -188,7 +186,7 @@ export const MyReviewControlButton = styled.button`
 `;
 
 export const MovieReviews = styled.section`
-  max-width: 1320px;
+  width: 1320px;
   margin: 0 auto;
   margin-top: 50px;
 `;
@@ -197,6 +195,12 @@ export const ReviewList = styled.ul`
   .slick-active:not(:first-child) {
     padding-left: 10px;
   }
+`;
+
+export const NonSlider = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
 `;
 
 export const PrevButtonTransformed = styled(PrevButton)`

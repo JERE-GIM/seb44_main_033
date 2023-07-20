@@ -70,7 +70,7 @@ export default function Mypage() {
         <SectionHeader>나의 리뷰</SectionHeader>
         <ReviewList>
           {dummyReviews.map((review) => (
-            <ReviewListitem key={review.id} review={review} />
+            <ReviewListitem key={review.reviewId} review={review} />
           ))}
         </ReviewList>
       </MyReviews>
