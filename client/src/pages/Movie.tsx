@@ -72,12 +72,17 @@ export default function Movie() {
       });
   };
 
+  const fetchMoviePageData = () => {
+    fetchMovieInfo();
+    fetchMyReview();
+  };
+
   // api 요청 함수
   const deleteMyReview = () => {
     if (myReview)
       requestDeleteMyReview(myReview.reviewId).then(() => {
         dispatch(modalAction.close());
-        fetchMyReview();
+        fetchMoviePageData();
       });
   };
 
@@ -88,8 +93,7 @@ export default function Movie() {
 
   useEffect(() => {
     if (movieId) {
-      fetchMovieInfo();
-      fetchMyReview();
+      fetchMoviePageData();
     }
   }, []);
 
@@ -185,7 +189,7 @@ export default function Movie() {
               myReview={myReview}
               rating={rating}
               setRating={setRating}
-              callback={fetchMyReview}
+              callback={fetchMoviePageData}
             />
           )}
           {modal.status && modal.role === MODAL_ROLE.REVIEW_DELETE && (
