@@ -16,6 +16,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<MovieSearchResultDto> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     Movie findByMovieId(Long movieId);
+    Movie findByTitle(String movieNm);
 /*
     @Query("SELECT DISTINCT m FROM Movie m JOIN FETCH m.reviews r WHERE DATE(r.createdAt) = DATE(:today)")
     List<Movie> findTopReviewedMovies(@Param("today") LocalDateTime today);

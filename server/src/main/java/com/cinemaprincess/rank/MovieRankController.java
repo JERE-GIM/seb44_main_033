@@ -8,11 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,12 +45,22 @@ public class MovieRankController {
             log.info("순위: " + dailyBoxOffice.getRank());
             log.info("영화 제목: " + dailyBoxOffice.getMovieNm());
             log.info("개봉 일자: " + dailyBoxOffice.getOpenDt());
+            log.info("누적 관객수: " + dailyBoxOffice.getAudiAcc());
             //여기서 dailyBoxOffice를 movierank로 변환시켜서 저장
-            movieRankService.saveMovieRank(dailyBoxOffice.getRank(), dailyBoxOffice.movieNm, dailyBoxOffice.openDt);
+            movieRankService.saveMovieRank(dailyBoxOffice.getRank(), dailyBoxOffice.movieNm,
+                    dailyBoxOffice.openDt, dailyBoxOffice.audiAcc);
         }
 
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<MovieRankDto>> getMovieRankList(@RequestParam int page,
+                                                               @RequestParam int size){
+        Pageable pageable = PageRequest.of(page-1,size);
+        Page<MovieRankDto> movieRankPage = movieRankService.getMovieRankList(pageable);
+        return new ResponseEntity<>(movieRankPage,HttpStatus.OK);
     }
 
     @Data
