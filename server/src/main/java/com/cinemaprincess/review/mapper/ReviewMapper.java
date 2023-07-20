@@ -1,6 +1,5 @@
 package com.cinemaprincess.review.mapper;
 
-import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.review.dto.ReviewPatchDto;
 import com.cinemaprincess.review.dto.ReviewPostDto;
@@ -8,7 +7,6 @@ import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.user.entity.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -25,6 +23,7 @@ public interface ReviewMapper {
         Review review = new Review();
         MovieDetail movieDetail = new MovieDetail();
         User user = new User();
+
         movieDetail.setId(reviewPostDto.getMovieId());
         user.setUserId(reviewPostDto.getUserId());
 
@@ -32,20 +31,24 @@ public interface ReviewMapper {
         review.setScore(reviewPostDto.getScore());
         review.setMovieDetail(movieDetail);
         review.setUser(user);
+
         return review;
     }
 
     default ReviewResponseDto reviewToReviewResponseDto(Review review) {
         ReviewResponseDto responseDto = new ReviewResponseDto();
+
         responseDto.setReviewId(review.getReviewId());
         responseDto.setUserId(review.getUserId());
         responseDto.setMovieId(review.getMovieId());
+        responseDto.setMovieTitle(review.getMovieDetail().getMovie().getTitle());
         responseDto.setScore(review.getScore());
         responseDto.setContent(review.getContent());
         responseDto.setUsername(review.getUser().getUsername());
         responseDto.setVotesCount(review.getVotesCount());
         responseDto.setCreatedAt(String.valueOf(review.getCreatedAt()));
         responseDto.setModifiedAt(String.valueOf(review.getModifiedAt()));
+
         return responseDto;
     }
 }

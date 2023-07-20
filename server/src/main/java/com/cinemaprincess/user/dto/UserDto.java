@@ -89,7 +89,6 @@ public class UserDto {
         private String provider;
         private String profileImgName;
         private String profileImgPath;
-        private List<ReviewResponseDto> reviews;
     }
 
     @Getter

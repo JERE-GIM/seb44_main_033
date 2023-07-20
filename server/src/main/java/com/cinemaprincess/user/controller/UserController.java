@@ -83,7 +83,7 @@ public class UserController {
         Page<ReviewResponseDto> reviewPage = reviewService.findReviewsByUserId(userId, page - 1);
         List<ReviewResponseDto> reviews = reviewPage.getContent();
 
-        UserDto.Response response = userMapper.userToReviewResponseDto(user);
+        UserDto.Response response = userMapper.userToResponseDto(user);
 
         return new ResponseEntity<>(new UserDto.UserMultiResponseDto<>(response, reviews, reviewPage), HttpStatus.OK);
 

@@ -82,7 +82,7 @@ server:
 
 jwt:
   key: team033team033team033team033team033team033team033team033
-  accessTokenExpirationMinutes: 30
+  accessTokenExpirationMinutes: 120
   refreshTokenExpirationMinutes: 420
 
 tmdb:

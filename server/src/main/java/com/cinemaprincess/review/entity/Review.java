@@ -30,6 +30,7 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long reviewId;
+    private String movieTitle;
     @Column(nullable = false)
     private String content;
     @Column(nullable = false)
