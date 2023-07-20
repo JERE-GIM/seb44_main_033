@@ -86,7 +86,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         navigate('/');
       })
       .catch(() => {
-        alert('아이디와 비밀번호를 확인해주세요.');
+        alert('아이디와 비밀번호를 확인해주세요');
       });
   };
   interface TokenPayload {
