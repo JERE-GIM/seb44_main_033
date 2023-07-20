@@ -57,7 +57,7 @@ public class WatchlistService {
 
         // Watchlist 가 비어있다면 생성
         if (watchlist == null) {
-            watchlist = createWatchlist(userId);
+            watchlist = this.createWatchlist(userId);
         }
 
         // Watchlist 에 들어갈 Movie 생성
@@ -68,7 +68,7 @@ public class WatchlistService {
         // 추가하고자 하는 Movie 가 Watchlist 에 없다면 생성, 이미 존재한다면 예외 처리
         if(watchlistMovie == null) {
             Long watchlistId = user.getWatchlist().getWatchlistId();
-            watchlistMovie = createWatchlistMovie(watchlistId, movie);
+            watchlistMovie = this.createWatchlistMovie(watchlistId, movie);
             watchlist.setCount(watchlist.getCount() + 1);
             watchlistMovieRepository.save(watchlistMovie);
         } else {
@@ -80,7 +80,7 @@ public class WatchlistService {
     public WatchlistDto findUserWatchlist(Long userId) {
         User user = userRepository.findByUserId(userId);
         Watchlist watchlist = user.getWatchlist();
-        List<MovieDto> dtoList = findMovieFromWatchlist(userId);
+        List<MovieDto> dtoList = this.findMovieFromWatchlist(userId);
 
         WatchlistDto watchlistDto = new WatchlistDto();
         watchlistDto.setWatchlistId(watchlist.getWatchlistId());

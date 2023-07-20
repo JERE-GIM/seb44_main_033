@@ -1,13 +1,20 @@
 package com.cinemaprincess.user.service;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.user.dto.UserStatisticsDto;
-import lombok.Getter;
 import com.cinemaprincess.statistics.dto.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 
@@ -37,8 +44,8 @@ public class UserService {
     // 회원가입
     public User createUser(User user) {
         // 중복 메일, 닉네임 확인
-        verifyExistsEmail(user.getEmail());
-        verifyExistsUsername(user.getUsername());
+        this.verifyExistsEmail(user.getEmail());
+        this.verifyExistsUsername(user.getUsername());
 
         // password 암호화
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
@@ -56,14 +63,14 @@ public class UserService {
 
     // 회원정보 수정
     public User updateUser(User user) {
-        User findUser = findVerifiedUser(user.getUserId());
+        User findUser = this.findVerifiedUser(user.getUserId());
 
         // 현재 user 의 닉네임이거나 중복되지 않은 닉네임 일때만 수정가능
         if(findUser.getUsername().equals(user.getUsername())) {
             Optional.ofNullable(user.getUsername())
                     .ifPresent(userName -> findUser.setUsername(userName));
         } else {
-            verifyExistsUsername(user.getUsername());
+            this.verifyExistsUsername(user.getUsername());
         }
         Optional.ofNullable(user.getAge())
                 .ifPresent(age -> findUser.setAge(age));
@@ -75,7 +82,7 @@ public class UserService {
 
     // password 수정
     public User updatePasswordToUser(User user, String newPassword) {
-        User findUser = findVerifiedUser(user.getUserId());
+        User findUser = this.findVerifiedUser(user.getUserId());
         String currentPassword = findUser.getPassword(); // DB에 저장된 비밀번호
         String checkPassword = user.getPassword(); // 입력받은 현재 비밀번호
         String changePassword = newPassword; // 입력받은 새로운 비밀번호
@@ -93,12 +100,12 @@ public class UserService {
 
     // 회원 조회
     public User findUser(Long userId) {
-        return findVerifiedUser(userId);
+        return this.findVerifiedUser(userId);
     }
 
     // 회원 탈퇴
     public void deleteUser(Long userId) {
-        User user = findVerifiedUser(userId);
+        User user = this.findVerifiedUser(userId);
 
         userRepository.delete(user);
     }

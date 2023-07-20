@@ -86,6 +86,7 @@ public class UserController {
         UserDto.Response response = userMapper.userToReviewResponseDto(user);
 
         return new ResponseEntity<>(new UserDto.UserMultiResponseDto<>(response, reviews, reviewPage), HttpStatus.OK);
+
     }
 
     // 회원 탈퇴
