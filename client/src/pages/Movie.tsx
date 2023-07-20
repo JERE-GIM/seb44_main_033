@@ -238,6 +238,7 @@ export default function Movie() {
                 title={similarMovie.title}
                 country={'미국'}
                 openat={Number(similarMovie.releaseDate.slice(0, 4))}
+                voteAverage={-1}
               />
             </RecommentListItem>
           ))}

@@ -50,3 +50,15 @@ export const Keyword = styled.div`
   font-weight: 400;
   line-height: 21px;
 `;
+export const Average = styled.div`
+  color: #74747b;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 2px;
+  display: flex;
+  span {
+    display: flex;
+    margin-top: 1px;
+    margin-left: 5px;
+  }
+`;
