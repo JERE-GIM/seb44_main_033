@@ -23,4 +23,13 @@ public class MovieDetailGenre {
     @ManyToOne
     @JoinColumn(name = "movie_id")
     private MovieDetail movieDetail;
+
+    @Override
+    public String toString() {
+        return "MovieDetailGenre{" +
+                "movieDetailGenreId=" + movieDetailGenreId +
+                ", genre=" + genre +
+                ", movieDetail=" + movieDetail +
+                '}';
+    }
 }
