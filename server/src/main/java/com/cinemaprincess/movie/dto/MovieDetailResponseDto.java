@@ -30,4 +30,5 @@ public class MovieDetailResponseDto {
     private List<GenreDto.Response> genres;
     private List<WatchProviderDto.Response> watchProviders;
     private List<MovieDto.Response> similarMovies;
+    //private boolean watchlistCheck;
 }

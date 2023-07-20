@@ -2,6 +2,7 @@ package com.cinemaprincess.movie.service;
 
 import com.cinemaprincess.exception.BusinessLogicException;
 import com.cinemaprincess.exception.ExceptionCode;
+import com.cinemaprincess.movie.dto.MovieDetailResponseDto;
 import com.cinemaprincess.movie.dto.MovieDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
@@ -11,6 +12,12 @@ import com.cinemaprincess.movie.repository.MovieDetailGenreRepository;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
+import com.cinemaprincess.user.entity.User;
+import com.cinemaprincess.user.repository.UserRepository;
+import com.cinemaprincess.user.service.UserService;
+import com.cinemaprincess.watchlist.entity.Watchlist;
+import com.cinemaprincess.watchlist.entity.WatchlistMovie;
+import com.cinemaprincess.watchlist.repository.WatchlistMovieRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,6 +29,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -111,7 +121,6 @@ public class MovieService {
         return similarMovieDTOs;
     }
 
-
     public MovieDetail findMovie(Long movieId) {
         return findVerifiedMovie(movieId);
     }
@@ -122,4 +131,27 @@ public class MovieService {
         return optional
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MOVIE_NOT_FOUND));
     }
+
+//    private final UserService userService;
+//    private final UserRepository userRepository;
+//    private final WatchlistMovieRepository watchlistMovieRepository;
+//    public boolean findWatchlistMovie(Long movieId) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication != null) {
+//            Object principal = authentication.getPrincipal();
+//            if(principal instanceof UserDetails) {
+//                String email = ((UserDetails) principal).getUsername();
+//                Long userId = userRepository.findUserIdByEmail(email);
+//                User user = userService.findUser(userId);
+//                Watchlist watchlist = user.getWatchlist();
+//                Movie movie = movieRepository.findByMovieId(movieId);
+//                WatchlistMovie watchlistMovie =  watchlistMovieRepository.findByWatchlistWatchlistIdAndMovieMovieId(watchlist.getWatchlistId(),
+//                        movie.getMovieId());
+//                if(watchlistMovie == null) {
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
+//    }
 }
