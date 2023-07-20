@@ -6,7 +6,7 @@ export const SearchbarContainer = styled.div`
   border: 1px solid lightgray;
   border-radius: 4px;
   height: 40px;
-  margin-left: 120px;
+  margin-left: 40px;
 `;
 
 export const SearchInput = styled.input`
