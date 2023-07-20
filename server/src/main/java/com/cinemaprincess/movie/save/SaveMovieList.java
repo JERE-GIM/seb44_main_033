@@ -142,31 +142,6 @@ public class SaveMovieList {
 
             log.info("MovieDetail 저장 완료");
 
-            List<Long> movieIds = movieDetails.stream()
-                    .map(MovieDetail::getId)
-                    .collect(Collectors.toList());
-            List<Long> existingMovieIds = saveMovieVote.getExistingMovieIds(movieIds);
-
-            List<CompletableFuture<MovieVote>> voteFutures = movieDetails.stream()
-                    .filter(movieDetail -> !existingMovieIds.contains(movieDetail.getId()))
-                    .map(movieDetail -> CompletableFuture.supplyAsync(() -> {
-                        MovieVote movieVote = saveMovieVote.getMovieVote(movieDetail.getId());
-                        movieVote.setMovieDetail(movieDetail);
-                        return movieVote;
-                    }, executorService))
-                    .collect(Collectors.toList());
-
-            CompletableFuture<List<MovieVote>> movieVotesFuture = CompletableFuture.allOf(voteFutures.toArray(new CompletableFuture[0]))
-                    .thenApply(v -> voteFutures.stream()
-                            .map(CompletableFuture::join)
-                            .collect(Collectors.toList()));
-
-            List<MovieVote> movieVotes = movieVotesFuture.get();
-
-            movieJdbcRepository.saveMovieVote(movieVotes);
-
-            log.info("MovieVote 저장 완료");
-
             List<CompletableFuture<List<MovieDetailGenre>>> movieDetailGenreFutures = movieDetails.stream()
                     .map(movieDetail -> CompletableFuture.supplyAsync(movieDetail::getMovieDetailGenres, executorService))
                     .collect(Collectors.toList());
@@ -229,8 +204,6 @@ public class SaveMovieList {
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
     public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("2023-05-01");
-        LocalDate startDate = LocalDate.parse("2022-01-01");
         LocalDate startDate = LocalDate.parse("2017-01-01");
         LocalDate endDate = LocalDate.parse("2023-12-31");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

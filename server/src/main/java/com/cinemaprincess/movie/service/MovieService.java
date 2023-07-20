@@ -53,10 +53,6 @@ public class MovieService {
                 .toUriString();
     }
 
-    public Page<Movie> findMovieListByKeyword(int page, int size, String keyword) {
-        List<Movie> movies = new ArrayList<>();
-        Pageable pageable = PageRequest.of(page, size);
-
     public List<Movie> findMovieListByKeyword(String keyword) {
         List<Movie> movies = new ArrayList<>();
         try {
@@ -77,25 +73,6 @@ public class MovieService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), movies.size());
-        return new PageImpl<>(movies.subList(start,end), pageable, movies.size());
-    }
-
-    public List<Movie> findMonthlyMovies() {
-        List<Movie> movies = new ArrayList<>();
-        String year = String.format("%04d", LocalDateTime.now().getYear());
-        String month = String.format("%02d", LocalDateTime.now().getMonthValue());
-
-        List<MovieDetail> movieDetails = movieDetailRepository.findByReleaseDateMonth(year, month, PageRequest.of(0, 5));
-
-        for (MovieDetail movieDetail : movieDetails) {
-            Optional<Movie> movie = movieRepository.findById(movieDetail.getId());
-            movie.ifPresent(movies::add);
-        }
-
-        return movies;
-    }
 
         return movies;
     }

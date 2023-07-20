@@ -21,6 +21,7 @@ const TopMovieSlider: React.FC = () => {
               title={movie.title}
               openat={movie.openat}
               country={movie.country}
+              voteAverage={movie.voteAverage}
             />
           );
         })}

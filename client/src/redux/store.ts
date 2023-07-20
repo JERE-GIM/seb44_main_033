@@ -4,12 +4,17 @@ import isLoginReducer from './reducers/isLogin';
 import signupReducer from './reducers/singupSlice';
 import modalReducer from './reducers/modal';
 import authReducer from './reducers/authSlice';
+import tabmovie from './reducers/tabmovieSlice';
+import monthly from './reducers/monthlySlice';
+
 const store = configureStore({
   reducer: {
     isLogin: isLoginReducer,
     signup: signupReducer,
     modal: modalReducer,
     auth: authReducer,
+    tabmovie: tabmovie.reducer,
+    monthly: monthly.reducer,
   },
 });
 
