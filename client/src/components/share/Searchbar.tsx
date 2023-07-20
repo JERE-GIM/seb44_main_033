@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
   SearchbarContainer,
@@ -14,15 +13,7 @@ const Searchbar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = () => {
-    axios
-      .get(`/search?keyword=${searchTerm}&page={}&size={}`)
-      .then((response) => {
-        console.log(response.data);
-        navigate('/search');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    navigate('/search', { state: { searchTerm } });
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
