@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/movies")
@@ -59,7 +60,7 @@ public class MovieController {
     // 신작
     @GetMapping("/new")
     public ResponseEntity getNewMovies() {
-        List<Movie> movies = movieService.findMovieListByKeyword("now_playing");
+        List<Movie> movies = movieService.findMovieListByKeyword("now_playing", (int)(Math.random() * 3) + 1);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
@@ -68,7 +69,7 @@ public class MovieController {
     // 인기작
     @GetMapping("/popular")
     public ResponseEntity getPopularMovies() {
-        List<Movie> movies = movieService.findMovieListByKeyword("top_rated");
+        List<Movie> movies = movieService.findMovieListByKeyword("top_rated", (int)(Math.random() * 50) + 1);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
@@ -77,7 +78,7 @@ public class MovieController {
     // 개봉 예정
     @GetMapping("/upcoming")
     public ResponseEntity getUpcomingMovies() {
-        List<Movie> movies = movieService.findMovieListByKeyword("upcoming");
+        List<Movie> movies = movieService.findMovieListByKeyword("upcoming", 1);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
@@ -102,7 +103,7 @@ public class MovieController {
     }
 
     @PostMapping("/save/vote")
-    public ResponseEntity saveVote() {
+    public ResponseEntity saveVote() throws ExecutionException, InterruptedException {
         movieVote.getMovieVote();
         return new ResponseEntity<>(HttpStatus.OK);
     }

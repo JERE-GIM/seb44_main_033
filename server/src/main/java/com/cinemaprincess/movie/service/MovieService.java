@@ -23,10 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,20 +50,21 @@ public class MovieService {
     private final MovieMapper movieMapper;
     RestTemplate restTemplate = new RestTemplate();
 
-    public String buildMovieUrl(String keyword) {
+    public String buildMovieUrl(String keyword, int page) {
         String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + keyword)
                 .queryParam("api_key", key)
                 .queryParam("language", "ko")
                 .queryParam("region", "kr")
+                .queryParam("page", page)
                 .build()
                 .toUriString();
     }
 
-    public List<Movie> findMovieListByKeyword(String keyword) {
+    public List<Movie> findMovieListByKeyword(String keyword, int page) {
         List<Movie> movies = new ArrayList<>();
         try {
-            String url = buildMovieUrl(keyword);
+            String url = buildMovieUrl(keyword, page);
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
             String responseBody = response.getBody();
 
@@ -109,7 +107,8 @@ public class MovieService {
         MovieDetailGenre movieDetailGenre = movieDetailGenreRepository.findByMovieDetail(movieDetail).get(0);
         long genreId = movieDetailGenre.getGenre().getGenreId();
 
-        List<MovieDetail> similarMovieDetails = movieDetailGenreRepository.findSimilarMovieDetailsWithVote(genreId, movieId, Pageable.ofSize(10));
+        List<MovieDetail> similarMovieDetails =
+                movieDetailGenreRepository.findSimilarMovieDetailsWithVote(genreId, movieId, PageRequest.of(0,10, Sort.unsorted()));
 
         // 유사 영화 DTO 리스트 생성
         List<MovieDto.Response> similarMovieDTOs = new ArrayList<>();

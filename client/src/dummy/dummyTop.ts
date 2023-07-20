@@ -4,6 +4,7 @@ export interface ITop {
   poster: string;
   openat: number;
   country: string;
+  voteAverage: number;
 }
 
 export const dummyTopMovie: Array<ITop> = [
@@ -14,6 +15,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '스파이더맨',
     openat: 2023,
     country: '미국',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -22,6 +24,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '엘리멘탈',
     openat: 2023,
     country: '미국',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -30,6 +33,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '범죄도시3',
     openat: 2023,
     country: '한국',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -38,6 +42,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '보이즈 어프레이드',
     openat: 2023,
     country: '미국',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -46,6 +51,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '스파이더맨',
     openat: 2022,
     country: '미국',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -54,6 +60,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '빈큼없는 사이',
     openat: 2021,
     country: '한국',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -62,6 +69,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '악마들',
     openat: 2022,
     country: '한국',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -70,6 +78,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '여름날 우리',
     openat: 2023,
     country: '대만',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -78,6 +87,7 @@ export const dummyTopMovie: Array<ITop> = [
     title: '스파이더맨',
     openat: 2023,
     country: '미국',
+    voteAverage: 8.5,
   },
   {
     id: '1',
@@ -86,5 +96,6 @@ export const dummyTopMovie: Array<ITop> = [
     title: '그 여름',
     openat: 2022,
     country: '미국',
+    voteAverage: 8.5,
   },
 ];
