@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       { path: 'login', element: <Login /> },
       { path: 'mypage', element: <Mypage /> },
       { path: 'watchlist', element: <Watchlist /> },
-      { path: 'movie/:id', element: <Movie /> },
+      { path: 'movie/:movieId', element: <Movie /> },
       { path: 'search', element: <Search /> },
       { path: 'statistics', element: <Statistics /> },
       { path: 'statistics/genre', element: <YearlyGenres /> },

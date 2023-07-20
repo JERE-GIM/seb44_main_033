@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { IMovie } from '../../dummy/dummyMovie';
-import { IReview } from '../../dummy/dummyReview';
+import { IReview } from '../../types/movie';
 import Rating from '../share/Rating';
 import {
   Background,
@@ -16,25 +15,30 @@ import {
 import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';
+import { requestCreateMyReview, requestUpdateMyReview } from '../../api/movie';
 
 interface IReviewRegister {
-  movie: IMovie;
-  review?: IReview;
+  movieTitle: string;
+  movieId: number;
+  myReview: IReview | null;
   rating: number;
   setRating: React.Dispatch<React.SetStateAction<number>>;
+  callback: () => void;
 }
 
 export default function ReviewRegister({
-  movie,
-  review,
+  movieTitle,
+  movieId,
+  myReview,
   rating,
   setRating,
+  callback,
 }: IReviewRegister) {
-  const [comment, setComment] = useState(review ? review.comment : '');
+  const [comment, setComment] = useState(myReview ? myReview.content : '');
   const dispatch = useAppDispatch();
 
   const handleCloseModalUnsaved = () => {
-    if (review) setRating(review.rating);
+    if (myReview) setRating(myReview.score);
     else setRating(0);
     dispatch(modalAction.close());
   };
@@ -45,7 +49,23 @@ export default function ReviewRegister({
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // api 로직 추가
+    if (myReview)
+      requestUpdateMyReview(myReview.reviewId, {
+        content: comment,
+        score: rating,
+      }).then(() => {
+        dispatch(modalAction.close());
+        callback();
+      });
+    else
+      requestCreateMyReview({
+        content: comment,
+        score: rating,
+        movieId,
+      }).then(() => {
+        dispatch(modalAction.close());
+        callback();
+      });
   };
 
   const handleChangeTextarea = (
@@ -57,7 +77,7 @@ export default function ReviewRegister({
       <Background onClick={handleCloseModalUnsaved}>
         <Modal onClick={handleClickModal}>
           <ModalHeader>
-            <MovieTitle>{movie.title}</MovieTitle>
+            <MovieTitle>{movieTitle}</MovieTitle>
             <CloseButton onClick={handleCloseModalUnsaved}>
               <img src={closeButton} alt="close button" />
             </CloseButton>
