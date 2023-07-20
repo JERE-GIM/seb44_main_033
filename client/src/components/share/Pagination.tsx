@@ -10,17 +10,17 @@ const Pagination: React.FC<Props> = ({ total, current, onPageChange }) => {
   const pages = Array.from({ length: total }, (_, i) => i + 1);
 
   return (
-    <div>
+    <PaginationWrapper>
       {pages.map((page) => (
-        <button
+        <PageButton
           key={page}
           onClick={() => onPageChange(page)}
           style={{ fontWeight: page === current ? 'bold' : 'normal' }}
         >
           {page}
-        </button>
+        </PageButton>
       ))}
-    </div>
+    </PaginationWrapper>
   );
 };
 
@@ -30,15 +30,15 @@ export const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
   padding: 1em 0;
-  margin-top: 30px;
+  margin: 30px 10px 0px 0px;
 `;
 
 export const PageButton = styled.button`
   background: transparent;
-  border: none;
+  border: 1px solid;
+  border-radius: 10px;
   cursor: pointer;
   padding: 0.5em 1em;
   margin: 0 0.25em;
   font-weight: 500;
-  color: #ff5252;
 `;

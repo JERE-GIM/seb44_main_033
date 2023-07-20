@@ -76,6 +76,7 @@ export const Container = styled.div`
 export const SearchTitle = styled.div`
   font-size: 25px;
   font-weight: 600;
+  color: gray;
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
