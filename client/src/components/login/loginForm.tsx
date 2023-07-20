@@ -78,6 +78,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         formData,
       )
       .then((response) => {
+        console.log(response.data);
         const accessToken = response.data.accessToken;
         dispatch(setAccessToken(accessToken));
         const userId = UserIdFromAccessToken(accessToken);
@@ -90,15 +91,20 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       });
   };
   interface TokenPayload {
-    userId: string;
+    userId: number;
   }
   const UserIdFromAccessToken = (accessToken: string): string => {
+    if (!accessToken) {
+      console.error('토큰이 제공되지 않았습니다.');
+      return '';
+    }
     try {
       const tokenPayload: TokenPayload = jwt_decode(accessToken);
       const userId = tokenPayload.userId;
-      return userId;
+      return userId.toString();
     } catch (error) {
-      console.error('사용자 정보를 받아오는데 실패하였습니다:', error);
+      console.error('토큰 디코딩에 실패했습니다:', error);
+      console.error('잘못된 토큰:', accessToken);
       return '';
     }
   };
