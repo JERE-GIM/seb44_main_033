@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class SaveMovieVote {
     private final MovieVoteRepository movieVoteRepository;
     RestTemplate restTemplate = new RestTemplate();
 
-    public void getMovieVote() {
+    public void getMovieVote() throws ExecutionException, InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(20);
         List<MovieDetail> movieDetails = movieDetailCache.getMovieDetails();
         List<CompletableFuture<MovieVote>> futures = new ArrayList<>();
@@ -71,13 +72,9 @@ public class SaveMovieVote {
                         .collect(Collectors.toList())
         );
 
-        try {
-            List<MovieVote> movieVotes = combinedFuture.get();
-            movieJdbcRepository.saveMovieVote(movieVotes);
-            log.info("MovieVote 저장 완료");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<MovieVote> movieVotes = combinedFuture.get();
+        movieJdbcRepository.saveMovieVote(movieVotes);
+        log.info("MovieVote 저장 완료");
 
         executorService.shutdown();
     }

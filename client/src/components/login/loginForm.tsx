@@ -24,6 +24,7 @@ import jwt_decode from 'jwt-decode';
 import NaverLogin from './Naverlogin';
 import KakaoLogin from './Kakaologin';
 import GoogleLogin from './Googlelogin';
+import { login } from '../../redux/reducers/isLogin';
 
 const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -78,11 +79,18 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         formData,
       )
       .then((response) => {
-        console.log(response.data);
-        const accessToken = response.data.accessToken;
+        console.log(response.headers);
+        const accessToken = response.headers.authorization;
+        if (!accessToken) {
+          console.error('토큰이 제공되지 않았습니다.');
+          return;
+        }
         dispatch(setAccessToken(accessToken));
+        dispatch(login());
+        localStorage.setItem('isLogin', 'true');
         const userId = UserIdFromAccessToken(accessToken);
         localStorage.setItem('userId', userId);
+        localStorage.setItem('accessToken', accessToken); // accessToken 저장
         onClose();
         navigate('/');
       })
@@ -90,14 +98,12 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         alert('아이디와 비밀번호를 확인해주세요');
       });
   };
+
   interface TokenPayload {
     userId: number;
   }
+
   const UserIdFromAccessToken = (accessToken: string): string => {
-    if (!accessToken) {
-      console.error('토큰이 제공되지 않았습니다.');
-      return '';
-    }
     try {
       const tokenPayload: TokenPayload = jwt_decode(accessToken);
       const userId = tokenPayload.userId;
