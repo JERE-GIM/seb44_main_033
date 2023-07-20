@@ -9,4 +9,5 @@ public class MovieRankDto {
     private String openDt;
     private String audiAcc;
     private String posterPath;
+    private String movieId;
 }

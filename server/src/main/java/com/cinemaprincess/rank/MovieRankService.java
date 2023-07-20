@@ -46,7 +46,13 @@ public class MovieRankService {
             movieRank.setAudiAcc(movieRankDto.getAudiAcc());
 
             Movie movie = movieRepository.findByTitle(movieRankDto.getMovieNm());
-            movieRank.setPosterPath(movie.getPosterPath());
+            if (movie != null) {
+                movieRank.setPosterPath(movie.getPosterPath());
+                movieRank.setMovieId(String.valueOf(movie.getMovieId()));
+            } else {
+                movieRank.setPosterPath("default_poster_path.jpg");
+                movieRank.setMovieId("-1"); // 또는 다른 기본값을 설정할 수 있음
+            }
 
             movieRankRepository.save(movieRank);
         }

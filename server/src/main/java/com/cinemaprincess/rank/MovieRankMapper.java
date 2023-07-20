@@ -9,5 +9,6 @@ public interface MovieRankMapper {
     @Mapping(source = "openDt", target = "openDt")
     @Mapping(source = "audiAcc", target = "audiAcc")
     @Mapping(source = "posterPath", target = "posterPath")
+    @Mapping(source = "movieId", target = "movieId")
     MovieRankDto movieRankToMovieRankDto(MovieRank movieRank);
 }
