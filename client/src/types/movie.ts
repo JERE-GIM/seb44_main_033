@@ -35,28 +35,32 @@ export interface IReview {
   modifiedAt: string;
 }
 
-export interface IMovie {
-  data: {
-    movieId: string;
-    title: string;
-    overview: string;
-    backdropPath: string;
-    posterPath: string;
-    releaseDate: number;
-    genres: Array<IGenre>;
-    certification: string;
-    runtime: number;
-    director: string;
-    actors: Array<string>;
-    movieVote: IMovieVote;
-    similarMovies: Array<ISimilarMovie>;
-    watchProviders: Array<IMovieProvider>;
-  };
-  pageInfo: {
-    page: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
+export interface IPageInfo {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface IMovieInfo {
+  movieId: string;
+  title: string;
+  overview: string;
+  backdropPath: string;
+  posterPath: string;
+  releaseDate: number;
+  genres: Array<IGenre>;
+  certification: string;
+  runtime: number;
+  director: string;
+  actors: Array<string>;
+  movieVote: IMovieVote;
+  similarMovies: Array<ISimilarMovie>;
+  watchProviders: Array<IMovieProvider>;
+}
+
+export interface IMovieResponse {
+  data: IMovieInfo;
   reviews: Array<IReview>;
+  pageInfo: IPageInfo;
 }

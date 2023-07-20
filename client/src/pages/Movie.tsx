@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReviewRegisterModal from '../components/movie/ReviewRegisterModal';
-import { IMovie, IReview } from '../types/movie';
+import { IMovieResponse, IReview } from '../types/movie';
 import Rating from '../components/share/Rating';
 import {
   Star,
@@ -12,21 +12,9 @@ import {
   MovieTitle,
   MovieDetail,
   MovieDetailCol,
-  MovieInfo,
-  MovieInfoContainer,
-  MovieInfoSpan,
-  MovieInfoText,
   MoviePoster,
-  MyReviewButtons,
-  MyReviewContainer,
-  MyReviewContent,
-  MyReviewControlButton,
-  MyReviewRegisterButton,
   MovieReviews,
   StarsContainer,
-  ReviewList,
-  PrevButtonTransformed,
-  NextButtonTransformed,
   MovieRecommend,
   RecommendList,
   RecommentListItem,
@@ -37,17 +25,11 @@ import {
   OTTText,
   MovieHeader,
   MovieDescription,
-  NonSlider,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
-import elementalPoster from '../assets/elemental_poster.png';
-import elementalCover from '../assets/elemental_cover.png';
 import starIcon from '../assets/starIcon.svg';
-import ReviewListitem from '../components/movie/ReviewListitem';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
-import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
-import Slider from 'react-slick';
 import Card from '../components/main/movierank/Card';
 import defaultPoster from '../assets/default_poster.png';
 import { useParams } from 'react-router-dom';
@@ -56,34 +38,12 @@ import {
   requestGetMovieInfo,
   requestGetMyReview,
 } from '../api/movie';
-
-const REVIEW_SLIDE_TO_SHOW = 4;
-
-const SLIDE_SETTINGS = {
-  dots: false,
-  arrows: true,
-  infinite: false,
-  speed: 500,
-  slidesToShow: REVIEW_SLIDE_TO_SHOW,
-  slidesToScroll: REVIEW_SLIDE_TO_SHOW,
-  rows: 2,
-  slidesPerRow: 1,
-  swipe: true,
-  draggable: false,
-  prevArrow: (
-    <PrevButtonTransformed>
-      <MdArrowBackIos />
-    </PrevButtonTransformed>
-  ),
-  nextArrow: (
-    <NextButtonTransformed>
-      <MdArrowForwardIos />
-    </NextButtonTransformed>
-  ),
-};
+import ReviewList from '../components/share/ReviewList';
+import MovieInfo from '../components/movie/MovieInfo';
+import MyReview from '../components/movie/MyReview';
 
 export default function Movie() {
-  const [movieInfo, setMovieInfo] = useState<IMovie>();
+  const [movieInfo, setMovieInfo] = useState<IMovieResponse>();
   const [myReview, setMyReview] = useState<IReview | null>(null);
   const [rating, setRating] = useState(0);
 
@@ -126,10 +86,6 @@ export default function Movie() {
     dispatch(modalAction.open(MODAL_ROLE.REVIEW_WRITE));
   };
 
-  const handleOpenConfirmModal = () => {
-    dispatch(modalAction.open(MODAL_ROLE.REVIEW_DELETE));
-  };
-
   useEffect(() => {
     if (movieId) {
       fetchMovieInfo();
@@ -142,7 +98,10 @@ export default function Movie() {
       {movieInfo && (
         <>
           <MovieCover>
-            <MovieCoverImage src={elementalCover} alt="cover image" />
+            <MovieCoverImage
+              src={`https://image.tmdb.org/t/p/w500/${movieInfo.data.backdropPath}`}
+              alt="cover image"
+            />
             <MovieHeader>
               <MovieTitle>{movieInfo.data.title}</MovieTitle>
               <MovieDescription>{movieInfo.data.overview}</MovieDescription>
@@ -164,84 +123,22 @@ export default function Movie() {
           </MovieCover>
           <MovieDetail>
             <MovieDetailCol>
-              <MoviePoster src={elementalPoster} alt="poster image" />
+              <MoviePoster
+                src={`https://image.tmdb.org/t/p/w500/${movieInfo.data.posterPath}`}
+                alt="poster image"
+              />
             </MovieDetailCol>
             <MovieDetailCol>
-              {myReview ? (
-                <MyReviewContainer>
-                  <MyReviewContent>{myReview.content}</MyReviewContent>
-                  <MyReviewButtons>
-                    <MyReviewControlButton onClick={handleOpenReviewModal}>
-                      수정
-                    </MyReviewControlButton>
-                    <MyReviewControlButton onClick={handleOpenConfirmModal}>
-                      삭제
-                    </MyReviewControlButton>
-                  </MyReviewButtons>
-                </MyReviewContainer>
-              ) : (
-                <MyReviewContainer>
-                  <MyReviewContent>
-                    영화를 보고 난 소감을 기록하세요.
-                  </MyReviewContent>
-                  <MyReviewRegisterButton onClick={handleOpenReviewModal}>
-                    리뷰 작성하기
-                  </MyReviewRegisterButton>
-                </MyReviewContainer>
-              )}
-              <MovieInfo>
-                <MovieInfoContainer>
-                  <MovieInfoText>
-                    <MovieInfoSpan>개봉</MovieInfoSpan>
-                    <MovieInfoSpan>{movieInfo.data.releaseDate}</MovieInfoSpan>
-                  </MovieInfoText>
-                  <MovieInfoText>
-                    <MovieInfoSpan>장르</MovieInfoSpan>
-                    <MovieInfoSpan>
-                      {movieInfo.data.genres
-                        .map((genre) => genre.genreName)
-                        .join(', ')}
-                    </MovieInfoSpan>
-                  </MovieInfoText>
-                  <MovieInfoText>
-                    <MovieInfoSpan>등급</MovieInfoSpan>
-                    <MovieInfoSpan>
-                      {movieInfo.data.certification}세
-                    </MovieInfoSpan>
-                  </MovieInfoText>
-                  <MovieInfoText>
-                    <MovieInfoSpan>러닝타임</MovieInfoSpan>
-                    <MovieInfoSpan>{movieInfo.data.runtime}분</MovieInfoSpan>
-                  </MovieInfoText>
-                  <MovieInfoText>
-                    <MovieInfoSpan>감독</MovieInfoSpan>
-                    <MovieInfoSpan>{movieInfo.data.director}</MovieInfoSpan>
-                  </MovieInfoText>
-                  <MovieInfoText>
-                    <MovieInfoSpan>출연</MovieInfoSpan>
-                    <MovieInfoSpan>{movieInfo.data.actors}</MovieInfoSpan>
-                  </MovieInfoText>
-                </MovieInfoContainer>
-              </MovieInfo>
+              <MyReview
+                myReview={myReview}
+                handleOpenReviewModal={handleOpenReviewModal}
+              />
+              <MovieInfo movieInfo={movieInfo.data} />
             </MovieDetailCol>
           </MovieDetail>
           <MovieReviews>
             <SectionTitle>코멘트</SectionTitle>
-            <ReviewList>
-              {movieInfo.reviews.length >= REVIEW_SLIDE_TO_SHOW ? (
-                <Slider {...SLIDE_SETTINGS}>
-                  {movieInfo.reviews.map((review) => (
-                    <ReviewListitem key={review.reviewId} review={review} />
-                  ))}
-                </Slider>
-              ) : (
-                <NonSlider>
-                  {movieInfo.reviews.map((review) => (
-                    <ReviewListitem key={review.reviewId} review={review} />
-                  ))}
-                </NonSlider>
-              )}
-            </ReviewList>
+            <ReviewList reviewList={movieInfo.reviews} />
           </MovieReviews>
           {movieInfo.data.watchProviders.length !== 0 && (
             <MovieOTTInfo>
