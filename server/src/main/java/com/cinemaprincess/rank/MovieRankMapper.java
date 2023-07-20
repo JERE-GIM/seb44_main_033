@@ -8,6 +8,6 @@ public interface MovieRankMapper {
     @Mapping(source = "movieNm", target = "movieNm")
     @Mapping(source = "openDt", target = "openDt")
     @Mapping(source = "audiAcc", target = "audiAcc")
-    @Mapping(source = "movie.posterPath", target = "posterPath")
-    MovieRankDto movieToMovieRankDto(MovieRank movieRank);
+    @Mapping(source = "posterPath", target = "posterPath")
+    MovieRankDto movieRankToMovieRankDto(MovieRank movieRank);
 }

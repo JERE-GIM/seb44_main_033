@@ -27,8 +27,9 @@ public class MovieRank {
     private String movieNm;
     private String openDt;
     private String audiAcc;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "title",referencedColumnName = "title")
-    private Movie movie;
+    private String posterPath;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "title",referencedColumnName = "title")
+//    private Movie movie;
 
 }

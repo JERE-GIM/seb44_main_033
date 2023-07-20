@@ -41,6 +41,6 @@ public class Movie implements Serializable {
             movieDetail.setMovie(this);
         }
     }
-    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private List<MovieRank> movieRanks = new ArrayList<>();
+//    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+//    private List<MovieRank> movieRanks = new ArrayList<>();
 }
