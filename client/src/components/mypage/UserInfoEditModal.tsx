@@ -23,39 +23,61 @@ import { PasswordButton } from '../styles/PasswordEditForm.styled';
 import closeButton from '../../assets/closeButton.svg';
 import { useCallback, useEffect, useState } from 'react';
 import PasswordEditForm from './PasswordEditForm';
+import { requestUpdateUserInfo } from '../../api/userInfo';
+import { IUserInfo } from '../../types/user';
 
-interface IUserInfo {
-  username: string;
-  email: string;
-  gender: string;
-  age: string;
-  genres: Array<string>;
-}
-
-const genderValues = ['남자', '여자'];
-const ageValues = ['10대 이하', '20대', '30대', '40대', '50대', '60대 이상'];
+const genderValues = [
+  {
+    value: 'MALE',
+    text: '남자',
+  },
+  { value: 'FEMALE', text: '여자' },
+];
+const ageValues = [10, 20, 30, 40, 50, 60];
 const genreValues = [
-  '액션',
-  'SF',
-  '로맨스',
-  '애니메이션',
-  '공포',
-  '드라마',
   '모험',
+  '판타지',
+  '애니메이션',
+  '드라마',
+  '공포',
+  '액션',
   '코미디',
-  '로맨틱코미디',
+  '역사',
+  '서부',
+  '스릴러',
+  '범죄',
+  '다큐멘터리',
+  'SF',
+  '미스터리',
+  '음악',
+  '로맨스',
+  '가족',
+  '전쟁',
+  'TV 영화',
 ];
 
-export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
+interface IUserInfoInput {
+  username: string;
+  age: number | null;
+  genre: Array<string>;
+}
+
+interface IUserInfoEditModalProps {
+  user: IUserInfo;
+  callback: () => void;
+}
+
+export default function UserInfoEditModal({
+  user,
+  callback,
+}: IUserInfoEditModalProps) {
   const dispatch = useAppDispatch();
 
   const [isEditPassword, setIsEditPassword] = useState(false);
-  const [userInfo, setUserInfo] = useState<IUserInfo>({
+  const [userInfoInput, setUserInfoInput] = useState<IUserInfoInput>({
     username: '',
-    email: '',
-    gender: '',
-    age: '',
-    genres: [],
+    age: null,
+    genre: [],
   });
 
   const handleCloseModalUnsaved = () => {
@@ -68,27 +90,29 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(userInfo);
-    // api 로직 추가
+    requestUpdateUserInfo(userInfoInput).then(() => {
+      callback();
+      dispatch(modalAction.close());
+    });
   };
 
   const handleChangeUserInfo = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
-      setUserInfo({ ...userInfo, [name]: value });
+      if (name === 'age')
+        setUserInfoInput({ ...userInfoInput, [name]: Number(value) });
+      else setUserInfoInput({ ...userInfoInput, [name]: value });
     },
-    [userInfo],
+    [userInfoInput],
   );
 
   useEffect(() => {
-    const { username, email, gender, age, genres } = user;
+    const { username, age, genre } = user;
 
-    setUserInfo({
+    setUserInfoInput({
       username,
-      email,
-      gender,
       age,
-      genres,
+      genre,
     });
   }, []);
 
@@ -108,21 +132,13 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
               id="username"
               name="username"
               autoComplete="off"
-              value={userInfo.username}
+              value={userInfoInput.username}
               onChange={handleChangeUserInfo}
             />
           </TextInputContainer>
           <TextInputContainer>
             <TextInputLabel htmlFor="email">이메일</TextInputLabel>
-            <TextInput
-              id="email"
-              name="email"
-              autoComplete="off"
-              value={userInfo.email}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setUserInfo({ ...userInfo, email: event.target.value })
-              }
-            />
+            <TextInput id="email" name="email" value={user.email} disabled />
           </TextInputContainer>
           <InputContainer>
             <InputContainerTitle>비밀번호</InputContainerTitle>
@@ -140,14 +156,17 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
             <InputContainerTitle>성별</InputContainerTitle>
             <RadioInputList>
               {genderValues.map((gender) => (
-                <RadioLabel key={gender} $selected={userInfo.gender === gender}>
+                <RadioLabel
+                  key={gender.value}
+                  $selected={user.gender === gender.value}
+                >
                   <RadioInput
                     type="radio"
                     name="gender"
-                    value={gender}
-                    onChange={handleChangeUserInfo}
+                    value={gender.value}
+                    disabled
                   />
-                  {gender}
+                  {gender.text}
                 </RadioLabel>
               ))}
             </RadioInputList>
@@ -157,14 +176,21 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
             <RadioInputListContainer>
               <RadioInputList>
                 {ageValues.map((age) => (
-                  <RadioLabel key={age} $selected={userInfo.age === age}>
+                  <RadioLabel
+                    key={age}
+                    $selected={
+                      userInfoInput
+                        ? userInfoInput.age === age
+                        : user.age === age
+                    }
+                  >
                     <RadioInput
                       type="radio"
                       name="age"
                       value={age}
                       onChange={handleChangeUserInfo}
                     />
-                    {age}
+                    {age}대
                   </RadioLabel>
                 ))}
               </RadioInputList>
@@ -178,7 +204,7 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
                 {genreValues.map((genre) => (
                   <RadioLabel
                     key={genre}
-                    $selected={userInfo.genres.includes(genre)}
+                    $selected={userInfoInput.genre.includes(genre)}
                   >
                     <RadioInput
                       type="radio"
@@ -187,12 +213,12 @@ export default function UserInfoEditModal({ user }: { user: IUserInfo }) {
                       onChange={(
                         event: React.ChangeEvent<HTMLInputElement>,
                       ) => {
-                        setUserInfo({
-                          ...userInfo,
-                          genres:
-                            userInfo.genres.length >= 2
+                        setUserInfoInput({
+                          ...userInfoInput,
+                          genre:
+                            userInfoInput.genre.length >= 2
                               ? [event.target.value]
-                              : userInfo.genres.concat(event.target.value),
+                              : userInfoInput.genre.concat(event.target.value),
                         });
                       }}
                     />
