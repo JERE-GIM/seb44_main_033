@@ -6,8 +6,8 @@ const initialState = {
   movies: [],
   error: null as string | null,
 };
-const tabmovieSlice = createSlice({
-  name: 'tabmovie',
+const watchlistSlice = createSlice({
+  name: 'watchlist',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -19,7 +19,7 @@ const tabmovieSlice = createSlice({
       })
       .addCase(fetchWatchlist.fulfilled, (state, action) => {
         state.status = 'succeed';
-        state.movies = action.payload.data;
+        state.movies = action.payload.watchlistMovies;
       })
       .addCase(fetchWatchlist.rejected, (state, action) => {
         state.status = 'failed';
@@ -28,4 +28,4 @@ const tabmovieSlice = createSlice({
   },
 });
 
-export default tabmovieSlice;
+export default watchlistSlice;
