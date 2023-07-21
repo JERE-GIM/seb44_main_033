@@ -103,6 +103,12 @@ export const MoviePoster = styled.img`
   width: 280px;
 `;
 
+export const MovieVideo = styled.section`
+  width: 1320px;
+  margin: 0 auto;
+  margin-top: 50px;
+`;
+
 export const MovieReviews = styled.section`
   width: 1320px;
   margin: 0 auto;

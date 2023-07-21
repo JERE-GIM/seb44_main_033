@@ -48,6 +48,7 @@ export interface IMovieInfo {
   overview: string;
   backdropPath: string;
   posterPath: string;
+  videoPath: string;
   releaseDate: number;
   genres: Array<IGenre>;
   certification: string;

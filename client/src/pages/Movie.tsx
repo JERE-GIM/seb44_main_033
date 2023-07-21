@@ -25,6 +25,7 @@ import {
   OTTText,
   MovieHeader,
   MovieDescription,
+  MovieVideo,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import starIcon from '../assets/starIcon.svg';
@@ -41,6 +42,7 @@ import {
 import ReviewList from '../components/share/ReviewList';
 import MovieInfo from '../components/movie/MovieInfo';
 import MyReview from '../components/movie/MyReview';
+import YouTube from 'react-youtube';
 
 export default function Movie() {
   const [movieInfo, setMovieInfo] = useState<IMovieResponse>();
@@ -136,6 +138,10 @@ export default function Movie() {
               <MovieInfo movieInfo={movieInfo.data} />
             </MovieDetailCol>
           </MovieDetail>
+          <MovieVideo>
+            <SectionTitle>영상</SectionTitle>
+            <YouTube videoId={movieInfo.data.videoPath.slice(1)} />
+          </MovieVideo>
           <MovieReviews>
             <SectionTitle>코멘트</SectionTitle>
             <ReviewList reviewList={movieInfo.reviews} />
