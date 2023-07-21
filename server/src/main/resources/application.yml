@@ -39,7 +39,7 @@ spring:
             clientSecret: 59wb3hhtZ7kKeARzIjGW6PvxOxtqe9oy
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: "http://cinema-princess-s3-bucket.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/kakao"
+            redirectUri: "http://cinemaprincess.shop/login/oauth2/code/kakao"
             scope:
               - account_email
             clientName: Kakao
@@ -49,7 +49,7 @@ spring:
             clientSecret: O2wLr6v208
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: "http://cinema-princess-s3-bucket.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/naver"
+            redirectUri: "http://cinemaprincess.shop/login/oauth2/code/naver"
             scope:
               - email
             clientName: Naver
