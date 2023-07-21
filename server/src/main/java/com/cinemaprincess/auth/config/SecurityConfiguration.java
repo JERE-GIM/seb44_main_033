@@ -60,12 +60,12 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         // 요청 접근 권한
-//                                .antMatchers("/", "/login/", "/login/**", "/signup", "/oauth2/**").permitAll()
-//                                .antMatchers(HttpMethod.GET, "/movies/**").permitAll()
-//                                .antMatchers(HttpMethod.GET, "/reviews/*").permitAll()
-//                                .antMatchers(HttpMethod.GET, "/search", "/search/**").permitAll()
-//                                .anyRequest().authenticated()
-                                .anyRequest().permitAll()
+                                .antMatchers("/", "/login/", "/login/**", "/signup", "/oauth2/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/movies/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/reviews/*").permitAll()
+                                .antMatchers(HttpMethod.GET, "/search", "/search/**").permitAll()
+                                .anyRequest().authenticated()
+
                 )
 
                 .oauth2Login()

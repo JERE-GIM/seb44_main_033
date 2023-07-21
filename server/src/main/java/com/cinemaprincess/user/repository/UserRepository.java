@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
     User findByUserId(Long userId);
-    Long findUserIdByEmail(String email);
+    User findUserByEmail(String email);
     @Query("SELECT u FROM User u WHERE u.gender = :genderEnum AND u.age >= :minAge AND u.age <= :maxAge")
     List<User> findByAgeRangeAndGender(@Param("genderEnum") User.Gender gender,
                                        @Param("minAge") int minAge,
