@@ -23,7 +23,7 @@ import { PasswordButton } from '../styles/PasswordEditForm.styled';
 import closeButton from '../../assets/closeButton.svg';
 import { useCallback, useEffect, useState } from 'react';
 import PasswordEditForm from './PasswordEditForm';
-import { requestUpdateUserInfo } from '../../api/userInfo';
+import { fetchUpdateUserInfo } from '../../api/userInfo';
 import { IUserInfo } from '../../types/user';
 
 const genderValues = [
@@ -88,12 +88,16 @@ export default function UserInfoEditModal({
     event.stopPropagation();
   };
 
-  const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    requestUpdateUserInfo(userInfoInput).then(() => {
+  const handleFetchUpdateUserInfo = () => {
+    fetchUpdateUserInfo(userInfoInput).then(() => {
       callback();
       dispatch(modalAction.close());
     });
+  };
+
+  const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleFetchUpdateUserInfo();
   };
 
   const handleChangeUserInfo = useCallback(

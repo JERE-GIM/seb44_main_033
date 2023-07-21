@@ -16,7 +16,7 @@ import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';
 import { useEffect, useState } from 'react';
 import profile from '../../assets/profile.jpg';
-import { requestUpdateProfile } from '../../api/userInfo';
+import { fetchUpdateProfileImage } from '../../api/userInfo';
 
 interface IProfileUploadModalProps {
   callback: () => void;
@@ -37,17 +37,21 @@ export default function ProfileUploadModal({
     event.stopPropagation();
   };
 
-  const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData();
-    if (imgFile) formData.append('imgFile', imgFile);
-
-    requestUpdateProfile(formData)
+  const handleFetchUpdateProfile = (data: FormData) => {
+    fetchUpdateProfileImage(data)
       .then(() => {
         callback();
         dispatch(modalAction.close());
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData();
+    if (imgFile) formData.append('imgFile', imgFile);
+
+    handleFetchUpdateProfile(formData);
   };
 
   const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {

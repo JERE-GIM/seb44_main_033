@@ -18,8 +18,8 @@ import ConfirmModal from '../components/movie/ConfirmModal';
 import UserInfoEditModal from '../components/mypage/UserInfoEditModal';
 import ProfileUploadModal from '../components/mypage/ProfileUploadModal';
 import { useEffect, useState } from 'react';
-import { requestGetProfile, requestGetUserInfo } from '../api/userInfo';
-import { requestDeleteAccount } from '../api/auth';
+import { fetchGetProfileImage, fetchGetUserInfo } from '../api/userInfo';
+import { fetchDeleteAccount } from '../api/auth';
 import { IMypageResponse } from '../types/user';
 import ReviewList from '../components/share/ReviewList';
 import { logout } from '../redux/reducers/isLogin';
@@ -32,14 +32,14 @@ export default function Mypage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const deleteAccount = () => {
-    requestDeleteAccount()
+  const handleFetchDeleteAccount = () => {
+    fetchDeleteAccount()
       .then(() => {
         dispatch(modalAction.close());
         dispatch(logout());
         navigate('/');
       })
-      .then((err) => console.log(err));
+      .catch((err) => console.log(err));
   };
 
   const handleClickEditUserInfo = () => {
@@ -54,16 +54,16 @@ export default function Mypage() {
     dispatch(modalAction.open(MODAL_ROLE.PROFILE_UPLOAD));
   };
 
-  const fetchUserInfoData = () => {
-    requestGetUserInfo()
+  const handleFetchUserInfo = () => {
+    fetchGetUserInfo()
       .then((res) => {
         setUserInfo({ ...res.data });
       })
       .catch((err) => console.log(err));
   };
 
-  const fetchProfileImageData = () => {
-    requestGetProfile()
+  const handleFetchProfileImage = () => {
+    fetchGetProfileImage()
       .then((imageBlob) => {
         const imageUrl = URL.createObjectURL(imageBlob);
         setProfileImage(imageUrl);
@@ -72,8 +72,8 @@ export default function Mypage() {
   };
 
   useEffect(() => {
-    fetchUserInfoData();
-    fetchProfileImageData();
+    handleFetchUserInfo();
+    handleFetchProfileImage();
   }, []);
 
   return (
@@ -107,17 +107,17 @@ export default function Mypage() {
           {modal.status && modal.role === MODAL_ROLE.USER_INFO_EDIT && (
             <UserInfoEditModal
               user={userInfo.data}
-              callback={fetchUserInfoData}
+              callback={handleFetchUserInfo}
             />
           )}
           {modal.status && modal.role === MODAL_ROLE.ACCOUNT_DELETE && (
             <ConfirmModal
               message="Cinema Princess에서 탈퇴하시겠습니까?"
-              callback={deleteAccount}
+              callback={handleFetchDeleteAccount}
             />
           )}
           {modal.status && modal.role === MODAL_ROLE.PROFILE_UPLOAD && (
-            <ProfileUploadModal callback={fetchProfileImageData} />
+            <ProfileUploadModal callback={handleFetchProfileImage} />
           )}
         </>
       )}
