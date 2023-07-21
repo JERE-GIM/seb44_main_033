@@ -172,35 +172,28 @@ public class UserService {
 
         return findUser;
     }
-
-    /**
-
-     하루님 요부분 수정 필요해졌습니닷.
-
-
-    public Map<String, Integer> getUsersStatistics(String gender, String age) {
-        int minAge = calculateMinAge(age);
-        int maxAge = calculateMaxAge(age);
-        User.Gender genderEnum = User.Gender.valueOf(gender);
-
-        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
-                .map(user -> new UserStatisticsDto(user.getGenre()))
-                .collect(Collectors.toList());
-
-        Map<String, Integer> genreCount = new HashMap<>();
-
-        for (UserStatisticsDto userStatistics : allUsersGenre) {
-            for (Long genreId : userStatistics.getGenreIds()) {
-                Genre genre = genreRepository.getGenreNameByGenreId(genreId);
-                String genreName = genre.getGenreName();
-                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
-            }
-        }
-
-        return genreCount;
-    }
-
-     **/
+    /** 하루님 장르가 List<String> 타입으로 바꼈습니다..! **/
+//    public Map<String, Integer> getUsersStatistics(String gender, String age) {
+//        int minAge = calculateMinAge(age);
+//        int maxAge = calculateMaxAge(age);
+//        User.Gender genderEnum = User.Gender.valueOf(gender);
+//
+//        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
+//                .map(user -> new UserStatisticsDto(user.getGenre()))
+//                .collect(Collectors.toList());
+//
+//        Map<String, Integer> genreCount = new HashMap<>();
+//
+//        for (UserStatisticsDto userStatistics : allUsersGenre) {
+//            for (Long genreId : userStatistics.getGenreIds()) {
+//                Genre genre = genreRepository.getGenreNameByGenreId(genreId);
+//                String genreName = genre.getGenreName();
+//                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
+//            }
+//        }
+//
+//        return genreCount;
+//    }
 
     private int calculateMinAge(String age){
         int ageGroup = Integer.parseInt(age);

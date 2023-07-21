@@ -4,7 +4,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.response.PageInfo;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.user.entity.User;
@@ -40,7 +39,7 @@ public class UserDto {
         @NotBlank(message = "닉네임을 작성해 주세요.") // unique 옵션 프론트와 상의
         private String username;
 
-        private List<Genre> genre;
+        private List<String> genre;
     }
 
     //회원정보 수정
@@ -53,7 +52,7 @@ public class UserDto {
 
         private String username;
 
-        private List<Genre> genre;
+        private List<String> genre;
     }
 
     // password 수정
@@ -86,7 +85,7 @@ public class UserDto {
         private String username;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private List<Genre> genre;
+        private List<String> genre;
         private String provider;
         private String profileImgName;
         private String profileImgPath;
