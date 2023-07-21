@@ -17,7 +17,7 @@ import {
 import profile from '../../assets/profile.jpg';
 import elementalPoster from '../../assets/elemental_poster.png';
 import thumbUp from '../../assets/thumb-up.svg';
-import { IReview } from '../../dummy/dummyReview';
+import { IReview } from '../../types/movie';
 
 interface IReviewListitem {
   review: IReview;
@@ -33,7 +33,7 @@ export default function ReviewListitem({ review }: IReviewListitem) {
         {isMoviePage && (
           <>
             <ProfileImage src={profile} />
-            <Username>{review.writer}</Username>
+            <Username>{review.username}</Username>
           </>
         )}
         {!isMoviePage && (
@@ -44,13 +44,13 @@ export default function ReviewListitem({ review }: IReviewListitem) {
         )}
       </ReviewTop>
       <ReviewMiddle>
-        <Stars rating={review.rating} />
-        <Comment>{review.comment}</Comment>
+        <Stars rating={review.score} />
+        <Comment>{review.content}</Comment>
       </ReviewMiddle>
       <ReviewBottom>
         <LikeButton $liked={$liked}>
           <IconImage $liked={$liked} src={thumbUp} alt="like icon" />
-          <ButtonText $liked={$liked}>{review.likes}</ButtonText>
+          <ButtonText $liked={$liked}>{review.votesCount}</ButtonText>
         </LikeButton>
       </ReviewBottom>
     </Wrapper>

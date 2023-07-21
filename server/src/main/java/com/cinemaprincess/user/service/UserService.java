@@ -174,7 +174,6 @@ public class UserService {
         int ageGroup = Integer.parseInt(age);
         return ageGroup / 10 * 10;
     }
-
     private int calculateMaxAge(String age){
         int ageGroup = Integer.parseInt(age);
         return (ageGroup / 10 * 10) + 9;
