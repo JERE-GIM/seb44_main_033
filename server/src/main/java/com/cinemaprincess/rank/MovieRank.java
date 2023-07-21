@@ -23,6 +23,7 @@ public class MovieRank {
 
 //    private String boxofficeType;
 //    private String showRange;  //박스오피스 조회 일자
+    @Column(name = "movie_rank")
     private String rank;
     private String movieNm;
     private String openDt;
