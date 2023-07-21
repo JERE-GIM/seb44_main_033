@@ -70,6 +70,7 @@ public class ReviewService {
 //                });
         Optional.ofNullable(review.getScore())
                 .ifPresent(findReview::setScore);
+                        .ifPresent(findReview::setScore);
         Optional.ofNullable(review.getContent())
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());

@@ -7,12 +7,12 @@ const userId = localStorage.getItem('userId')
   ? Number(localStorage.getItem('userId'))
   : null;
 
-export const requestGetMovieInfo = async (movieId: number) => {
+export const fetchGetMovieInfo = async (movieId: number) => {
   const res = await axios.get(`http://cinemaprincess.shop/movies/${movieId}`);
   return res;
 }; //
 
-export const requestGetMyReview = async (movieId: number) => {
+export const fetchGetMyReview = async (movieId: number) => {
   const res = await axios.get(
     `http://cinemaprincess.shop/reviews/${movieId}/${userId}`,
     {
@@ -28,7 +28,7 @@ interface ICreateMyReviewData {
   movieId: number;
   userId?: number | null;
 }
-export const requestCreateMyReview = async (data: ICreateMyReviewData) => {
+export const fetchCreateMyReview = async (data: ICreateMyReviewData) => {
   data = { ...data, userId };
 
   const res = await axios.post(`http://cinemaprincess.shop/reviews`, data, {
@@ -41,7 +41,7 @@ interface IUpdateReviewData {
   content: string;
   score: number;
 }
-export const requestUpdateMyReview = async (
+export const fetchUpdateMyReview = async (
   reviewId: number,
   data: IUpdateReviewData,
 ) => {
@@ -55,7 +55,7 @@ export const requestUpdateMyReview = async (
   return res;
 }; //
 
-export const requestDeleteMyReview = async (reviewId: number) => {
+export const fetchDeleteMyReview = async (reviewId: number) => {
   const res = await axios.delete(
     `http://cinemaprincess.shop/reviews/${reviewId}`,
     {
@@ -65,7 +65,7 @@ export const requestDeleteMyReview = async (reviewId: number) => {
   return res;
 }; //
 
-export const requestAddWatchlist = async (movieId: number) => {
+export const fetchAddToWatchlist = async (movieId: number) => {
   const res = await axios.post(
     `http://cinemaprincess.shop/movies/${movieId}/${userId}`,
     null,
@@ -74,7 +74,7 @@ export const requestAddWatchlist = async (movieId: number) => {
   return res;
 };
 
-export const requestDeleteWatchlist = async (movieId: number) => {
+export const fetchDeleteInWatchlist = async (movieId: number) => {
   const res = await axios.post(
     `http://cinemaprincess.shop/movies/${movieId}/${userId}`,
     null,

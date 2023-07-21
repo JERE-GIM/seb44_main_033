@@ -1,7 +1,7 @@
 import React from 'react';
 import { GoogleLogo } from '../styles/SignupForm1.styled';
 
-const GOOGLE_OAUTH_URL = `http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google`;
+const GOOGLE_OAUTH_URL = `http://cinemaprincess.shop/oauth2/authorization/google`;
 
 const GoogleLogin: React.FC = () => {
   const handleLogin = () => {
