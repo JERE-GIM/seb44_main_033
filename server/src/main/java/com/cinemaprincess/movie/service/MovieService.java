@@ -131,26 +131,27 @@ public class MovieService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MOVIE_NOT_FOUND));
     }
 
-//    private final UserService userService;
-//    private final UserRepository userRepository;
-//    private final WatchlistMovieRepository watchlistMovieRepository;
-//    public boolean findWatchlistMovie(Long movieId) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if(authentication != null) {
-//            Object principal = authentication.getPrincipal();
-//            if(principal instanceof UserDetails) {
-//                String email = ((UserDetails) principal).getUsername();
-//                Long userId = userRepository.findUserIdByEmail(email);
-//                User user = userService.findUser(userId);
-//                Watchlist watchlist = user.getWatchlist();
-//                Movie movie = movieRepository.findByMovieId(movieId);
-//                WatchlistMovie watchlistMovie =  watchlistMovieRepository.findByWatchlistWatchlistIdAndMovieMovieId(watchlist.getWatchlistId(),
-//                        movie.getMovieId());
-//                if(watchlistMovie == null) {
-//                    return false;
-//                }
-//            }
-//        }
-//        return true;
-//    }
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final WatchlistMovieRepository watchlistMovieRepository;
+    public boolean findWatchlistMovie(Long movieId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null) {
+            Object principal = authentication.getPrincipal();
+            if(principal instanceof UserDetails) {
+                String email = ((UserDetails) principal).getUsername();
+                Long userId = userRepository.findUserIdByEmail(email);
+                User user = userService.findUser(userId);
+                Watchlist watchlist = user.getWatchlist();
+                Movie movie = movieRepository.findByMovieId(movieId);
+                WatchlistMovie watchlistMovie =  watchlistMovieRepository.findByWatchlistWatchlistIdAndMovieMovieId(watchlist.getWatchlistId(),
+                        movie.getMovieId());
+                System.out.println("movieId : " + watchlistMovie.getMovie().getMovieId());
+                if(watchlistMovie != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

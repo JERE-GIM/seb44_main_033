@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +23,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -71,6 +78,8 @@ public class UserService {
                     .ifPresent(userName -> findUser.setUsername(userName));
         } else {
             this.verifyExistsUsername(user.getUsername());
+            Optional.ofNullable(user.getUsername())
+                    .ifPresent(userName -> findUser.setUsername(userName));
         }
         Optional.ofNullable(user.getAge())
                 .ifPresent(age -> findUser.setAge(age));
@@ -111,7 +120,7 @@ public class UserService {
     }
 
     // 프로필 이미지 업로드
-    public void imgFileUpload(User user, MultipartFile imgFile) throws IOException {
+    public void uploadImgFile(User user, MultipartFile imgFile) throws IOException {
         UUID uuid = UUID.randomUUID();
         String fileName = uuid.toString() + "_" + imgFile.getOriginalFilename();
         File profileImg = new File(uploadPath, fileName);
@@ -123,11 +132,12 @@ public class UserService {
     }
 
     public byte[] getImgFile(User user) throws IOException {
-        InputStream inputStream = new FileInputStream(user.getProfileImgPath());
-        byte[] imageByteArray = IOUtils.toByteArray(inputStream);
-        inputStream.close();
+        String imagePath = user.getProfileImgPath();
+        Path path = Paths.get(imagePath);
 
-        return imageByteArray;
+        byte[] imageBytes = Files.readAllBytes(path);
+
+        return imageBytes;
     }
 
     // 중복된 이메일인지 확인
