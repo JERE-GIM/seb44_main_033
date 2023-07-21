@@ -34,9 +34,9 @@ import Card from '../components/main/movierank/Card';
 import defaultPoster from '../assets/default_poster.png';
 import { useParams } from 'react-router-dom';
 import {
-  requestDeleteMyReview,
-  requestGetMovieInfo,
-  requestGetMyReview,
+  fetchDeleteMyReview,
+  fetchGetMovieInfo,
+  fetchGetMyReview,
 } from '../api/movie';
 import ReviewList from '../components/share/ReviewList';
 import MovieInfo from '../components/movie/MovieInfo';
@@ -51,15 +51,14 @@ export default function Movie() {
   const { modal } = useAppSelector((state) => state);
   const { movieId } = useParams();
 
-  // 서버 데이터 가져오는 api 요청 함수
-  const fetchMovieInfo = () => {
-    requestGetMovieInfo(Number(movieId))
+  const handleFetchGetMovieInfo = () => {
+    fetchGetMovieInfo(Number(movieId))
       .then((res) => setMovieInfo(res.data))
       .catch((err) => alert(err));
   };
 
-  const fetchMyReview = () => {
-    requestGetMyReview(Number(movieId))
+  const handleFetchGetMyReview = () => {
+    fetchGetMyReview(Number(movieId))
       .then((res) => {
         setMyReview(res.data);
         setRating(res.data.score);
@@ -72,21 +71,18 @@ export default function Movie() {
       });
   };
 
+  const handleFetchDeleteMyReview = (reviewId: number) => {
+    fetchDeleteMyReview(reviewId).then(() => {
+      dispatch(modalAction.close());
+      fetchMoviePageData();
+    });
+  };
+
   const fetchMoviePageData = () => {
-    fetchMovieInfo();
-    fetchMyReview();
+    handleFetchGetMovieInfo();
+    handleFetchGetMyReview();
   };
 
-  // api 요청 함수
-  const deleteMyReview = () => {
-    if (myReview)
-      requestDeleteMyReview(myReview.reviewId).then(() => {
-        dispatch(modalAction.close());
-        fetchMoviePageData();
-      });
-  };
-
-  // 이벤트 핸들러
   const handleOpenReviewModal = () => {
     dispatch(modalAction.open(MODAL_ROLE.REVIEW_WRITE));
   };
@@ -195,7 +191,9 @@ export default function Movie() {
           {modal.status && modal.role === MODAL_ROLE.REVIEW_DELETE && (
             <ConfirmModal
               message={'리뷰를 삭제하시겠습니까?'}
-              callback={() => deleteMyReview()}
+              callback={() => {
+                if (myReview) handleFetchDeleteMyReview(myReview.reviewId);
+              }}
             />
           )}
         </>

@@ -7,7 +7,7 @@ const userId = localStorage.getItem('userId')
   ? Number(localStorage.getItem('userId'))
   : null;
 
-export const requestDeleteAccount = async () => {
+export const fetchDeleteAccount = async () => {
   const res = await axios.delete(
     `http://cinemaprincess.shop/users/mypage/${userId}`,
     {
