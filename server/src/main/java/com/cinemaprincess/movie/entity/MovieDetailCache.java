@@ -12,6 +12,12 @@ public class MovieDetailCache {
         movieDetailMap.put(movieDetail.getId(), movieDetail);
     }
 
+    public void addMovieDetails(List<MovieDetail> movieDetails) {
+        for (MovieDetail movieDetail : movieDetails) {
+            movieDetailMap.put(movieDetail.getId(), movieDetail);
+        }
+    }
+
     public MovieDetail getMovieDetailById(Long movieId) {
         return movieDetailMap.get(movieId);
     }

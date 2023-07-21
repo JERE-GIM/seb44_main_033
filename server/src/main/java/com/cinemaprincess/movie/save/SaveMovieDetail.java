@@ -2,27 +2,23 @@ package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreCache;
-import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailCache;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
-import com.cinemaprincess.movie.repository.MovieJdbcRepository;
-import com.cinemaprincess.movie.repository.MovieRepository;
 import com.cinemaprincess.movie.watch_provider.WatchProvider;
 import com.cinemaprincess.movie.watch_provider.WatchProviderCache;
-import com.cinemaprincess.movie.watch_provider.WatchProviderRepository;
-import com.cinemaprincess.review.repository.ReviewRepository;
+import com.cinemaprincess.utils.RestTemplateConfig;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
@@ -38,21 +34,17 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 @Transactional
 public class SaveMovieDetail {
-    private final MovieRepository movieRepository;
-    private final MovieJdbcRepository movieJdbcRepository;
     private final MovieDetailRepository movieDetailRepository;
-    private final GenreRepository genreRepository;
-    private final WatchProviderRepository watchProviderRepository;
-    private final ReviewRepository reviewRepository;
     private MovieDetail movieDetail;
     private final GenreCache genreCache;
     private final WatchProviderCache watchProviderCache;
     private final MovieDetailCache movieDetailCache;
+    private final RestTemplateConfig restTemplateConfig;
 
-    RestTemplate restTemplate = new RestTemplate();
+    @Value("${tmdb.key}")
+    String key;
 
     public String buildMovieDetailUrl(long movieId) {
-        String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + movieId)
                 .queryParam("api_key", key)
                 .queryParam("language", "ko")
@@ -66,7 +58,7 @@ public class SaveMovieDetail {
         if (movieDetail == null) {
             try {
                 String url = buildMovieDetailUrl(movieId);
-                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+                ResponseEntity<String> response = restTemplateConfig.restTemplate().exchange(url, HttpMethod.GET, null, String.class);
                 String responseBody = response.getBody();
                 movieDetail = parseMovieDetail(responseBody);
 

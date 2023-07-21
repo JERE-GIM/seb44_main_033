@@ -4,6 +4,7 @@ import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailCache;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.save.SaveMovieDetail;
+import com.cinemaprincess.utils.RestTemplateConfig;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -30,52 +30,46 @@ public class SaveMovieVote {
     private final SaveMovieDetail saveMovieDetail;
     private final MovieDetailCache movieDetailCache;
     private final MovieJdbcRepository movieJdbcRepository;
-    private final MovieVoteRepository movieVoteRepository;
-    RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplateConfig restTemplateConfig;
 
-    public void getMovieVote() throws ExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(20);
-        List<MovieDetail> movieDetails = movieDetailCache.getMovieDetails();
-        List<CompletableFuture<MovieVote>> futures = new ArrayList<>();
+    public void getMovieVote() {
+        ExecutorService executorService = Executors.newFixedThreadPool(30);
+        try {
+            List<MovieDetail> movieDetails = movieDetailCache.getMovieDetails();
 
-        for (MovieDetail movieDetail : movieDetails) {
-            CompletableFuture<MovieVote> future = CompletableFuture.supplyAsync(() -> {
-                try {
-                    String url = saveMovieDetail.buildMovieDetailUrl(movieDetail.getId());
-                    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-                    String responseBody = response.getBody();
-                    JsonParser jsonParser = new JsonParser();
-                    JsonObject jsonObject = jsonParser.parse(responseBody).getAsJsonObject();
+            List<CompletableFuture<MovieVote>> voteFutures = movieDetails.stream()
+                    .map(movieDetail -> CompletableFuture.supplyAsync(() -> {
+                        String url = saveMovieDetail.buildMovieDetailUrl(movieDetail.getId());
+                        ResponseEntity<String> response = restTemplateConfig.restTemplate().exchange(url, HttpMethod.GET, null, String.class);
+                        String responseBody = response.getBody();
+                        JsonParser jsonParser = new JsonParser();
+                        JsonObject jsonObject = jsonParser.parse(responseBody).getAsJsonObject();
 
-                    float voteAverage = Math.round(jsonObject.get("vote_average").getAsFloat() * 10.0f) / 10.0f;
+                        float voteAverage = Math.round(jsonObject.get("vote_average").getAsFloat() * 10.0f) / 10.0f;
 
-                    return MovieVote.builder()
-                            .id(movieDetail.getId())
-                            .voteAverage(voteAverage)
-                            .voteCount(jsonObject.get("vote_count").getAsInt())
-                            .movieDetail(movieDetail)
-                            .build();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }, executorService);
+                        return MovieVote.builder()
+                                .id(movieDetail.getId())
+                                .voteAverage(voteAverage)
+                                .voteCount(jsonObject.get("vote_count").getAsInt())
+                                .movieDetail(movieDetail)
+                                .build();
+                    }, executorService))
+                    .collect(Collectors.toList());
 
-            futures.add(future);
+            CompletableFuture<List<MovieVote>> movieVotesFuture = CompletableFuture.allOf(voteFutures.toArray(new CompletableFuture[0]))
+                    .thenApply(v -> voteFutures.stream()
+                            .map(CompletableFuture::join)
+                            .collect(Collectors.toList()));
+
+            List<MovieVote> movieVotes = movieVotesFuture.get();
+
+            movieJdbcRepository.saveMovieVote(movieVotes);
+
+            log.info("MovieVote 저장 완료");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            executorService.shutdown();
         }
-
-        CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-
-        CompletableFuture<List<MovieVote>> combinedFuture = allFutures.thenApply(v ->
-                futures.stream()
-                        .map(CompletableFuture::join)
-                        .collect(Collectors.toList())
-        );
-
-        List<MovieVote> movieVotes = combinedFuture.get();
-        movieJdbcRepository.saveMovieVote(movieVotes);
-        log.info("MovieVote 저장 완료");
-
-        executorService.shutdown();
     }
 }
