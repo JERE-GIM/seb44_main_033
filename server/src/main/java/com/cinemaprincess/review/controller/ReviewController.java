@@ -83,7 +83,7 @@ public class ReviewController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @GetMapping("/votes/{review-id}/{user-id}")
+    @PostMapping("/votes/{review-id}/{user-id}")
     public ResponseEntity votesCount(@PathVariable("review-id") long reviewId,
                                        @PathVariable("user-id") long userId){
         ReviewVoteDto reviewVoteDto = reviewService.votesCount(reviewId, userId);

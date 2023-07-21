@@ -16,7 +16,7 @@ interface Props {
   title: string;
   openat: number;
   country: string;
-  voteAverage: number;
+  voteAverage?: number;
 }
 
 const Card: React.FC<Props> = ({

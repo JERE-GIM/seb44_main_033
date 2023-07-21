@@ -14,6 +14,7 @@ import com.cinemaprincess.review.dto.ReviewVoteDto;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.review.entity.ReviewVote;
 import com.cinemaprincess.review.mapper.ReviewMapper;
+import com.cinemaprincess.review.projection.TopReviewedMoviesResponse;
 import com.cinemaprincess.review.repository.ReviewRepository;
 import com.cinemaprincess.review.repository.ReviewVoteRepository;
 import com.cinemaprincess.user.entity.User;
@@ -27,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +51,7 @@ public class ReviewService {
         MovieDetail movieDetail = movieService.findMovie(reviewPostDto.getMovieId());
         review.setMovieDetail(movieDetail);
 
-        updateMovieVote(movieDetail, 0, review.getScore(), 1);
+//        updateMovieVote(movieDetail, 0, review.getScore(), 1);
 
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
@@ -60,12 +62,14 @@ public class ReviewService {
         Review review = mapper.reviewPatchDtoToReview(reviewPatchDto);
         Review findReview = findVerifiedReview(review.getReviewId());
 
+//        Optional.ofNullable(review.getScore())
+//                .ifPresent(score -> {
+//                    int oldScore = findReview.getScore();
+//                    findReview.setScore(score);
+//                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
+//                });
         Optional.ofNullable(review.getScore())
-                .ifPresent(score -> {
-                    int oldScore = findReview.getScore();
-                    findReview.setScore(score);
-                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
-                });
+                        .ifPresent(findReview::setScore);
         Optional.ofNullable(review.getContent())
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());
@@ -101,7 +105,7 @@ public class ReviewService {
     public void deleteReview(long reviewId) {
         Review review = findVerifiedReview(reviewId);
 
-        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
+//        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
 
         reviewRepository.delete(review);
     }
@@ -141,32 +145,30 @@ public class ReviewService {
         movieVoteRepository.save(movieVote);
     }
 
-//    public List<TopReviewedMoviesResponse> searchMoviesWithReviewsByPeriod(String period) {
-//        /*
-//            TODO: n+1 리팩터링 필요, reviewRepo 쿼리문 수 줄이기, 영화의 목록 결과가 n개 이하의 경우 고려
-//         */
-//        LocalDateTime today = LocalDateTime.now();
-//        LocalDateTime weekAgo = today.minusWeeks(1);
-//        LocalDateTime monthAgo = today.minusMonths(1);
-//        List<TopReviewedMoviesResponse> foundMovies = new ArrayList<>();
-//        switch (period) {
-//            case "day":
-//                foundMovies = reviewRepository.findReviewsByDay(today);
-//                break;
-//            case "week":
-//                foundMovies = reviewRepository.findReviewsByWeek(weekAgo);
-//                break;
-//            case "month":
-//                foundMovies = reviewRepository.findReviewsByMonth(monthAgo);
-//                break;
-//            default:
-//                //에러코드
-//                break;
-//        }
-//        return foundMovies;
-//    }
-    /*
-     */
+    public List<TopReviewedMoviesResponse> getMoviesWithReviewsByPeriod(String period) {
+        /*
+            TODO: n+1 리팩터링 필요, reviewRepo 쿼리문 수 줄이기, 영화의 목록 결과가 n개 이하의 경우 고려
+         */
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime weekAgo = today.minusWeeks(1);
+        LocalDateTime monthAgo = today.minusMonths(1);
+        List<TopReviewedMoviesResponse> foundMovies = new ArrayList<>();
+        switch (period) {
+            case "day":
+                foundMovies = reviewRepository.findReviewsByDay(today);
+                break;
+            case "week":
+                foundMovies = reviewRepository.findReviewsByWeek(weekAgo);
+                break;
+            case "month":
+                foundMovies = reviewRepository.findReviewsByMonth(monthAgo);
+                break;
+            default:
+                //에러코드
+                break;
+        }
+        return foundMovies;
+    }
 
     public ReviewVoteDto votesCount(long reviewId, long userId) {
         Review findReview = findVerifiedReview(reviewId);

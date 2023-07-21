@@ -1,5 +1,11 @@
 package com.cinemaprincess.genre;
 
+import com.cinemaprincess.movie.dto.MovieStatisticsDto;
+import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.entity.MovieDetailGenre;
+import com.cinemaprincess.movie.repository.MovieRepository;
+import com.cinemaprincess.user.dto.UserStatisticsDto;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,7 +19,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +31,7 @@ import java.util.List;
 public class GenreService {
     String key = "8799558ac2f2609cd5ff89aa63a87f10";
     private final GenreRepository genreRepository;
+    private final MovieRepository movieRepository;
     private final GenreCache genreCache;
     RestTemplate restTemplate = new RestTemplate();
 
@@ -66,5 +77,12 @@ public class GenreService {
         }
 
         return genres;
+    }
+    public Map<String, Long> getGenresByYear(int year) {
+        List<Movie> movies = movieRepository.getMoviesByYear(year);
+        return movies.stream()
+                .flatMap(movie -> movie.getMovieDetail().getMovieDetailGenres().stream())
+                .map(movieDetailGenre -> movieDetailGenre.getGenre().getGenreName())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 }

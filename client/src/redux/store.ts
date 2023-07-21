@@ -7,6 +7,7 @@ import authReducer from './reducers/authSlice';
 import tabmovie from './reducers/tabmovieSlice';
 import monthly from './reducers/monthlySlice';
 import watchlist from './reducers/watchlistSlice';
+import search from './reducers/searchSlice';
 
 const store = configureStore({
   reducer: {
@@ -17,6 +18,8 @@ const store = configureStore({
     tabmovie: tabmovie.reducer,
     monthly: monthly.reducer,
     watchlist: watchlist.reducer,
+    search: search.reducer,
+
   },
 });
 

@@ -94,35 +94,6 @@ public class SaveMovieList {
             movieJdbcRepository.saveMovies(allMovies);
             log.info("Movie 저장 완료");
 
-//            List<MovieDetail> movieDetails = new ArrayList<>();
-//            log.info("Movie_detail 저장 시작");
-//            for (Movie movie : allMovies) {
-//                MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
-//                movieDetail.setMovie(movie);
-//                movieDetails.add(movieDetail);
-//            }
-//            movieJdbcRepository.saveMovieDetails(movieDetails);
-//            log.info("MovieDetail 저장 완료");
-//
-//            List<MovieVote> movieVotes = new ArrayList<>();
-//            List<MovieDetailGenre> movieDetailGenres = new ArrayList<>();
-//
-//            List<Long> movieIds = movieDetails.stream()
-//                    .map(MovieDetail::getId)
-//                    .collect(Collectors.toList());
-//            List<Long> existingMovieIds = saveMovieVote.getExistingMovieIds(movieIds);
-//
-//            for (MovieDetail movieDetail : movieDetails) {
-//                if (!existingMovieIds.contains(movieDetail.getId())) {
-//                    // 존재하지 않는 경우에만 실행
-//                    MovieVote movieVote = saveMovieVote.getMovieVote(movieDetail.getId());
-//                    movieVote.setMovieDetail(movieDetail);
-//                    movieVotes.add(movieVote);
-//                }
-//                movieDetailGenres.addAll(movieDetail.getMovieDetailGenres());
-//            }
-//            movieJdbcRepository.saveMovieVote(movieVotes);
-//            movieJdbcRepository.saveMovieDetailGenres(movieDetailGenres);
             List<CompletableFuture<MovieDetail>> detailFutures = allMovies.stream()
                     .map(movie -> CompletableFuture.supplyAsync(() -> {
                         MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
@@ -204,7 +175,7 @@ public class SaveMovieList {
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
     public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("2017-01-01");
+        LocalDate startDate = LocalDate.parse("2018-01-01");
         LocalDate endDate = LocalDate.parse("2023-12-31");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -241,6 +212,7 @@ public class SaveMovieList {
             log.info("{}, {}, {}p", key, value, pages);
             // 500p가 되면 DB에 저장
             getMovieList();
+            dateMap.clear();
         }
     }
 

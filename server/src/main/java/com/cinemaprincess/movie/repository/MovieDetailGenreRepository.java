@@ -20,7 +20,8 @@ public interface MovieDetailGenreRepository extends JpaRepository<MovieDetailGen
             "WHERE mdg.genre.genreId = :genreId " +
             "AND mdg.movieDetail.id <> :movieId " +
             "AND mv.voteAverage >= 5 " +
-            "AND mv.voteCount >= 10")
+            "AND mv.voteCount >= 10 " +
+            "ORDER BY RAND()")
     List<MovieDetail> findSimilarMovieDetailsWithVote(@Param("genreId") long genreId, @Param("movieId") long movieId, Pageable pageable);
 
     List<MovieDetailGenre> findByMovieDetail(MovieDetail movieDetail);
