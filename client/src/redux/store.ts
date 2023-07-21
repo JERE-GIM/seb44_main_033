@@ -19,7 +19,6 @@ const store = configureStore({
     monthly: monthly.reducer,
     watchlist: watchlist.reducer,
     search: search.reducer,
-
   },
 });
 
