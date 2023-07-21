@@ -6,6 +6,7 @@ import modalReducer from './reducers/modal';
 import authReducer from './reducers/authSlice';
 import tabmovie from './reducers/tabmovieSlice';
 import monthly from './reducers/monthlySlice';
+import watchlist from './reducers/watchlistSlice';
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     auth: authReducer,
     tabmovie: tabmovie.reducer,
     monthly: monthly.reducer,
+    watchlist: watchlist.reducer,
   },
 });
 
