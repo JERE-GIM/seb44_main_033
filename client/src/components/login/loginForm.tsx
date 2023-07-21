@@ -74,10 +74,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       return;
     }
     axios
-      .post(
-        'http://cinemaprincess.shop/login',
-        formData,
-      )
+      .post('http://cinemaprincess.shop/login', formData)
       .then((response) => {
         console.log(response.headers);
         const accessToken = response.headers.authorization;
@@ -94,7 +91,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           navigate('/login');
           return;
         }
-        
+
         localStorage.setItem('userId', userId);
         localStorage.setItem('accessToken', accessToken); // accessToken 저장
         onClose();
@@ -102,36 +99,39 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       })
       .catch(() => {
         alert('아이디와 비밀번호를 확인해주세요');
-        });
-    };
+      });
+  };
 
-    interface TokenPayload {
-      userId: number;
-      exp?: number;
-    }
-    
-    const UserIdFromAccessToken = (accessToken: string): string => {
-      try {
-        const decoded = jwt_decode(accessToken);
-        const tokenPayload = decoded as TokenPayload;
-    
-        // Check if the object has userId property and it is a number
-        if (typeof tokenPayload.userId === 'number') {
-          const userId = tokenPayload.userId;
-          // Check token expiry
-          if (typeof tokenPayload.exp === 'number' && Date.now() >= tokenPayload.exp * 1000) {
-            throw new Error('Token expired');
-          }
-          return userId.toString();
-        } else {
-          throw new Error('Invalid token payload');
+  interface TokenPayload {
+    userId: number;
+    exp?: number;
+  }
+
+  const UserIdFromAccessToken = (accessToken: string): string => {
+    try {
+      const decoded = jwt_decode(accessToken);
+      const tokenPayload = decoded as TokenPayload;
+
+      // Check if the object has userId property and it is a number
+      if (typeof tokenPayload.userId === 'number') {
+        const userId = tokenPayload.userId;
+        // Check token expiry
+        if (
+          typeof tokenPayload.exp === 'number' &&
+          Date.now() >= tokenPayload.exp * 1000
+        ) {
+          throw new Error('Token expired');
         }
-      } catch (error) {
-        console.error('토큰 디코딩에 실패했습니다:', error);
-        console.error('잘못된 토큰:', accessToken);
-        return '';
+        return userId.toString();
+      } else {
+        throw new Error('Invalid token payload');
       }
-    };
+    } catch (error) {
+      console.error('토큰 디코딩에 실패했습니다:', error);
+      console.error('잘못된 토큰:', accessToken);
+      return '';
+    }
+  };
 
   return (
     <ModalBackground onClick={onClose}>

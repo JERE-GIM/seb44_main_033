@@ -23,8 +23,6 @@ export const OauthHandler: React.FC = () => {
       try {
         const decoded = jwt_decode(accessToken);
         const tokenPayload = decoded as TokenPayload;
-
-        
         if (typeof tokenPayload.userId === 'string') {
           const userId = tokenPayload.userId;
           localStorage.setItem('userId', userId);
@@ -33,7 +31,10 @@ export const OauthHandler: React.FC = () => {
         }
 
         // Check token expiry
-        if (typeof tokenPayload.exp === 'number' && Date.now() >= tokenPayload.exp * 1000) {
+        if (
+          typeof tokenPayload.exp === 'number' &&
+          Date.now() >= tokenPayload.exp * 1000
+        ) {
           throw new Error('Token expired');
         }
       } catch (error) {
