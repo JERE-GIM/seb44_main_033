@@ -42,10 +42,12 @@ export default function ProfileUploadModal({
     const formData = new FormData();
     if (imgFile) formData.append('imgFile', imgFile);
 
-    requestUpdateProfile(formData).then(() => {
-      callback();
-      dispatch(modalAction.close());
-    });
+    requestUpdateProfile(formData)
+      .then(() => {
+        callback();
+        dispatch(modalAction.close());
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {

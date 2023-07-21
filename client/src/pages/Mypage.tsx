@@ -33,11 +33,13 @@ export default function Mypage() {
   const navigate = useNavigate();
 
   const deleteAccount = () => {
-    requestDeleteAccount().then(() => {
-      dispatch(modalAction.close());
-      dispatch(logout());
-      navigate('/');
-    });
+    requestDeleteAccount()
+      .then(() => {
+        dispatch(modalAction.close());
+        dispatch(logout());
+        navigate('/');
+      })
+      .then((err) => console.log(err));
   };
 
   const handleClickEditUserInfo = () => {
@@ -53,16 +55,20 @@ export default function Mypage() {
   };
 
   const fetchUserInfoData = () => {
-    requestGetUserInfo().then((res) => {
-      setUserInfo({ ...res.data });
-    });
+    requestGetUserInfo()
+      .then((res) => {
+        setUserInfo({ ...res.data });
+      })
+      .catch((err) => console.log(err));
   };
 
   const fetchProfileImageData = () => {
-    requestGetProfile().then((imageBlob) => {
-      const imageUrl = URL.createObjectURL(imageBlob);
-      setProfileImage(imageUrl);
-    });
+    requestGetProfile()
+      .then((imageBlob) => {
+        const imageUrl = URL.createObjectURL(imageBlob);
+        setProfileImage(imageUrl);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
