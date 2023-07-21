@@ -14,12 +14,14 @@ import {
 import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import profile from '../../assets/profile.jpg';
+import { requestUpdateProfile } from '../../api/userInfo';
 
 export default function ProfileUploadModal() {
   const dispatch = useAppDispatch();
-  const [imgFile, setImgFile] = useState('');
+  const [imgPreview, setImgPreview] = useState('');
+  const [imgFile, setImgFile] = useState<File | null>(null);
 
   const handleCloseModalUnsaved = () => {
     dispatch(modalAction.close());
@@ -33,6 +35,10 @@ export default function ProfileUploadModal() {
     event.preventDefault();
     console.log(imgFile);
     // api 로직 추가
+    const formData = new FormData();
+    if (imgFile) formData.append('imgFile', imgFile);
+
+    requestUpdateProfile(formData);
     dispatch(modalAction.close());
   };
 
@@ -40,8 +46,15 @@ export default function ProfileUploadModal() {
     const file = event.target.files ? event.target.files[0] : '';
     if (!file) return;
 
-    setImgFile(URL.createObjectURL(file));
+    setImgFile(file);
+    setImgPreview(URL.createObjectURL(file));
   };
+
+  useEffect(() => {
+    if (imgPreview) {
+      return () => URL.revokeObjectURL(imgPreview);
+    }
+  }, [imgPreview]);
 
   return (
     <Background onClick={handleCloseModalUnsaved}>
@@ -53,7 +66,10 @@ export default function ProfileUploadModal() {
           </CloseButton>
         </ModalHeader>
         <Form onSubmit={handleSubmitForm}>
-          <Profile src={imgFile ? imgFile : profile} alt="profile image" />
+          <Profile
+            src={imgPreview ? imgPreview : profile}
+            alt="profile image"
+          />
           <FileInputLabel htmlFor="imageUpload">
             <FileInput
               type="file"

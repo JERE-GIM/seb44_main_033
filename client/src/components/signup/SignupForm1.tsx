@@ -27,9 +27,6 @@ import {
   Loginmessage,
   Loginlink,
   OAuthbox,
-  KakaoLogo,
-  NaverLogo,
-  GoogleLogo,
   Container2page,
   UserInfoTitle,
   GenderBox,
@@ -56,12 +53,15 @@ import {
 import { RootState } from '../../redux/store';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import NaverLogin from '../login/Naverlogin';
+import KakaoLogin from '../login/Kakaologin';
+import GoogleLogin from '../login/Googlelogin';
 const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
   const { currentPage, username, email, password, gender, age, genres } =
     useSelector((state: RootState) => state.signup);
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
-  const [selectedAge, setSelectedAge] = useState<string | null>(null);
+  const [selectedAge, setSelectedAge] = useState<number | null>(null);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [isConfirmValid, setIsConfirmValid] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null); // 모달 참조?
@@ -124,7 +124,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     validateConfirm();
   };
 
-  const handleAgeChange = (selectedAge: string) => {
+  const handleAgeChange = (selectedAge: number) => {
     setSelectedAge(selectedAge);
     dispatch(setAge(selectedAge));
     validateConfirm();
@@ -157,10 +157,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const formData = {
       email,
       password,
-      gender,
-      age,
+      gender: selectedGender,
+      age: selectedAge,
       username,
-      genres,
+      genres: selectedGenres,
     };
 
     axios
@@ -169,10 +169,12 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         formData,
       )
       .then(() => {
+        alert('회원가입에 성공하였습니다.');
         onClose();
         navigate('/');
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         alert('필수 사항을 모두 체크해주세요');
       });
   };
@@ -207,22 +209,13 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <SignupButton onClick={handleNext}>다 음</SignupButton>
             <LoginmessageBox>
               <Loginmessage>Already haver an account?</Loginmessage>
-              <Loginlink>Login</Loginlink>
+              <Loginlink>Click Login</Loginlink>
             </LoginmessageBox>
             <div>or</div>
             <OAuthbox>
-              <KakaoLogo
-                src={process.env.PUBLIC_URL + '/images/Kakao.png'}
-                alt="Kakao"
-              />
-              <NaverLogo
-                src={process.env.PUBLIC_URL + '/images/Naver.png'}
-                alt="Naver"
-              />
-              <GoogleLogo
-                src={process.env.PUBLIC_URL + '/images/Google.png'}
-                alt="Google"
-              />
+              <KakaoLogin />
+              <NaverLogin />
+              <GoogleLogin />
             </OAuthbox>
           </Container1page>
         )}
@@ -236,10 +229,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="radio"
                   name="gender"
                   value="남자"
-                  checked={gender === 'male'}
-                  onChange={() => handleGenderChange('남자')}
+                  checked={gender === '남자'}
+                  onChange={() => handleGenderChange('MALE')}
                 />
-                <GenderText selected={selectedGender === '남자'}>
+                <GenderText selected={selectedGender === 'MALE'}>
                   남자
                 </GenderText>
               </GenderBoxLabel>
@@ -248,10 +241,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="radio"
                   name="gender"
                   value="여자"
-                  checked={gender === 'female'}
-                  onChange={() => handleGenderChange('여자')}
+                  checked={gender === '여자'}
+                  onChange={() => handleGenderChange('FEMALE')}
                 />
-                <GenderText selected={selectedGender === '여자'}>
+                <GenderText selected={selectedGender === 'FEMALE'}>
                   여자
                 </GenderText>
               </GenderBoxLabel>
@@ -259,24 +252,24 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <AgeBox>
               <AgeTitle>나이</AgeTitle>
               <AgeBoxLabel>
-                <GenderInput
+                <AgeInput
                   type="radio"
                   name="age"
                   value="10"
-                  checked={age === 'teens'}
-                  onChange={() => handleAgeChange('10대')}
+                  checked={age === '10'}
+                  onChange={() => handleAgeChange(10)}
                 />
-                <AgeText selected={selectedAge === '10대'}>10대</AgeText>
+                <AgeText selected={selectedAge === 10}>10대</AgeText>
               </AgeBoxLabel>
               <AgeBoxLabel>
                 <AgeInput
                   type="radio"
                   name="age"
                   value="20"
-                  checked={age === 'twenties'}
-                  onChange={() => handleAgeChange('20대')}
+                  checked={age === '20'}
+                  onChange={() => handleAgeChange(20)}
                 />
-                <AgeText selected={selectedAge === '20대'}>20대</AgeText>
+                <AgeText selected={selectedAge === 20}>20대</AgeText>
               </AgeBoxLabel>
             </AgeBox>
             <AgeBox>
@@ -286,20 +279,20 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="radio"
                   name="age"
                   value="30"
-                  checked={age === 'thirties'}
-                  onChange={() => handleAgeChange('30대')}
+                  checked={age === '30'}
+                  onChange={() => handleAgeChange(30)}
                 />
-                <AgeText selected={selectedAge === '30대'}>30대</AgeText>
+                <AgeText selected={selectedAge === 30}>30대</AgeText>
               </AgeBoxLabel>
               <AgeBoxLabel>
                 <AgeInput
                   type="radio"
                   name="age"
                   value="40"
-                  checked={age === 'forties'}
-                  onChange={() => handleAgeChange('40대')}
+                  checked={age === '40'}
+                  onChange={() => handleAgeChange(40)}
                 />
-                <AgeText selected={selectedAge === '40대'}>40대</AgeText>
+                <AgeText selected={selectedAge === 40}>40대</AgeText>
               </AgeBoxLabel>
             </AgeBox>
             <AgeBox>
@@ -309,20 +302,20 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="radio"
                   name="age"
                   value="50"
-                  checked={age === 'fifties'}
-                  onChange={() => handleAgeChange('50대')}
+                  checked={age === '50'}
+                  onChange={() => handleAgeChange(50)}
                 />
-                <AgeText selected={selectedAge === '50대'}>50대</AgeText>
+                <AgeText selected={selectedAge === 50}>50대</AgeText>
               </AgeBoxLabel>
               <AgeBoxLabel>
-                <GenderInput
+                <AgeInput
                   type="radio"
                   name="age"
                   value="60"
-                  checked={age === 'sixties'}
-                  onChange={() => handleAgeChange('60대')}
+                  checked={age === '60'}
+                  onChange={() => handleAgeChange(60)}
                 />
-                <AgeText selected={selectedAge === '60대'}>60대</AgeText>
+                <AgeText selected={selectedAge === 60}>60대</AgeText>
               </AgeBoxLabel>
             </AgeBox>
             {/* 선호 장르 작업선 */}
@@ -333,10 +326,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value="28"
-                  checked={selectedGenres.includes('액션')}
-                  onChange={() => handleGenreChange('액션')}
+                  checked={selectedGenres.includes('28')}
+                  onChange={() => handleGenreChange('28')}
                 />
-                <GenreText selected={selectedGenres.includes('액션')}>
+                <GenreText selected={selectedGenres.includes('28')}>
                   액 션
                 </GenreText>
               </GenreBoxLabel>
@@ -345,10 +338,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value="14"
-                  checked={selectedGenres.includes('판타지')}
-                  onChange={() => handleGenreChange('판타지')}
+                  checked={selectedGenres.includes('14')}
+                  onChange={() => handleGenreChange('14')}
                 />
-                <GenreText selected={selectedGenres.includes('판타지')}>
+                <GenreText selected={selectedGenres.includes('14')}>
                   판타지
                 </GenreText>
               </GenreBoxLabel>
@@ -357,10 +350,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value="16"
-                  checked={selectedGenres.includes('만화')}
-                  onChange={() => handleGenreChange('만화')}
+                  checked={selectedGenres.includes('16')}
+                  onChange={() => handleGenreChange('16')}
                 />
-                <GenreText selected={selectedGenres.includes('만화')}>
+                <GenreText selected={selectedGenres.includes('16')}>
                   만 화
                 </GenreText>
               </GenreBoxLabel>
@@ -372,10 +365,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value="36"
-                  checked={selectedGenres.includes('역사')}
-                  onChange={() => handleGenreChange('역사')}
+                  checked={selectedGenres.includes('36')}
+                  onChange={() => handleGenreChange('36')}
                 />
-                <GenreText selected={selectedGenres.includes('역사')}>
+                <GenreText selected={selectedGenres.includes('36')}>
                   역 사
                 </GenreText>
               </GenreBoxLabel>
@@ -384,10 +377,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value="10749"
-                  checked={selectedGenres.includes('로맨스')}
-                  onChange={() => handleGenreChange('로맨스')}
+                  checked={selectedGenres.includes('10749')}
+                  onChange={() => handleGenreChange('10749')}
                 />
-                <GenreText selected={selectedGenres.includes('로맨스')}>
+                <GenreText selected={selectedGenres.includes('10749')}>
                   로맨스
                 </GenreText>
               </GenreBoxLabel>
@@ -396,10 +389,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value="27"
-                  checked={selectedGenres.includes('공포')}
-                  onChange={() => handleGenreChange('공포')}
+                  checked={selectedGenres.includes('27')}
+                  onChange={() => handleGenreChange('27')}
                 />
-                <GenreText selected={selectedGenres.includes('공포')}>
+                <GenreText selected={selectedGenres.includes('27')}>
                   공 포
                 </GenreText>
               </GenreBoxLabel>
@@ -411,10 +404,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value="35"
-                  checked={selectedGenres.includes('코미디')}
-                  onChange={() => handleGenreChange('코미디')}
+                  checked={selectedGenres.includes('35')}
+                  onChange={() => handleGenreChange('35')}
                 />
-                <GenreText selected={selectedGenres.includes('코미디')}>
+                <GenreText selected={selectedGenres.includes('35')}>
                   코미디
                 </GenreText>
               </GenreBoxLabel>
@@ -423,10 +416,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value="99"
-                  checked={selectedGenres.includes('다큐')}
-                  onChange={() => handleGenreChange('다큐')}
+                  checked={selectedGenres.includes('99')}
+                  onChange={() => handleGenreChange('99')}
                 />
-                <GenreText selected={selectedGenres.includes('다큐')}>
+                <GenreText selected={selectedGenres.includes('99')}>
                   다 큐
                 </GenreText>
               </GenreBoxLabel>
@@ -435,10 +428,10 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   type="checkbox"
                   name="genres"
                   value=""
-                  checked={selectedGenres.includes('기타')}
-                  onChange={() => handleGenreChange('기타')}
+                  checked={selectedGenres.includes('')}
+                  onChange={() => handleGenreChange('')}
                 />
-                <GenreText selected={selectedGenres.includes('기타')}>
+                <GenreText selected={selectedGenres.includes('')}>
                   기 타
                 </GenreText>
               </GenreBoxLabel>

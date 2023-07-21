@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const isLoginSlice = createSlice({
   name: 'isLogin',
-  initialState: { status: false },
+  initialState: { status: localStorage.getItem('isLogin') === 'true' },
   reducers: {
     login: (state) => {
       state.status = true;
