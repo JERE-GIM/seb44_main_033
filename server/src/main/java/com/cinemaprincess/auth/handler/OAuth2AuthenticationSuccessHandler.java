@@ -73,7 +73,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("access_token", "Bearer " + accessToken);
+        queryParams.add("access_token", "Bearer_" + accessToken);
         queryParams.add("refresh_token", refreshToken);
 
         return UriComponentsBuilder
