@@ -132,12 +132,16 @@ public class UserService {
     }
 
     public byte[] getImgFile(User user) throws IOException {
-        String imagePath = user.getProfileImgPath();
-        Path path = Paths.get(imagePath);
+        if(user.getProfileImgPath() == null) {
+            return null;
+        } else {
+            String imagePath = user.getProfileImgPath();
+            Path path = Paths.get(imagePath);
 
-        byte[] imageBytes = Files.readAllBytes(path);
+            byte[] imageBytes = Files.readAllBytes(path);
 
-        return imageBytes;
+            return imageBytes;
+        }
     }
 
     // 중복된 이메일인지 확인
