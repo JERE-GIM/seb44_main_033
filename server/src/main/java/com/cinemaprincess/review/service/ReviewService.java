@@ -51,7 +51,7 @@ public class ReviewService {
         MovieDetail movieDetail = movieService.findMovie(reviewPostDto.getMovieId());
         review.setMovieDetail(movieDetail);
 
-        updateMovieVote(movieDetail, 0, review.getScore(), 1);
+//        updateMovieVote(movieDetail, 0, review.getScore(), 1);
 
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
@@ -62,12 +62,14 @@ public class ReviewService {
         Review review = mapper.reviewPatchDtoToReview(reviewPatchDto);
         Review findReview = findVerifiedReview(review.getReviewId());
 
+//        Optional.ofNullable(review.getScore())
+//                .ifPresent(score -> {
+//                    int oldScore = findReview.getScore();
+//                    findReview.setScore(score);
+//                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
+//                });
         Optional.ofNullable(review.getScore())
-                .ifPresent(score -> {
-                    int oldScore = findReview.getScore();
-                    findReview.setScore(score);
-                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
-                });
+                        .ifPresent(findReview::setScore);
         Optional.ofNullable(review.getContent())
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());
@@ -103,7 +105,7 @@ public class ReviewService {
     public void deleteReview(long reviewId) {
         Review review = findVerifiedReview(reviewId);
 
-        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
+//        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
 
         reviewRepository.delete(review);
     }
