@@ -74,10 +74,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       return;
     }
     axios
-      .post(
-        'http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/login',
-        formData,
-      )
+      .post('http://cinemaprincess.shop/login', formData)
       .then((response) => {
         console.log(response.headers);
         const accessToken = response.headers.authorization;
@@ -89,6 +86,12 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         dispatch(login());
         localStorage.setItem('isLogin', 'true');
         const userId = UserIdFromAccessToken(accessToken);
+        if (!userId) {
+          alert('토큰이 만료되었습니다. 다시 로그인해주세요.');
+          navigate('/login');
+          return;
+        }
+
         localStorage.setItem('userId', userId);
         localStorage.setItem('accessToken', accessToken); // accessToken 저장
         onClose();
@@ -101,13 +104,28 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   interface TokenPayload {
     userId: number;
+    exp?: number;
   }
 
   const UserIdFromAccessToken = (accessToken: string): string => {
     try {
-      const tokenPayload: TokenPayload = jwt_decode(accessToken);
-      const userId = tokenPayload.userId;
-      return userId.toString();
+      const decoded = jwt_decode(accessToken);
+      const tokenPayload = decoded as TokenPayload;
+
+      // Check if the object has userId property and it is a number
+      if (typeof tokenPayload.userId === 'number') {
+        const userId = tokenPayload.userId;
+        // Check token expiry
+        if (
+          typeof tokenPayload.exp === 'number' &&
+          Date.now() >= tokenPayload.exp * 1000
+        ) {
+          throw new Error('Token expired');
+        }
+        return userId.toString();
+      } else {
+        throw new Error('Invalid token payload');
+      }
     } catch (error) {
       console.error('토큰 디코딩에 실패했습니다:', error);
       console.error('잘못된 토큰:', accessToken);

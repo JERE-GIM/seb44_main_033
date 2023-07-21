@@ -13,6 +13,14 @@ export const requestGetUserInfo = async () => {
   return res;
 };
 
+export const requestGetProfile = async () => {
+  const res = await axios.get<Blob>(
+    `http://cinemaprincess.shop/users/mypage/edit/${userId}/upload`,
+    { responseType: 'blob' },
+  );
+  return res.data;
+};
+
 interface IUpdatePasswordData {
   password: string;
   newPassword: string;

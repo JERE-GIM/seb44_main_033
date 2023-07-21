@@ -12,14 +12,13 @@ import {
   SectionHeader,
   Username,
 } from './styles/Mypage.styled';
-import profile from '../assets/profile.jpg';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import UserInfoEditModal from '../components/mypage/UserInfoEditModal';
 import ProfileUploadModal from '../components/mypage/ProfileUploadModal';
 import { useEffect, useState } from 'react';
-import { requestGetUserInfo } from '../api/userInfo';
+import { requestGetProfile, requestGetUserInfo } from '../api/userInfo';
 import { requestDeleteAccount } from '../api/auth';
 import { IMypageResponse } from '../types/user';
 import ReviewList from '../components/share/ReviewList';
@@ -28,16 +27,19 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Mypage() {
   const [userInfo, setUserInfo] = useState<IMypageResponse>();
+  const [profileImage, setProfileImage] = useState('');
   const { modal } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const deleteAccount = () => {
-    requestDeleteAccount().then(() => {
-      dispatch(modalAction.close());
-      dispatch(logout());
-      navigate('/');
-    });
+    requestDeleteAccount()
+      .then(() => {
+        dispatch(modalAction.close());
+        dispatch(logout());
+        navigate('/');
+      })
+      .then((err) => console.log(err));
   };
 
   const handleClickEditUserInfo = () => {
@@ -52,14 +54,26 @@ export default function Mypage() {
     dispatch(modalAction.open(MODAL_ROLE.PROFILE_UPLOAD));
   };
 
-  const fetchMyPageData = () => {
-    requestGetUserInfo().then((res) => {
-      setUserInfo({ ...res.data });
-    });
+  const fetchUserInfoData = () => {
+    requestGetUserInfo()
+      .then((res) => {
+        setUserInfo({ ...res.data });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const fetchProfileImageData = () => {
+    requestGetProfile()
+      .then((imageBlob) => {
+        const imageUrl = URL.createObjectURL(imageBlob);
+        setProfileImage(imageUrl);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
-    fetchMyPageData();
+    fetchUserInfoData();
+    fetchProfileImageData();
   }, []);
 
   return (
@@ -68,7 +82,7 @@ export default function Mypage() {
         <>
           <Info>
             <ProfileContainer>
-              <Profile src={profile} alt="profile image" />
+              <Profile src={profileImage} alt="profile image" />
               <ProfileEditButton onClick={handleClickUploadProfile}>
                 변경
               </ProfileEditButton>
@@ -93,7 +107,7 @@ export default function Mypage() {
           {modal.status && modal.role === MODAL_ROLE.USER_INFO_EDIT && (
             <UserInfoEditModal
               user={userInfo.data}
-              callback={fetchMyPageData}
+              callback={fetchUserInfoData}
             />
           )}
           {modal.status && modal.role === MODAL_ROLE.ACCOUNT_DELETE && (
@@ -103,7 +117,7 @@ export default function Mypage() {
             />
           )}
           {modal.status && modal.role === MODAL_ROLE.PROFILE_UPLOAD && (
-            <ProfileUploadModal />
+            <ProfileUploadModal callback={fetchProfileImageData} />
           )}
         </>
       )}
