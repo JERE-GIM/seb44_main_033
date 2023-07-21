@@ -124,14 +124,4 @@ public class UserController {
 
         return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
     }
-    //
-////    @GetMapping("users/mypage/edit/{user-id}/upload")
-//    @GetMapping("/upload/{user-id}")
-//    public byte[] getProfileImg(@PathVariable("user-id") @Positive Long userId) throws IOException {
-//        User user = userService.findUser(userId);
-//        byte[] imageByteArray = userService.getImgFile(user);
-//
-////        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
-//        return imageByteArray;
-//    }
 }
