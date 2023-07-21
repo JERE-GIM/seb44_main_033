@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.GET, "/reviews/*").permitAll()
                                 .antMatchers(HttpMethod.GET, "/search", "/search/**").permitAll()
                                 .anyRequest().authenticated()
+
                 )
 
                 .oauth2Login()
@@ -78,11 +79,18 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://cinema-princess-s3-bucket.s3-website.ap-northeast-2.amazonaws.com/"));
-        configuration.setAllowedOrigins(List.of("http://localhost:3000/"));
-        configuration.addAllowedMethod("*");
+        configuration.setAllowedOrigins(
+                List.of(
+                        "http://cinema-princess-s3-bucket.s3-website.ap-northeast-2.amazonaws.com/",
+                        "http://localhost:3000/")
+        );
         configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

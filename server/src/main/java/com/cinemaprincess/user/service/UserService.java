@@ -1,18 +1,32 @@
 package com.cinemaprincess.user.service;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.user.dto.UserStatisticsDto;
-import lombok.Getter;
 import com.cinemaprincess.statistics.dto.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -37,8 +51,8 @@ public class UserService {
     // 회원가입
     public User createUser(User user) {
         // 중복 메일, 닉네임 확인
-        verifyExistsEmail(user.getEmail());
-        verifyExistsUsername(user.getUsername());
+        this.verifyExistsEmail(user.getEmail());
+        this.verifyExistsUsername(user.getUsername());
 
         // password 암호화
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
@@ -51,19 +65,25 @@ public class UserService {
         // local 회원가입 user
         user.setProvider("LOCAL");
 
+        // 기본 프로필 이미지 설정
+        user.setProfileImgPath(uploadPath + "default_image.png");
+        user.setProfileImgName("default_image.png");
+
         return userRepository.save(user);
     }
 
     // 회원정보 수정
     public User updateUser(User user) {
-        User findUser = findVerifiedUser(user.getUserId());
+        User findUser = this.findVerifiedUser(user.getUserId());
 
         // 현재 user 의 닉네임이거나 중복되지 않은 닉네임 일때만 수정가능
         if(findUser.getUsername().equals(user.getUsername())) {
             Optional.ofNullable(user.getUsername())
                     .ifPresent(userName -> findUser.setUsername(userName));
         } else {
-            verifyExistsUsername(user.getUsername());
+            this.verifyExistsUsername(user.getUsername());
+            Optional.ofNullable(user.getUsername())
+                    .ifPresent(userName -> findUser.setUsername(userName));
         }
         Optional.ofNullable(user.getAge())
                 .ifPresent(age -> findUser.setAge(age));
@@ -75,7 +95,7 @@ public class UserService {
 
     // password 수정
     public User updatePasswordToUser(User user, String newPassword) {
-        User findUser = findVerifiedUser(user.getUserId());
+        User findUser = this.findVerifiedUser(user.getUserId());
         String currentPassword = findUser.getPassword(); // DB에 저장된 비밀번호
         String checkPassword = user.getPassword(); // 입력받은 현재 비밀번호
         String changePassword = newPassword; // 입력받은 새로운 비밀번호
@@ -93,18 +113,18 @@ public class UserService {
 
     // 회원 조회
     public User findUser(Long userId) {
-        return findVerifiedUser(userId);
+        return this.findVerifiedUser(userId);
     }
 
     // 회원 탈퇴
     public void deleteUser(Long userId) {
-        User user = findVerifiedUser(userId);
+        User user = this.findVerifiedUser(userId);
 
         userRepository.delete(user);
     }
 
     // 프로필 이미지 업로드
-    public void imgFileUpload(User user, MultipartFile imgFile) throws IOException {
+    public void uploadImgFile(User user, MultipartFile imgFile) throws IOException {
         UUID uuid = UUID.randomUUID();
         String fileName = uuid.toString() + "_" + imgFile.getOriginalFilename();
         File profileImg = new File(uploadPath, fileName);
@@ -116,11 +136,16 @@ public class UserService {
     }
 
     public byte[] getImgFile(User user) throws IOException {
-        InputStream inputStream = new FileInputStream(user.getProfileImgPath());
-        byte[] imageByteArray = IOUtils.toByteArray(inputStream);
-        inputStream.close();
+        if(user.getProfileImgPath() == null) {
+            return null;
+        } else {
+            String imagePath = user.getProfileImgPath();
+            Path path = Paths.get(imagePath);
 
-        return imageByteArray;
+            byte[] imageBytes = Files.readAllBytes(path);
+
+            return imageBytes;
+        }
     }
 
     // 중복된 이메일인지 확인
@@ -147,28 +172,28 @@ public class UserService {
 
         return findUser;
     }
-
-    public Map<String, Integer> getUsersStatistics(String gender, String age) {
-        int minAge = calculateMinAge(age);
-        int maxAge = calculateMaxAge(age);
-        User.Gender genderEnum = User.Gender.valueOf(gender);
-
-        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
-                .map(user -> new UserStatisticsDto(user.getGenre()))
-                .collect(Collectors.toList());
-
-        Map<String, Integer> genreCount = new HashMap<>();
-
-        for (UserStatisticsDto userStatistics : allUsersGenre) {
-            for (Long genreId : userStatistics.getGenreIds()) {
-                Genre genre = genreRepository.getGenreNameByGenreId(genreId);
-                String genreName = genre.getGenreName();
-                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
-            }
-        }
-
-        return genreCount;
-    }
+    /** 하루님 장르가 List<String> 타입으로 바꼈습니다..! **/
+//    public Map<String, Integer> getUsersStatistics(String gender, String age) {
+//        int minAge = calculateMinAge(age);
+//        int maxAge = calculateMaxAge(age);
+//        User.Gender genderEnum = User.Gender.valueOf(gender);
+//
+//        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
+//                .map(user -> new UserStatisticsDto(user.getGenre()))
+//                .collect(Collectors.toList());
+//
+//        Map<String, Integer> genreCount = new HashMap<>();
+//
+//        for (UserStatisticsDto userStatistics : allUsersGenre) {
+//            for (Long genreId : userStatistics.getGenreIds()) {
+//                Genre genre = genreRepository.getGenreNameByGenreId(genreId);
+//                String genreName = genre.getGenreName();
+//                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
+//            }
+//        }
+//
+//        return genreCount;
+//    }
 
     private int calculateMinAge(String age){
         int ageGroup = Integer.parseInt(age);
