@@ -51,7 +51,7 @@ public class ReviewService {
         MovieDetail movieDetail = movieService.findMovie(reviewPostDto.getMovieId());
         review.setMovieDetail(movieDetail);
 
-        updateMovieVote(movieDetail, 0, review.getScore(), 1);
+//        updateMovieVote(movieDetail, 0, review.getScore(), 1);
 
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
@@ -62,12 +62,14 @@ public class ReviewService {
         Review review = mapper.reviewPatchDtoToReview(reviewPatchDto);
         Review findReview = findVerifiedReview(review.getReviewId());
 
+//        Optional.ofNullable(review.getScore())
+//                .ifPresent(score -> {
+//                    int oldScore = findReview.getScore();
+//                    findReview.setScore(score);
+//                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
+//                });
         Optional.ofNullable(review.getScore())
-                .ifPresent(score -> {
-                    int oldScore = findReview.getScore();
-                    findReview.setScore(score);
-                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
-                });
+                .ifPresent(findReview::setScore);
         Optional.ofNullable(review.getContent())
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());
@@ -103,7 +105,7 @@ public class ReviewService {
     public void deleteReview(long reviewId) {
         Review review = findVerifiedReview(reviewId);
 
-        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
+//        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
 
         reviewRepository.delete(review);
     }
@@ -115,14 +117,11 @@ public class ReviewService {
         return new PageImpl<>(reviewDtos, reviewPage.getPageable(), reviewPage.getTotalElements());
     }
     public Review findReviewByUserAndMovieDetail(long userId, long movieId){
-        Optional<Review> optionalReview = reviewRepository.findByUserAndMovieDetail(
-                userRepository.findById(userId).orElseThrow(() ->
-                                new BusinessLogicException(ExceptionCode.USER_NOT_FOUND)),
-                movieDetailRepository.findById(movieId).orElseThrow(() ->
-                                new BusinessLogicException(ExceptionCode.MOVIE_NOT_FOUND))
-                );
-        return optionalReview.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
+        User user = userRepository.findById(userId).orElse(null);
+        MovieDetail movieDetail = movieDetailRepository.findById(movieId).orElse(null);
+
+        Optional<Review> optionalReview = reviewRepository.findByUserAndMovieDetail(user, movieDetail);
+        return optionalReview.orElse(null);
     }
 
     public Page<ReviewResponseDto> findReviewsByUserId(long userId, int page) {
