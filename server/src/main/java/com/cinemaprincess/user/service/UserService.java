@@ -65,6 +65,10 @@ public class UserService {
         // local 회원가입 user
         user.setProvider("LOCAL");
 
+        // 기본 프로필 이미지 설정
+        user.setProfileImgPath(uploadPath + "default_image.png");
+        user.setProfileImgName("default_image.png");
+
         return userRepository.save(user);
     }
 
@@ -169,6 +173,11 @@ public class UserService {
         return findUser;
     }
 
+    /**
+
+     하루님 요부분 수정 필요해졌습니닷.
+
+
     public Map<String, Integer> getUsersStatistics(String gender, String age) {
         int minAge = calculateMinAge(age);
         int maxAge = calculateMaxAge(age);
@@ -190,6 +199,8 @@ public class UserService {
 
         return genreCount;
     }
+
+     **/
 
     private int calculateMinAge(String age){
         int ageGroup = Integer.parseInt(age);

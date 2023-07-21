@@ -17,6 +17,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
 
 import com.cinemaprincess.audit.Auditable;
+import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.watchlist.entity.Watchlist;
 
@@ -51,9 +52,8 @@ public class User extends Auditable {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Column(name = "genreId")
-    private List<Long> genre = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Genre> genre = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> roles = new ArrayList<>();
