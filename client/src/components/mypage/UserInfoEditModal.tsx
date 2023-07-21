@@ -80,19 +80,19 @@ export default function UserInfoEditModal({
     genre: [],
   });
 
+  const handleFetchUpdateUserInfo = () => {
+    fetchUpdateUserInfo(userInfoInput).then(() => {
+      callback();
+      dispatch(modalAction.close());
+    });
+  };
+
   const handleCloseModalUnsaved = () => {
     dispatch(modalAction.close());
   };
 
   const handleClickModal = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-  };
-
-  const handleFetchUpdateUserInfo = () => {
-    fetchUpdateUserInfo(userInfoInput).then(() => {
-      callback();
-      dispatch(modalAction.close());
-    });
   };
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {

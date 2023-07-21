@@ -71,16 +71,16 @@ export default function Movie() {
       });
   };
 
-  const fetchMoviePageData = () => {
-    handleFetchGetMovieInfo();
-    handleFetchGetMyReview();
-  };
-
   const handleFetchDeleteMyReview = (reviewId: number) => {
     fetchDeleteMyReview(reviewId).then(() => {
       dispatch(modalAction.close());
       fetchMoviePageData();
     });
+  };
+
+  const fetchMoviePageData = () => {
+    handleFetchGetMovieInfo();
+    handleFetchGetMyReview();
   };
 
   const handleOpenReviewModal = () => {

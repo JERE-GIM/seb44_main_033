@@ -42,18 +42,6 @@ export default function Mypage() {
       .catch((err) => console.log(err));
   };
 
-  const handleClickEditUserInfo = () => {
-    dispatch(modalAction.open(MODAL_ROLE.USER_INFO_EDIT));
-  };
-
-  const handleClickDeleteAccount = () => {
-    dispatch(modalAction.open(MODAL_ROLE.ACCOUNT_DELETE));
-  };
-
-  const handleClickUploadProfile = () => {
-    dispatch(modalAction.open(MODAL_ROLE.PROFILE_UPLOAD));
-  };
-
   const handleFetchUserInfo = () => {
     fetchGetUserInfo()
       .then((res) => {
@@ -69,6 +57,18 @@ export default function Mypage() {
         setProfileImage(imageUrl);
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleClickEditUserInfo = () => {
+    dispatch(modalAction.open(MODAL_ROLE.USER_INFO_EDIT));
+  };
+
+  const handleClickDeleteAccount = () => {
+    dispatch(modalAction.open(MODAL_ROLE.ACCOUNT_DELETE));
+  };
+
+  const handleClickUploadProfile = () => {
+    dispatch(modalAction.open(MODAL_ROLE.PROFILE_UPLOAD));
   };
 
   useEffect(() => {

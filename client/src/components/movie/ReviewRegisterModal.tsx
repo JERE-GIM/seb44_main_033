@@ -37,16 +37,6 @@ export default function ReviewRegister({
   const [comment, setComment] = useState(myReview ? myReview.content : '');
   const dispatch = useAppDispatch();
 
-  const handleCloseModalUnsaved = () => {
-    if (myReview) setRating(myReview.score);
-    else setRating(0);
-    dispatch(modalAction.close());
-  };
-
-  const handleClickModal = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-  };
-
   const handleFetchUpdateMyReview = (reviewId: number) => {
     fetchUpdateMyReview(reviewId, {
       content: comment,
@@ -66,6 +56,16 @@ export default function ReviewRegister({
       dispatch(modalAction.close());
       callback();
     });
+  };
+
+  const handleCloseModalUnsaved = () => {
+    if (myReview) setRating(myReview.score);
+    else setRating(0);
+    dispatch(modalAction.close());
+  };
+
+  const handleClickModal = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
   };
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {

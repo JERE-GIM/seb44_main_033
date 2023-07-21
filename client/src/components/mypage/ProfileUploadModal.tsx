@@ -29,14 +29,6 @@ export default function ProfileUploadModal({
   const [imgPreview, setImgPreview] = useState('');
   const [imgFile, setImgFile] = useState<File | null>(null); //FormData로 전송하기 위함
 
-  const handleCloseModalUnsaved = () => {
-    dispatch(modalAction.close());
-  };
-
-  const handleClickModal = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-  };
-
   const handleFetchUpdateProfile = (data: FormData) => {
     fetchUpdateProfileImage(data)
       .then(() => {
@@ -44,6 +36,14 @@ export default function ProfileUploadModal({
         dispatch(modalAction.close());
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleCloseModalUnsaved = () => {
+    dispatch(modalAction.close());
+  };
+
+  const handleClickModal = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
   };
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
