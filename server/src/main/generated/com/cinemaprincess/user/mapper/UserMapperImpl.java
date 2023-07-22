@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-07-19T07:44:20+0900",
+    date = "2023-07-21T10:56:26+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 11.0.19 (Azul Systems, Inc.)"
 )
 @Component
@@ -32,6 +32,7 @@ public class UserMapperImpl implements UserMapper {
         if ( list != null ) {
             user.genre( new ArrayList<Long>( list ) );
         }
+        user.provider( userPostDto.getProvider() );
 
         return user.build();
     }
@@ -88,6 +89,9 @@ public class UserMapperImpl implements UserMapper {
         if ( list != null ) {
             response.setGenre( new ArrayList<Long>( list ) );
         }
+        response.setProvider( user.getProvider() );
+        response.setProfileImgName( user.getProfileImgName() );
+        response.setProfileImgPath( user.getProfileImgPath() );
 
         return response;
     }

@@ -28,10 +28,7 @@ public class StatisticsController {
 
     private final ReviewService reviewService;
     private final UserService userService;
-    private final MovieService movieService;
     private final GenreService genreService;
-
-    // TODO: 결제 구현시 인터셉터 추가...
 
     /*
         사용자들의 연령별, 성별별 선호 장르 통계

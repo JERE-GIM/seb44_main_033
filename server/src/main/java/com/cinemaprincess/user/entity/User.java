@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Getter
@@ -52,21 +53,31 @@ public class User extends Auditable {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @ElementCollection()
+    @ElementCollection(fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
     @Column(name = "genreId")
     private List<Long> genre = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
     private List<String> roles = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @BatchSize(size = 10)
     private Watchlist watchlist;
 
-    public User(String email, String password, String username, List<String> roles) {
+    private String provider;
+
+    private String profileImgName;
+
+    private String profileImgPath;
+
+    public User(String email, String password, String username, List<String> roles, String provider) {
         this.email = email;
         this.password = password;
         this.username = username;
         this.roles = roles;
+        this.provider = provider;
     }
 
     public enum Gender {

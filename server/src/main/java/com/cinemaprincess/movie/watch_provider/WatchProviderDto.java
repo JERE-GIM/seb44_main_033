@@ -10,5 +10,6 @@ public class WatchProviderDto {
         private long providerId;
         private String providerName;
         private String logoPath;
+        private String link;
     }
 }

@@ -4,6 +4,7 @@ import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
+import com.cinemaprincess.movie.vote.MovieVote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,13 +20,11 @@ public class MovieJdbcRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public void saveMovies(List<Movie> movies) {
-        String sql = "INSERT INTO movie (movie_id, title, poster_path, vote_average, popularity) "
-                + "VALUES (?, ?, ?, ?, ?) "
+        String sql = "INSERT INTO movie (movie_id, title, poster_path) "
+                + "VALUES (?, ?, ?) "
                 + "ON DUPLICATE KEY UPDATE movie_id = VALUES(movie_id), "
                 + "title = VALUES(title), "
-                + "poster_path = VALUES(poster_path), "
-                + "vote_average = VALUES(vote_average), "
-                + "popularity = VALUES(popularity)";
+                + "poster_path = VALUES(poster_path)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -34,8 +33,6 @@ public class MovieJdbcRepository {
                 ps.setLong(1, movie.getMovieId());
                 ps.setString(2, movie.getTitle());
                 ps.setString(3, movie.getPosterPath());
-                ps.setFloat(4, movie.getVoteAverage());
-                ps.setFloat(5, movie.getPopularity());
             }
 
             @Override
@@ -108,13 +105,15 @@ public class MovieJdbcRepository {
 
     public void saveMovieDetailGenres(List<MovieDetailGenre> movieDetailGenres) {
         String sql = "INSERT INTO movie_detail_genre (movie_id, genre_id) "
-                + "VALUES (?, ?)";
+                + "VALUES (?, ?) "
+                + "ON DUPLICATE KEY UPDATE movie_id = VALUES(movie_id), "
+                + "genre_id = VALUES(genre_id)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 MovieDetailGenre movieDetailGenre = movieDetailGenres.get(i);
-                ps.setLong(1, movieDetailGenre.getMovieDetail().getMovie().getMovieId());
+                ps.setLong(1, movieDetailGenre.getMovieDetail().getId());
                 ps.setLong(2, movieDetailGenre.getGenre().getGenreId());
             }
 
@@ -127,7 +126,9 @@ public class MovieJdbcRepository {
 
     public void saveMovieDetailWatchProviders(List<MovieDetailWatchProvider> movieDetailWatchProviders) {
         String sql = "INSERT INTO movie_detail_watch_provider (movie_id, provider_id) "
-                + "VALUES (?, ?)";
+                + "VALUES (?, ?) "
+                + "ON DUPLICATE KEY UPDATE movie_id = VALUES(movie_id), "
+                + "provider_id = VALUES(provider_id)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -140,6 +141,29 @@ public class MovieJdbcRepository {
             @Override
             public int getBatchSize() {
                 return movieDetailWatchProviders.size();
+            }
+        });
+    }
+
+    public void saveMovieVote(List<MovieVote> movieVotes) {
+        String sql = "INSERT INTO movie_vote (movie_id, vote_average, vote_count) "
+                + "VALUES (?, ?, ?) "
+                + "ON DUPLICATE KEY UPDATE movie_id = VALUES(movie_id), "
+                + "vote_average = VALUES(vote_average), "
+                + "vote_count = VALUES(vote_count)";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                MovieVote movieVote = movieVotes.get(i);
+                ps.setLong(1, movieVote.getMovieDetail().getId());
+                ps.setFloat(2, movieVote.getVoteAverage());
+                ps.setInt(3, movieVote.getVoteCount());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return movieVotes.size();
             }
         });
     }

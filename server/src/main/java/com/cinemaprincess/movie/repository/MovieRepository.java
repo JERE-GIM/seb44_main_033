@@ -11,9 +11,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-
+/*
     @Query(value = "SELECT m FROM Movie m WHERE m.title like %:keyword%")
     List<MovieSearchResultDto> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
+    @Query(value = "SELECT DISTINCT m FROM Movie m JOIN FETCH m.movieDetail WHERE m.title LIKE %:keyword%")
+    List<MovieSearchResultDto> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
+*/
+
+    @Query("SELECT DISTINCT m FROM Movie m JOIN FETCH m.movieDetail md LEFT JOIN FETCH md.movieVote WHERE m.title LIKE %:keyword%")
+    List<MovieSearchResultDto> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
 
     Movie findByMovieId(Long movieId);
     @Query(value = "SELECT m FROM Movie m WHERE YEAR(m.movieDetail.releaseDate) = :year")
