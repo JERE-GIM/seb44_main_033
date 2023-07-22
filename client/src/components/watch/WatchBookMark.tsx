@@ -40,8 +40,12 @@ export const WatchBookmark: React.FC<BookmarkButtonProps> = ({
       onClick={handleBookmarkClick}
     >
       <FontAwesomeIcon
-        icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular}
-        style={{ cursor: 'pointer', fontSize: styleProps.fontSize }}
+        icon={faBookmarkSolid}
+        style={{
+          cursor: 'pointer',
+          fontSize: styleProps.fontSize,
+          color: isBookmarked ? 'var(--purple)' : 'var(--gray-dark)',
+        }}
       />
     </BookmarkButton>
   );
