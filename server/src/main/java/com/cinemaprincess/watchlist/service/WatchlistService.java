@@ -123,9 +123,9 @@ public class WatchlistService {
             throw new BusinessLogicException(ExceptionCode. WATCH_LIST_NOT_FOUND);
         }
 
-        WatchlistMovie watchlistMovie = watchlistMovieRepository.findByMovieMovieId(movieId);
-
         // 삭제하고자 하는 Movie 가 Watchlist 에 없다면 예외 처리, 존재한다면 삭제
+        WatchlistMovie watchlistMovie = watchlistMovieRepository.findByWatchlistWatchlistIdAndMovieMovieId(watchlist.getWatchlistId(),
+                movieId);
         if(watchlistMovie == null) {
             throw new BusinessLogicException(ExceptionCode.WATCH_LIST_MOVIE_NOT_FOUND);
         } else {

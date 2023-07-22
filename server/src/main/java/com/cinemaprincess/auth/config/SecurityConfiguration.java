@@ -64,8 +64,8 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.GET, "/movies/**").permitAll()
                                 .antMatchers(HttpMethod.GET, "/reviews/*").permitAll()
                                 .antMatchers(HttpMethod.GET, "/search", "/search/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/movieRank", "/movieRank/**").permitAll()
                                 .anyRequest().authenticated()
-
                 )
 
                 .oauth2Login()
