@@ -165,14 +165,12 @@ export default function Movie() {
               {movieInfo.data.similarMovies.map((similarMovie, index) => (
                 <RecommentListItem key={similarMovie.movieId + index}>
                   <Card
-                    poster={
+                    posterPath={
                       similarMovie.posterPath
                         ? `https://image.tmdb.org/t/p/w200/${similarMovie.posterPath}`
                         : defaultPoster
                     }
-                    title={similarMovie.title}
-                    country={'미국'}
-                    openat={Number(similarMovie.releaseDate.slice(0, 4))}
+                    movieNm={similarMovie.title}
                   />
                 </RecommentListItem>
               ))}

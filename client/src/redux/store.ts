@@ -8,6 +8,7 @@ import tabmovie from './reducers/tabmovieSlice';
 import monthly from './reducers/monthlySlice';
 import watchlist from './reducers/watchlistSlice';
 import search from './reducers/searchSlice';
+import movierank from './reducers/movierank';
 
 const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ const store = configureStore({
     monthly: monthly.reducer,
     watchlist: watchlist.reducer,
     search: search.reducer,
+    movierank: movierank.reducer,
   },
 });
 
