@@ -36,21 +36,30 @@ export const SLIDE_SETTINGS = {
 
 interface IReviewListProps {
   reviewList: Array<IReview>;
+  hasMovieTitle?: boolean;
 }
 
-function ReviewList({ reviewList }: IReviewListProps) {
+function ReviewList({ reviewList, hasMovieTitle }: IReviewListProps) {
   return (
     <ReviewListWrapper>
       {reviewList.length >= REVIEW_SLIDE_TO_SHOW ? (
         <Slider {...SLIDE_SETTINGS}>
           {reviewList.map((review) => (
-            <ReviewListitem key={review.reviewId} review={review} />
+            <ReviewListitem
+              key={review.reviewId}
+              review={review}
+              hasMovieTitle={hasMovieTitle}
+            />
           ))}
         </Slider>
       ) : (
         <NonSlider>
           {reviewList.map((review) => (
-            <ReviewListitem key={review.reviewId} review={review} />
+            <ReviewListitem
+              key={review.reviewId}
+              review={review}
+              hasMovieTitle={hasMovieTitle}
+            />
           ))}
         </NonSlider>
       )}

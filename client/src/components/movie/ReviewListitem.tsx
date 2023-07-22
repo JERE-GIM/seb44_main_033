@@ -1,12 +1,10 @@
-import { useMatch } from 'react-router-dom';
-
 import {
   ButtonText,
   Comment,
   IconImage,
   LikeButton,
   MovieTitle,
-  ProfileImage,
+  Image,
   ReviewBottom,
   ReviewMiddle,
   ReviewTop,
@@ -14,31 +12,35 @@ import {
   Username,
   Wrapper,
 } from '../styles/ReviewListitem.styled';
-import profile from '../../assets/profile.jpg';
-import elementalPoster from '../../assets/elemental_poster.png';
+import profile from '../../assets/profile.png';
 import thumbUp from '../../assets/thumb-up.svg';
 import { IReview } from '../../types/movie';
 
 interface IReviewListitem {
   review: IReview;
+  hasMovieTitle?: boolean;
 }
 
-export default function ReviewListitem({ review }: IReviewListitem) {
+export default function ReviewListitem({
+  review,
+  hasMovieTitle,
+}: IReviewListitem) {
   const $liked = false;
-  const isMoviePage = useMatch('/movie/:id');
 
   return (
     <Wrapper>
       <ReviewTop>
-        {isMoviePage && (
+        {!hasMovieTitle && (
           <>
-            <ProfileImage src={profile} />
+            <Image src={profile} />
             <Username>{review.username}</Username>
           </>
         )}
-        {!isMoviePage && (
+        {hasMovieTitle && (
           <>
-            <ProfileImage src={elementalPoster} />
+            <Image
+              src={`https://image.tmdb.org/t/p/w200/${review.moviePosterPath}`}
+            />
             <MovieTitle>{review.movieTitle}</MovieTitle>
           </>
         )}
