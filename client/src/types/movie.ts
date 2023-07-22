@@ -59,6 +59,7 @@ export interface IMovieInfo {
   movieVote: IMovieVote;
   similarMovies: Array<ISimilarMovie>;
   watchProviders: Array<IMovieProvider>;
+  watchlistCheck: boolean;
 }
 
 export interface IMovieResponse {
