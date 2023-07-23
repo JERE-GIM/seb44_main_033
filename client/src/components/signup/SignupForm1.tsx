@@ -436,7 +436,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 </GenreText>
               </GenreBoxLabel>
             </GenreBox>
-            <Alertmessage>⚠️ 선호 장르는 0-3개 선택해주세요</Alertmessage>
+            <Alertmessage>⚠️ 선호 장르는 1-3개 선택해주세요</Alertmessage>
             <MessageBox>
               <SignupButton2 onClick={handlePrev}>이 전</SignupButton2>
               <SignupButton2 disabled={!isConfirmValid} onClick={handleConfirm}>
