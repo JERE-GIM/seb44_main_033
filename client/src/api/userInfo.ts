@@ -16,7 +16,7 @@ export const fetchGetUserInfo = async () => {
 export const fetchGetProfileImage = async () => {
   const res = await axios.get<Blob>(
     `http://cinemaprincess.shop/users/mypage/edit/${userId}/upload`,
-    { responseType: 'blob' },
+    { responseType: 'blob', headers: { Authorization: accessToken } },
   );
   return res.data;
 };

@@ -25,6 +25,7 @@ import {
   OTTText,
   MovieHeader,
   MovieDescription,
+  MovieVideo,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import starIcon from '../assets/starIcon.svg';
@@ -41,11 +42,15 @@ import {
 import ReviewList from '../components/share/ReviewList';
 import MovieInfo from '../components/movie/MovieInfo';
 import MyReview from '../components/movie/MyReview';
+import YouTube from 'react-youtube';
+import LoginForm from '../components/login/loginForm';
+import { WatchBookmark } from '../components/watch/WatchBookMark';
 
 export default function Movie() {
   const [movieInfo, setMovieInfo] = useState<IMovieResponse>();
   const [myReview, setMyReview] = useState<IReview | null>(null);
   const [rating, setRating] = useState(0);
+  const { isLogin } = useAppSelector((state) => state);
 
   const dispatch = useAppDispatch();
   const { modal } = useAppSelector((state) => state);
@@ -80,10 +85,15 @@ export default function Movie() {
 
   const fetchMoviePageData = () => {
     handleFetchGetMovieInfo();
-    handleFetchGetMyReview();
+    if (isLogin.status) handleFetchGetMyReview();
+  };
+
+  const AskLogin = () => {
+    dispatch(modalAction.open(MODAL_ROLE.LOGIN));
   };
 
   const handleOpenReviewModal = () => {
+    if (!isLogin.status) return AskLogin();
     dispatch(modalAction.open(MODAL_ROLE.REVIEW_WRITE));
   };
 
@@ -120,6 +130,11 @@ export default function Movie() {
                 </AverageRatingSpan>
               </AverageRatingText>
             </AverageRatingContainer>
+            <WatchBookmark
+              movieId={Number(movieId)}
+              styleProps={{ fontSize: '40px', right: '40px', bottom: '40px' }}
+              defaultStatus={movieInfo.data.watchlistCheck}
+            />
           </MovieCover>
           <MovieDetail>
             <MovieDetailCol>
@@ -136,6 +151,10 @@ export default function Movie() {
               <MovieInfo movieInfo={movieInfo.data} />
             </MovieDetailCol>
           </MovieDetail>
+          <MovieVideo>
+            <SectionTitle>영상</SectionTitle>
+            <YouTube videoId={movieInfo.data.videoPath.slice(1)} />
+          </MovieVideo>
           <MovieReviews>
             <SectionTitle>코멘트</SectionTitle>
             <ReviewList reviewList={movieInfo.reviews} />
@@ -191,6 +210,13 @@ export default function Movie() {
               message={'리뷰를 삭제하시겠습니까?'}
               callback={() => {
                 if (myReview) handleFetchDeleteMyReview(myReview.reviewId);
+              }}
+            />
+          )}
+          {modal.status && modal.role === MODAL_ROLE.LOGIN && (
+            <LoginForm
+              onClose={() => {
+                dispatch(modalAction.close());
               }}
             />
           )}

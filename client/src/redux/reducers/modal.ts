@@ -6,6 +6,7 @@ export enum MODAL_ROLE {
   USER_INFO_EDIT = 'userInfoEdit',
   ACCOUNT_DELETE = 'accountDelete',
   PROFILE_UPLOAD = 'uploadProfile',
+  LOGIN = 'login',
 }
 
 interface IInitialState {
@@ -16,6 +17,7 @@ interface IInitialState {
     | MODAL_ROLE.USER_INFO_EDIT
     | MODAL_ROLE.ACCOUNT_DELETE
     | MODAL_ROLE.PROFILE_UPLOAD
+    | MODAL_ROLE.LOGIN
     | null;
 }
 
