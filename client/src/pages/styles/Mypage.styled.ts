@@ -44,6 +44,7 @@ export const Username = styled.div`
 `;
 
 export const Genres = styled.div`
+  min-width: 300px;
   display: flex;
   margin-bottom: 10px;
 `;
