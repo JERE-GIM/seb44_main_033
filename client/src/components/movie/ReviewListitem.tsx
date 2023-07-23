@@ -32,24 +32,30 @@ export default function ReviewListitem({
     status: review.reviewVoted,
     count: review.votesCount,
   });
+  const [isFetching, setIsFetching] = useState(false);
 
   const [, userId] = getAccessTokenAndUserId();
 
   const handleFetchLikeReview = (reviewId: number) => {
+    setIsFetching(() => true);
     fetchLikeReview(reviewId)
       .then(() => setLiked((prev) => ({ status: true, count: prev.count + 1 })))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setIsFetching(() => false));
   };
 
   const handleFetchUnlikeReview = (reviewId: number) => {
+    setIsFetching(() => true);
     fetchUnlikeReview(reviewId)
       .then(() =>
         setLiked((prev) => ({ status: false, count: prev.count - 1 })),
       )
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setIsFetching(() => false));
   };
 
   const handleClickLike = (reviewId: number) => {
+    if (isFetching) return;
     if (liked.status) handleFetchUnlikeReview(reviewId);
     else handleFetchLikeReview(reviewId);
   };
