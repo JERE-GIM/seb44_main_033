@@ -44,14 +44,15 @@ export const Comment = styled.p`
   overflow: scroll;
 `;
 
-export const LikeButton = styled.button<{ $liked: boolean }>`
+export const LikeButton = styled.button<{ $liked: boolean; disabled: boolean }>`
   padding: 8px 15px;
   display: flex;
   align-items: center;
   border: 1px solid var(--gray);
   border-radius: 20px;
-  background-color: ${(props) =>
-    props.$liked ? 'var(--purple)' : 'var(--white)'};
+  background-color: ${({ $liked, disabled }) =>
+    disabled ? '#e0e0e0' : $liked ? 'var(--purple)' : 'var(--white)'};
+  ${({ disabled }) => disabled && 'cursor:auto'}
 `;
 
 export const IconImage = styled.img<{ $liked: boolean }>`

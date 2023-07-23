@@ -32,6 +32,8 @@ export default function ReviewListitem({
     count: review.votesCount,
   });
 
+  const userId = localStorage.getItem('userId');
+
   const handleFetchLikeReview = (reviewId: number) => {
     fetchLikeReview(reviewId)
       .then(() => setLiked((prev) => ({ status: true, count: prev.count + 1 })))
@@ -77,6 +79,7 @@ export default function ReviewListitem({
         <LikeButton
           $liked={liked.status}
           onClick={() => handleClickLike(review.reviewId)}
+          disabled={review.userId === Number(userId)}
         >
           <IconImage $liked={liked.status} src={thumbUp} alt="like icon" />
           <ButtonText $liked={liked.status}>{liked.count}</ButtonText>
