@@ -45,13 +45,19 @@ public class ReviewService {
     private final MovieVoteRepository movieVoteRepository;
 
     public ReviewResponseDto createReview(ReviewPostDto reviewPostDto) {
+        long movieId = reviewPostDto.getMovieId();
+        long userId = reviewPostDto.getUserId();
+
+        if (hasDuplicateReview(movieId, userId)) {
+            throw new BusinessLogicException(ExceptionCode.DUPLICATE_REVIEW);
+        }
         Review review = mapper.reviewPostDtoToReview(reviewPostDto);
         User user = userService.findUser(reviewPostDto.getUserId());
         review.setUser(user);
         MovieDetail movieDetail = movieService.findMovie(reviewPostDto.getMovieId());
         review.setMovieDetail(movieDetail);
 
-//        updateMovieVote(movieDetail, 0, review.getScore(), 1);
+        updateMovieVote(movieDetail, 0, review.getScore(), 1);
 
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
@@ -62,14 +68,12 @@ public class ReviewService {
         Review review = mapper.reviewPatchDtoToReview(reviewPatchDto);
         Review findReview = findVerifiedReview(review.getReviewId());
 
-//        Optional.ofNullable(review.getScore())
-//                .ifPresent(score -> {
-//                    int oldScore = findReview.getScore();
-//                    findReview.setScore(score);
-//                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
-//                });
         Optional.ofNullable(review.getScore())
-                .ifPresent(findReview::setScore);
+                .ifPresent(score -> {
+                    int oldScore = findReview.getScore();
+                    findReview.setScore(score);
+                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
+                });
         Optional.ofNullable(review.getContent())
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());
@@ -105,7 +109,7 @@ public class ReviewService {
     public void deleteReview(long reviewId) {
         Review review = findVerifiedReview(reviewId);
 
-//        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
+        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
 
         reviewRepository.delete(review);
     }
@@ -191,4 +195,13 @@ public class ReviewService {
 
         return reviewVoteDto;
     }
+
+    private boolean hasDuplicateReview(long movieId, long userId) {
+        User user = userService.findUser(userId);
+        MovieDetail movieDetail = movieService.findMovie(movieId);
+
+        Optional<Review> existingReview = reviewRepository.findByUserAndMovieDetail(user, movieDetail);
+        return existingReview.isPresent();
+    }
+
 }

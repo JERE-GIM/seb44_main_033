@@ -14,6 +14,7 @@ public class ReviewResponseDto {
     private int score;
     private String username;
     private String posterPath;
+    private boolean reviewVoted;
     private int votesCount;
     private String createdAt;
     private String modifiedAt;
