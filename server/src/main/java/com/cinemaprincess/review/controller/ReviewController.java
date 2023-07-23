@@ -91,11 +91,25 @@ public class ReviewController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+//    @PostMapping("/votes/{review-id}/{user-id}")
+//    public ResponseEntity votesCount(@PathVariable("review-id") long reviewId,
+//                                     @PathVariable("user-id") long userId){
+//        ReviewVoteDto reviewVoteDto = reviewService.votesCount(reviewId, userId);
+//        return new ResponseEntity<>(reviewVoteDto,HttpStatus.OK);
+//    }
+
     @PostMapping("/votes/{review-id}/{user-id}")
-    public ResponseEntity votesCount(@PathVariable("review-id") long reviewId,
-                                     @PathVariable("user-id") long userId){
-        ReviewVoteDto reviewVoteDto = reviewService.votesCount(reviewId, userId);
-        return new ResponseEntity<>(reviewVoteDto,HttpStatus.OK);
+    public ResponseEntity addVote(@PathVariable("review-id") long reviewId,
+                                  @PathVariable("user-id") long userId) {
+        ReviewVoteDto reviewVoteDto = reviewService.addVote(reviewId, userId);
+        return new ResponseEntity<>(reviewVoteDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/votes/cancel/{review-id}/{user-id}")
+    public ResponseEntity cancelVote(@PathVariable("review-id") long reviewId,
+                                     @PathVariable("user-id") long userId) {
+        ReviewVoteDto reviewVoteDto = reviewService.cancelVote(reviewId, userId);
+        return new ResponseEntity<>(reviewVoteDto, HttpStatus.OK);
     }
 }
 

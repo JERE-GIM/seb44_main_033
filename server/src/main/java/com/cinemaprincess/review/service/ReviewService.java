@@ -195,6 +195,48 @@ public class ReviewService {
         return reviewVoteDto;
     }
 
+    public ReviewVoteDto addVote(long reviewId, long userId) {
+        Review findReview = findVerifiedReview(reviewId);
+        User findUser = findVerifiedUser(userId);
+        Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
+
+        if (optionalReviewVote.isPresent()) {
+            // 이미 좋아요를 누른 경우에는 아무 작업도 하지 않고 예외 처리
+            throw new BusinessLogicException(ExceptionCode.DUPLICATE_REVIEW_VOTE);
+        } else {
+            // 좋아요를 누를 때는 새로운 ReviewVote 엔티티 생성
+            ReviewVote reviewVote = ReviewVote.builder().review(findReview).user(findUser).build();
+            findReview.updateVoteCount(true);
+            reviewVoteRepository.save(reviewVote);
+        }
+
+        Review updatedReview = reviewRepository.save(findReview);
+        ReviewVoteDto reviewVoteDto = new ReviewVoteDto();
+        reviewVoteDto.setReviewVoteStatus(true); // 좋아요를 눌렀으므로 true 설정
+        reviewVoteDto.setTotalVoteCount(updatedReview.getVotesCount());
+
+        return reviewVoteDto;
+    }
+
+    public ReviewVoteDto cancelVote(long reviewId, long userId) {
+        Review findReview = findVerifiedReview(reviewId);
+        User findUser = findVerifiedUser(userId);
+        Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
+
+        if (optionalReviewVote.isPresent()) {
+            // 좋아요를 취소할 때는 해당 ReviewVote 엔티티를 삭제
+            reviewVoteRepository.delete(optionalReviewVote.get());
+            findReview.updateVoteCount(false);
+        }
+
+        Review updatedReview = reviewRepository.save(findReview);
+        ReviewVoteDto reviewVoteDto = new ReviewVoteDto();
+        reviewVoteDto.setReviewVoteStatus(false); // 좋아요를 취소했으므로 false 설정
+        reviewVoteDto.setTotalVoteCount(updatedReview.getVotesCount());
+
+        return reviewVoteDto;
+    }
+
     private boolean hasDuplicateReview(long movieId, long userId) {
         User user = userService.findUser(userId);
         MovieDetail movieDetail = movieService.findMovie(movieId);
