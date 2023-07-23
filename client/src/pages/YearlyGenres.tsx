@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-// import { requestGetStatisticsYearlyGenres } from '../api/statistics';
 import {
   Options,
   Selectbox,
@@ -8,10 +7,11 @@ import {
   StyledChart,
   Wrapper,
 } from './styles/YearlyGenres.styled';
+import { fetchGetStatisticsYearlyGenres } from '../api/statistics';
 
 const CHART_FIELD = {
   GENRE: 'Genre',
-  GENRE_DATA: 'Movies per Year',
+  GENRE_DATA: 'Released Movie Genres per Year',
 };
 
 function YearlyGenres() {
@@ -24,13 +24,10 @@ function YearlyGenres() {
   const [year, setYear] = useState(thisYear);
   const [data, setData] = useState([
     [CHART_FIELD.GENRE, CHART_FIELD.GENRE_DATA],
-    ['코믹', 1],
-    ['액션', 6],
-    ['로맨스', 5],
   ]);
 
   const options = {
-    title: `Yearly Genres for ${year}`,
+    title: `Released Movie Genres for ${year}`,
     pieHole: 0.4,
   };
 
@@ -38,10 +35,20 @@ function YearlyGenres() {
     setYear(Number(event.target.value));
   };
 
+  const handleFetchGetStatisticsYearlyGenres = () => {
+    fetchGetStatisticsYearlyGenres(year)
+      .then((res) => {
+        const newData = [[CHART_FIELD.GENRE, CHART_FIELD.GENRE_DATA]];
+        Object.keys(res.data).forEach((genreName) =>
+          newData.push([genreName, res.data[genreName]]),
+        );
+        setData(newData);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
-    /*    requestGetStatisticsYearlyGenres(year).then((res) =>
-      setData([[CHART_FIELD.GENRE, CHART_FIELD.GENRE_DATA], ...res.data]),
-    ); */
+    handleFetchGetStatisticsYearlyGenres();
   }, [year]);
 
   return (
