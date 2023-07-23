@@ -175,22 +175,21 @@ public class ReviewService {
         Review findReview = findVerifiedReview(reviewId);
         User findUser = findVerifiedUser(userId);
         Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
-        ReviewVote saveReview;
 
-        if (optionalReviewVote.isEmpty()) {
+        if (optionalReviewVote.isPresent()) {
+            // 좋아요를 취소할 때는 해당 ReviewVote 엔티티를 삭제
+            reviewVoteRepository.delete(optionalReviewVote.get());
+            findReview.updateVoteCount(false);
+        } else {
+            // 좋아요를 누를 때는 새로운 ReviewVote 엔티티 생성
             ReviewVote reviewVote = ReviewVote.builder().review(findReview).user(findUser).build();
             findReview.updateVoteCount(true);
-            saveReview = reviewVoteRepository.save(reviewVote);
-        } else {
-            ReviewVote findReviewVote = optionalReviewVote.get();
-            findReviewVote.updateVote();
-            saveReview = reviewVoteRepository.save(findReviewVote);
-            findReview.updateVoteCount(findReviewVote.isReviewVoted());
+            reviewVoteRepository.save(reviewVote);
         }
 
         Review updatedReview = reviewRepository.save(findReview);
         ReviewVoteDto reviewVoteDto = new ReviewVoteDto();
-        reviewVoteDto.setReviewVoteStatus(saveReview.isReviewVoted());
+        reviewVoteDto.setReviewVoteStatus(!optionalReviewVote.isPresent());
         reviewVoteDto.setTotalVoteCount(updatedReview.getVotesCount());
 
         return reviewVoteDto;
@@ -202,6 +201,20 @@ public class ReviewService {
 
         Optional<Review> existingReview = reviewRepository.findByUserAndMovieDetail(user, movieDetail);
         return existingReview.isPresent();
+    }
+
+    public boolean checkReviewLikeStatus(long reviewId, long userId) {
+        // 리뷰와 유저를 데이터베이스에서 조회
+        Review findReview = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+
+        // 리뷰와 유저를 기반으로 ReviewVote 정보를 데이터베이스에서 조회
+        Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
+
+        // ReviewVote 정보가 존재하면 해당 유저가 좋아요를 눌렀으므로 true를 반환, 없으면 false를 반환
+        return optionalReviewVote.isPresent();
     }
 
 }
