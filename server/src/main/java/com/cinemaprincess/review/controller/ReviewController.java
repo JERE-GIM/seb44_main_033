@@ -69,7 +69,9 @@ public class ReviewController {
         }
 
         // 리뷰를 찾은 경우 200 OK 응답과 함께 리뷰 정보를 반환
-        return new ResponseEntity<>(mapper.reviewToReviewResponseDto(review), HttpStatus.OK);
+//        return new ResponseEntity<>(mapper.reviewToReviewResponseDto(review), HttpStatus.OK);
+        String responseJson = "{\"data\": " + mapper.reviewToReviewResponseDto(review) + "}";
+        return ResponseEntity.ok().body(responseJson);
     }
     @GetMapping
     public ResponseEntity getReviews(@Positive @RequestParam int page,
