@@ -24,6 +24,7 @@ import { IMypageResponse } from '../types/user';
 import ReviewList from '../components/share/ReviewList';
 import { logout } from '../redux/reducers/isLogin';
 import { useNavigate } from 'react-router-dom';
+import Empty from '../components/share/Empty';
 
 export default function Mypage() {
   const [userInfo, setUserInfo] = useState<IMypageResponse>();
@@ -104,7 +105,11 @@ export default function Mypage() {
           </Info>
           <MyReviews>
             <SectionHeader>나의 리뷰</SectionHeader>
-            <ReviewList reviewList={userInfo.reviews} hasMovieTitle={true} />
+            {userInfo.reviews.length === 0 ? (
+              <Empty message="남긴 리뷰가 없습니다. 인상깊은 영화에 리뷰를 남겨보세요!" />
+            ) : (
+              <ReviewList reviewList={userInfo.reviews} hasMovieTitle={true} />
+            )}
           </MyReviews>
           {modal.status && modal.role === MODAL_ROLE.USER_INFO_EDIT && (
             <UserInfoEditModal

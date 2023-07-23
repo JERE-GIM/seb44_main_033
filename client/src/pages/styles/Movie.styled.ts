@@ -109,7 +109,7 @@ export const MovieDetail = styled.section`
   width: 1320px;
   display: flex;
   margin: 0 auto;
-  padding-top: 20px;
+  padding-top: 30px;
 
   & > div:first-child {
     width: 280px;
