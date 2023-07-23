@@ -131,10 +131,14 @@ public class MovieService {
         if(authentication.getAuthorities().toString().equals("[ROLE_USER]")) {
             String email = authentication.getName();
             User user  = userRepository.findUserByEmail(email);
-            List<WatchlistMovie> watchlistMovies = user.getWatchlist().getWatchlistMovies();
-            for(WatchlistMovie watchlistMovie : watchlistMovies) {
-                if(watchlistMovie.getMovie().getMovieId() == movieId) {
-                    return true;
+            if(user.getWatchlist() == null) {
+                return false;
+            } else {
+                List<WatchlistMovie> watchlistMovies = user.getWatchlist().getWatchlistMovies();
+                for(WatchlistMovie watchlistMovie : watchlistMovies) {
+                    if(watchlistMovie.getMovie().getMovieId() == movieId) {
+                        return true;
+                    }
                 }
             }
         }
