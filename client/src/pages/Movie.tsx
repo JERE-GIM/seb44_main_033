@@ -114,7 +114,7 @@ export default function Movie() {
         <>
           <MovieCover>
             <MovieCoverImage
-              src={`https://image.tmdb.org/t/p/w500/${movieInfo.data.backdropPath}`}
+              src={`https://image.tmdb.org/t/p/w1280/${movieInfo.data.backdropPath}`}
               alt="cover image"
             />
             <MovieHeader>
