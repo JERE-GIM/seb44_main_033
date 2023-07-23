@@ -28,6 +28,7 @@ import {
   MovieVideo,
   MovieCoverBottom,
   UserController,
+  RecommentListItemLink,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import starIcon from '../assets/starIcon.png';
@@ -106,7 +107,9 @@ export default function Movie() {
     if (movieId) {
       fetchMoviePageData();
     }
-  }, []);
+
+    window.scrollTo(0, 0);
+  }, [movieId]);
 
   return (
     <>
@@ -194,16 +197,18 @@ export default function Movie() {
           <MovieRecommend>
             <SectionTitle>비슷한 영화 추천</SectionTitle>
             <RecommendList>
-              {movieInfo.data.similarMovies.map((similarMovie, index) => (
-                <RecommentListItem key={similarMovie.movieId + index}>
-                  <Card
-                    posterPath={
-                      similarMovie.posterPath
-                        ? `https://image.tmdb.org/t/p/w200/${similarMovie.posterPath}`
-                        : defaultPoster
-                    }
-                    movieNm={similarMovie.title}
-                  />
+              {movieInfo.data.similarMovies.map((similarMovie) => (
+                <RecommentListItem key={similarMovie.movieId}>
+                  <RecommentListItemLink to={`/movie/${similarMovie.movieId}`}>
+                    <Card
+                      posterPath={
+                        similarMovie.posterPath
+                          ? `https://image.tmdb.org/t/p/w200/${similarMovie.posterPath}`
+                          : defaultPoster
+                      }
+                      movieNm={similarMovie.title}
+                    />
+                  </RecommentListItemLink>
                 </RecommentListItem>
               ))}
             </RecommendList>

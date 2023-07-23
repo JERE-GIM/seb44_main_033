@@ -186,6 +186,8 @@ export const RecommentListItem = styled.li`
   justify-content: center;
 `;
 
+export const RecommentListItemLink = styled(Link)``;
+
 export const SectionTitle = styled.h2`
   font-size: 25px;
   font-weight: 600;
