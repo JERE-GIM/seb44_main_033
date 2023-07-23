@@ -10,7 +10,7 @@ export const HeaderContainer = styled.header<HeaderContainerProps>`
   width: 100vw;
   height: 60px;
   border-bottom: 3px solid #f1c6d4;
-  position: sticky;
+  position: fixed;
   z-index: 1; /* 변경된 부분 */
   top: 0;
   padding: 0px 0px 0px 0px;
@@ -18,8 +18,9 @@ export const HeaderContainer = styled.header<HeaderContainerProps>`
   ${({ isMovieDetailPage }) =>
     isMovieDetailPage &&
     `
+    position: absolute;
     border-bottom: 0px solid #f1c6d4;
-    background-color: transparent; 
+    background-color: transparent;
     `}
   a {
     text-decoration-line: none;
@@ -47,6 +48,7 @@ export const LogoImage = styled.img`
   width: 55px;
   height: 55px;
   margin-right: 8px;
+  background-color: transparent;
 `;
 
 export const ButtonContainer = styled.div<HeaderContainerProps>`
