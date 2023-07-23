@@ -166,7 +166,7 @@ export default function Movie() {
           </MovieDetail>
           <MovieVideo>
             <SectionTitle>영상</SectionTitle>
-            <YouTube videoId={movieInfo.data.videoPath.slice(1)} />
+            <YouTube videoId={movieInfo.data.videoPath.slice(30)} />
           </MovieVideo>
           <MovieReviews>
             <SectionTitle>코멘트</SectionTitle>
