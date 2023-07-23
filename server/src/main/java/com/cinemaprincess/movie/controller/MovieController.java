@@ -4,9 +4,7 @@ import com.cinemaprincess.genre.GenreService;
 import com.cinemaprincess.movie.dto.MovieDetailResponseDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
-import com.cinemaprincess.movie.entity.MovieDetailCache;
 import com.cinemaprincess.movie.mapper.MovieMapper;
-import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.save.SaveKoreaMovie;
 import com.cinemaprincess.movie.save.SaveLatestMovie;
 import com.cinemaprincess.movie.save.SaveMovieList;
@@ -23,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
