@@ -89,6 +89,11 @@ public class UserController {
         Page<ReviewResponseDto> reviewPage = reviewService.findReviewsByUserId(userId, page - 1);
         List<ReviewResponseDto> reviews = reviewPage.getContent();
 
+        for (ReviewResponseDto reviewDto : reviews) {
+            boolean isLiked = reviewService.checkReviewLikeStatus(reviewDto.getReviewId(), userId);
+            reviewDto.setReviewVoted(isLiked); // reviewVoted 필드에 좋아요 여부 값을 설정
+        }
+
         UserDto.Response response = userMapper.userToResponseDto(user);
 
         return new ResponseEntity<>(new UserDto.UserMultiResponseDto<>(response, reviews, reviewPage), HttpStatus.OK);
