@@ -11,14 +11,14 @@ export const HeaderContainer = styled.header<HeaderContainerProps>`
   height: 60px;
   border-bottom: 3px solid #f1c6d4;
   position: fixed;
-  z-index: 1; /* 변경된 부분 */
+  z-index: 1;
   top: 0;
   padding: 0px 0px 0px 0px;
   background-color: white;
   ${({ isMovieDetailPage }) =>
     isMovieDetailPage &&
     `
-    position: absolute;
+    position: fixed;
     border-bottom: 0px solid #f1c6d4;
     background-color: transparent;
     `}
