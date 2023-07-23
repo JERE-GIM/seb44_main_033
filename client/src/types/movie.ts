@@ -28,7 +28,7 @@ export interface IReview {
   username: string;
   movieId: number;
   movieTitle: string;
-  moviePosterPath: string;
+  posterPath: string;
   content: string;
   score: number;
   votesCount: number;

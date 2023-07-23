@@ -39,7 +39,7 @@ export default function ReviewListitem({
         {hasMovieTitle && (
           <>
             <Image
-              src={`https://image.tmdb.org/t/p/w200/${review.moviePosterPath}`}
+              src={`https://image.tmdb.org/t/p/w200/${review.posterPath}`}
             />
             <MovieTitle>{review.movieTitle}</MovieTitle>
           </>
