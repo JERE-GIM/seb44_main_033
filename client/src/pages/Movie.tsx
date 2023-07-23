@@ -48,6 +48,7 @@ import MyReview from '../components/movie/MyReview';
 import YouTube from 'react-youtube';
 import LoginForm from '../components/login/loginForm';
 import { WatchBookmark } from '../components/watch/WatchBookMark';
+import Empty from '../components/share/Empty';
 
 export default function Movie() {
   const [movieInfo, setMovieInfo] = useState<IMovieResponse>();
@@ -174,8 +175,12 @@ export default function Movie() {
             <YouTube videoId={movieInfo.data.videoPath.slice(30)} />
           </MovieVideo>
           <MovieReviews>
-            <SectionTitle>코멘트</SectionTitle>
-            <ReviewList reviewList={movieInfo.reviews} />
+            <SectionTitle>영화 리뷰</SectionTitle>
+            {movieInfo.reviews.length === 0 ? (
+              <Empty message="리뷰가 없습니다. 첫 리뷰를 남겨보세요!" />
+            ) : (
+              <ReviewList reviewList={movieInfo.reviews} />
+            )}
           </MovieReviews>
           {movieInfo.data.watchProviders.length !== 0 && (
             <MovieOTTInfo>
