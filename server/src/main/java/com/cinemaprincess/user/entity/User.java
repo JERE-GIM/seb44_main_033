@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Getter
@@ -46,7 +47,8 @@ public class User extends Auditable {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> roles = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @BatchSize(size = 10)
     private Watchlist watchlist;
 
     private String provider;

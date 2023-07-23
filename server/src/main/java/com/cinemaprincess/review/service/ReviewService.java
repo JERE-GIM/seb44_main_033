@@ -62,7 +62,7 @@ public class ReviewService {
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
     }
-
+/*
     public ReviewResponseDto updateReview(Long reviewId, ReviewPatchDto reviewPatchDto) {
         reviewPatchDto.setReviewId(reviewId);
         Review review = mapper.reviewPatchDtoToReview(reviewPatchDto);
@@ -81,7 +81,7 @@ public class ReviewService {
         Review updatedReview = reviewRepository.save(findReview);
         return mapper.reviewToReviewResponseDto(updatedReview);
     }
-
+*/
     public Review findReview(long reviewId) {
         return findVerifiedReview(reviewId);
     }

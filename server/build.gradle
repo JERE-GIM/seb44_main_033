@@ -83,6 +83,9 @@ dependencies {
 
 	//file-IO
 	implementation 'commons-io:commons-io:2.13.0'
+
+	//cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {

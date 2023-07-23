@@ -9,5 +9,5 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class UserStatisticsDto {
-    private List<Long> genreIds;
+    private List<String> genreNames;
 }

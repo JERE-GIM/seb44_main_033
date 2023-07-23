@@ -41,7 +41,7 @@ public class ReviewController {
 
         return new ResponseEntity<>(reviewResponseDto, HttpStatus.CREATED);
     }
-
+/*
     @PatchMapping("/{review-id}")
     public ResponseEntity patchReview(@PathVariable("review-id") @Positive long reviewId,
                                       @Valid @RequestBody ReviewPatchDto reviewPatchDto) {
@@ -51,7 +51,7 @@ public class ReviewController {
         return new ResponseEntity<>(reviewResponseDto,HttpStatus.OK);
 
     }
-
+*/
     @GetMapping("/{review-id}")
     public ResponseEntity getReview(@PathVariable("review-id") long reviewId){
         Review review = reviewService.findReview(reviewId);

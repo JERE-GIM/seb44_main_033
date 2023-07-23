@@ -12,10 +12,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MovieSearchResultDto {
+    private Long movieId;
     private String title;
+    private String posterPath;
 
     public MovieSearchResultDto(Movie movie) {
         this.title = movie.getTitle();
+        this.movieId = movie.getMovieId();
+        this.posterPath = movie.getPosterPath();
     }
 
 }
