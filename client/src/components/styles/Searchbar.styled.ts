@@ -16,6 +16,7 @@ export const SearchInput = styled.input`
   width: 300px;
   font-size: 16px;
   font-weight: bold;
+  background-color: transparent;
   &:focus {
     outline: none;
   }
@@ -25,7 +26,7 @@ export const SearchButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: transparent;
   border: none;
   color: black;
   cursor: pointer;
