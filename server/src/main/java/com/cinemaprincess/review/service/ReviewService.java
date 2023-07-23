@@ -3,6 +3,7 @@ package com.cinemaprincess.review.service;
 import com.cinemaprincess.exception.BusinessLogicException;
 import com.cinemaprincess.exception.ExceptionCode;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.service.MovieService;
 import com.cinemaprincess.movie.vote.MovieVote;
 import com.cinemaprincess.movie.vote.MovieVoteRepository;
@@ -38,6 +39,7 @@ public class ReviewService {
     private final ReviewMapper mapper;
     private final UserRepository userRepository;
     private final ReviewVoteRepository reviewVoteRepository;
+    private final MovieDetailRepository movieDetailRepository;
     private final UserService userService;
     private final MovieService movieService;
     private final MovieVoteRepository movieVoteRepository;
@@ -49,23 +51,26 @@ public class ReviewService {
         MovieDetail movieDetail = movieService.findMovie(reviewPostDto.getMovieId());
         review.setMovieDetail(movieDetail);
 
-        updateMovieVote(movieDetail, 0, review.getScore(), 1);
+//        updateMovieVote(movieDetail, 0, review.getScore(), 1);
 
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
     }
-
+/*
     public ReviewResponseDto updateReview(Long reviewId, ReviewPatchDto reviewPatchDto) {
         reviewPatchDto.setReviewId(reviewId);
         Review review = mapper.reviewPatchDtoToReview(reviewPatchDto);
         Review findReview = findVerifiedReview(review.getReviewId());
 
+//        Optional.ofNullable(review.getScore())
+//                .ifPresent(score -> {
+//                    int oldScore = findReview.getScore();
+//                    findReview.setScore(score);
+//                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
+//                });
         Optional.ofNullable(review.getScore())
-                .ifPresent(score -> {
-                    int oldScore = findReview.getScore();
-                    findReview.setScore(score);
-                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
-                });
+                .ifPresent(findReview::setScore);
+                        .ifPresent(findReview::setScore);
         Optional.ofNullable(review.getContent())
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());
@@ -73,7 +78,7 @@ public class ReviewService {
         Review updatedReview = reviewRepository.save(findReview);
         return mapper.reviewToReviewResponseDto(updatedReview);
     }
-
+*/
     public Review findReview(long reviewId) {
         return findVerifiedReview(reviewId);
     }
@@ -90,7 +95,7 @@ public class ReviewService {
                 new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
     }
 
-    private User findVerifiedUser(long userId) {
+    public User findVerifiedUser(long userId) {
         Optional<User> optionalUser =
                 userRepository.findById(userId);
         return optionalUser.orElseThrow(() ->
@@ -101,13 +106,27 @@ public class ReviewService {
     public void deleteReview(long reviewId) {
         Review review = findVerifiedReview(reviewId);
 
-        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
+//        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
 
         reviewRepository.delete(review);
     }
 
     public Page<ReviewResponseDto> findReviewsByMovieId(long movieId, int page) {
         Page<Review> reviewPage = reviewRepository.findByMovieDetail_Id(movieId, PageRequest.of(page, 40));
+        List<ReviewResponseDto> reviewDtos = mapper.reviewsToReviewResponseDtos(reviewPage.getContent());
+
+        return new PageImpl<>(reviewDtos, reviewPage.getPageable(), reviewPage.getTotalElements());
+    }
+    public Review findReviewByUserAndMovieDetail(long userId, long movieId){
+        User user = userRepository.findById(userId).orElse(null);
+        MovieDetail movieDetail = movieDetailRepository.findById(movieId).orElse(null);
+
+        Optional<Review> optionalReview = reviewRepository.findByUserAndMovieDetail(user, movieDetail);
+        return optionalReview.orElse(null);
+    }
+
+    public Page<ReviewResponseDto> findReviewsByUserId(long userId, int page) {
+        Page<Review> reviewPage = reviewRepository.findByUserUserId(userId, PageRequest.of(page, 40));
         List<ReviewResponseDto> reviewDtos = mapper.reviewsToReviewResponseDtos(reviewPage.getContent());
 
         return new PageImpl<>(reviewDtos, reviewPage.getPageable(), reviewPage.getTotalElements());

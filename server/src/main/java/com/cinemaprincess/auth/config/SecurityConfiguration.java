@@ -1,32 +1,32 @@
 package com.cinemaprincess.auth.config;
 
+import com.cinemaprincess.auth.jwt.JwtTokenProvider;
 import com.cinemaprincess.auth.filter.JwtAuthenticationFilter;
 import com.cinemaprincess.auth.filter.JwtVerificationFilter;
-import com.cinemaprincess.auth.handler.*;
+import com.cinemaprincess.auth.handler.OAuth2AuthenticationSuccessHandler;
+import com.cinemaprincess.auth.handler.UserAuthenticationSuccessHandler;
+import com.cinemaprincess.auth.handler.UserAuthenticationFailureHandler;
+import com.cinemaprincess.auth.handler.UserAccessDeniedHandler;
+import com.cinemaprincess.auth.handler.UserAuthenticationEntryPoint;
 import com.cinemaprincess.auth.userdetails.OAuth2UserDetailsService;
 import com.cinemaprincess.auth.utils.CustomAuthorityUtils;
-import com.cinemaprincess.user.service.UserService;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.cinemaprincess.auth.jwt.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @RequiredArgsConstructor
@@ -41,12 +41,13 @@ public class SecurityConfiguration {
         http
                 .headers().frameOptions().sameOrigin()
                 .and()
-                .csrf().disable()
-                .cors(withDefaults())
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .csrf().disable()
 
                 // 예외 핸들러 등록
                 .exceptionHandling()
@@ -58,8 +59,13 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        // 접근 권한 수정 필요
-                        .anyRequest().permitAll()
+                        // 요청 접근 권한
+                                .antMatchers("/", "/login/", "/login/**", "/signup", "/oauth2/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/movies/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/reviews/*").permitAll()
+                                .antMatchers(HttpMethod.GET, "/search", "/search/**").permitAll()
+                                .anyRequest().authenticated()
+
                 )
 
                 .oauth2Login()
@@ -73,13 +79,23 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://cinemaprincess.shop"));
+        configuration.setAllowedOrigins(
+                List.of(
+                        "http://cinema-princess-s3-bucket.s3-website.ap-northeast-2.amazonaws.com/",
+                        "http://localhost:3000/")
+        );
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
+        configuration.addExposedHeader("Authorization");
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 

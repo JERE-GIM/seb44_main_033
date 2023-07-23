@@ -14,12 +14,29 @@ import {
 import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import profile from '../../assets/profile.jpg';
+import { fetchUpdateProfileImage } from '../../api/userInfo';
 
-export default function ProfileUploadModal() {
+interface IProfileUploadModalProps {
+  callback: () => void;
+}
+
+export default function ProfileUploadModal({
+  callback,
+}: IProfileUploadModalProps) {
   const dispatch = useAppDispatch();
-  const [imgFile, setImgFile] = useState('');
+  const [imgPreview, setImgPreview] = useState('');
+  const [imgFile, setImgFile] = useState<File | null>(null); //FormData로 전송하기 위함
+
+  const handleFetchUpdateProfile = (data: FormData) => {
+    fetchUpdateProfileImage(data)
+      .then(() => {
+        callback();
+        dispatch(modalAction.close());
+      })
+      .catch((err) => console.log(err));
+  };
 
   const handleCloseModalUnsaved = () => {
     dispatch(modalAction.close());
@@ -31,17 +48,25 @@ export default function ProfileUploadModal() {
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(imgFile);
-    // api 로직 추가
-    dispatch(modalAction.close());
+    const formData = new FormData();
+    if (imgFile) formData.append('imgFile', imgFile);
+
+    handleFetchUpdateProfile(formData);
   };
 
   const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : '';
     if (!file) return;
 
-    setImgFile(URL.createObjectURL(file));
+    setImgFile(file);
+    setImgPreview(URL.createObjectURL(file));
   };
+
+  useEffect(() => {
+    if (imgPreview) {
+      return () => URL.revokeObjectURL(imgPreview);
+    }
+  }, [imgPreview]);
 
   return (
     <Background onClick={handleCloseModalUnsaved}>
@@ -53,7 +78,10 @@ export default function ProfileUploadModal() {
           </CloseButton>
         </ModalHeader>
         <Form onSubmit={handleSubmitForm}>
-          <Profile src={imgFile ? imgFile : profile} alt="profile image" />
+          <Profile
+            src={imgPreview ? imgPreview : profile}
+            alt="profile image"
+          />
           <FileInputLabel htmlFor="imageUpload">
             <FileInput
               type="file"

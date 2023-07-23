@@ -1,22 +1,28 @@
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import { fetchMonthly, Movie } from '../../../api/getMonthly';
 import { RightBase } from '../../styles/tabmovie/Botmovie.styled';
 import { Title } from '../../styles/monthmovie/Monthmovie';
 import MonthSlider from './Monthslider';
 import MonthCard from './Monthcard';
 
-//dummy
-import { ITop, dummyMonth } from '../../../dummy/dummyMonth';
+export default function MonthMovie() {
+  const dispatch = useAppDispatch();
+  const movies = useAppSelector((state) => state.monthly.movies);
 
-const MonthMovie: React.FC = () => {
+  useEffect(() => {
+    dispatch(fetchMonthly());
+  }, []);
   return (
     <RightBase>
       <Title>7월 상영작</Title>
       <MonthSlider>
-        {dummyMonth.map((movie: ITop) => {
-          return <MonthCard key={movie.id} poster={movie.poster} />;
+        {movies.map((movie: Movie) => {
+          return (
+            <MonthCard key={movie.movieId} posterPath={movie.posterPath} />
+          );
         })}
       </MonthSlider>
     </RightBase>
   );
-};
-
-export default MonthMovie;
+}

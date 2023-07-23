@@ -18,6 +18,7 @@ public class UsersDetails extends User implements UserDetails, OAuth2User {
     // local user
     public UsersDetails(User user) {
         setUserId(user.getUserId());
+        setUsername(user.getUsername());
         setEmail(user.getEmail());
         setPassword(user.getPassword());
         setRoles(user.getRoles());
@@ -72,8 +73,6 @@ public class UsersDetails extends User implements UserDetails, OAuth2User {
         }
 
     @Override
-    public String getName() {
-            return null;
-        }
+    public String getName() { return null; }
 }
 

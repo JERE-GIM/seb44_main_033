@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-07-21T10:56:26+0900",
+    date = "2023-07-22T22:10:21+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 11.0.19 (Azul Systems, Inc.)"
 )
 @Component
@@ -28,11 +28,10 @@ public class UserMapperImpl implements UserMapper {
         user.gender( userPostDto.getGender() );
         user.age( userPostDto.getAge() );
         user.username( userPostDto.getUsername() );
-        List<Long> list = userPostDto.getGenre();
+        List<String> list = userPostDto.getGenre();
         if ( list != null ) {
-            user.genre( new ArrayList<Long>( list ) );
+            user.genre( new ArrayList<String>( list ) );
         }
-        user.provider( userPostDto.getProvider() );
 
         return user.build();
     }
@@ -48,9 +47,9 @@ public class UserMapperImpl implements UserMapper {
         user.userId( userPatchDto.getUserId() );
         user.age( userPatchDto.getAge() );
         user.username( userPatchDto.getUsername() );
-        List<Long> list = userPatchDto.getGenre();
+        List<String> list = userPatchDto.getGenre();
         if ( list != null ) {
-            user.genre( new ArrayList<Long>( list ) );
+            user.genre( new ArrayList<String>( list ) );
         }
 
         return user.build();
@@ -68,31 +67,5 @@ public class UserMapperImpl implements UserMapper {
         user.password( userPatchToPassword.getPassword() );
 
         return user.build();
-    }
-
-    @Override
-    public UserDto.Response userToResponse(User user) {
-        if ( user == null ) {
-            return null;
-        }
-
-        UserDto.Response response = new UserDto.Response();
-
-        response.setUserId( user.getUserId() );
-        response.setEmail( user.getEmail() );
-        response.setGender( user.getGender() );
-        response.setAge( user.getAge() );
-        response.setUsername( user.getUsername() );
-        response.setCreatedAt( user.getCreatedAt() );
-        response.setModifiedAt( user.getModifiedAt() );
-        List<Long> list = user.getGenre();
-        if ( list != null ) {
-            response.setGenre( new ArrayList<Long>( list ) );
-        }
-        response.setProvider( user.getProvider() );
-        response.setProfileImgName( user.getProfileImgName() );
-        response.setProfileImgPath( user.getProfileImgPath() );
-
-        return response;
     }
 }

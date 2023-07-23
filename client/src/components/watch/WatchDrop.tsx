@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -13,107 +14,119 @@ import {
   MovieImage,
 } from '../styles/watchlist/WatchDrop.styled';
 import { WatchBookmark } from './WatchBookMark';
-
-//dummy
-import { ITop, dummyWatch } from '../../dummy/dummyWatch';
+import { fetchWatchlist, WatchMovie } from '../../api/getWatchlist';
 
 export default function WatchDrop() {
-  const [isOpen, setIsopen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string>('이름순');
-  const [sortedMovies, setSortedMovies] = useState<ITop[]>(dummyWatch);
-  const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [isOpen, setIsopen] = useState<boolean>(false);
+  // const [selectedOption, setSelectedOption] = useState<string>('담은순');
 
+  // const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const dispatch = useAppDispatch();
+  const movies = useAppSelector((state) => state.watchlist.movies);
+  const [sortOption, setSortOption] = useState<string>('담은순');
+  const [moviesToShow, setMoviesToShow] = useState<WatchMovie[]>([]);
   const onToggle = () => setIsopen(!isOpen);
-  const onOptionClicked = (value: string) => () => {
-    setSelectedOption(value);
+
+  const handleSortOptionChange = (option: '담은순' | '신작순' | '이름순') => {
+    setSortOption(option);
     setIsopen(false);
   };
 
-  // 무한스크롤
   useEffect(() => {
-    function handleScroll() {
-      const { scrollTop, clientHeight, scrollHeight } =
-        document.documentElement;
-      if (scrollHeight - (scrollTop + clientHeight) < 100 && !isLoading) {
-        setIsLoading(true);
-        setTimeout(() => {
-          const start = page * 4;
-          const end = start + 4;
-          if (start >= dummyWatch.length) {
-            setIsLoading(false);
-            return;
-          }
-          const newData = dummyWatch.slice(start, end);
-          setSortedMovies((prevMovies) => [...prevMovies, ...newData]);
-          setIsLoading(false);
-          setPage((prevPage) => prevPage + 1);
-        }, 1000);
-      }
-    }
+    const userId = 1;
+    dispatch(fetchWatchlist(userId));
+  }, []);
 
+  //무한스크롤
+  const handleScroll = () => {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+    if (scrollHeight - scrollTop === clientHeight) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [page, isLoading]);
+  }, []);
 
   //필터기능
   useEffect(() => {
-    if (selectedOption === '이름순') {
-      const sortedByTitle = [...dummyWatch].sort((a, b) =>
-        a.title.localeCompare(b.title),
-      );
-      setSortedMovies(sortedByTitle.slice(0, 12));
-    } else if (selectedOption === '신작순') {
-      const sortedByOpenAt = [...dummyWatch].sort(
-        (a, b) => new Date(b.openat).getTime() - new Date(a.openat).getTime(),
-      );
-      setSortedMovies(sortedByOpenAt.slice(0, 12));
-    } else {
-      setSortedMovies(dummyWatch.slice(0, 12));
-    }
-    setPage(1);
-  }, [selectedOption]);
-
-  //북마크 클릭 영화 제거
-  const handleBookmarkClick = (movieId: string) => {
-    setSortedMovies((prevMovies) => {
-      const updatedMovies = prevMovies.filter((movie) => movie.id !== movieId);
-      return updatedMovies;
+    const sortedMovies = movies.slice().sort((a: WatchMovie, b: WatchMovie) => {
+      if (sortOption === '담은순') {
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      } else if (sortOption === '신작순') {
+        return (
+          new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()
+        );
+      } else if (sortOption === '이름순') {
+        return a.title.localeCompare(b.title);
+      } else {
+        return 0;
+      }
     });
-  };
+    setMoviesToShow(sortedMovies.slice(0, page * 8));
+  }, [movies, sortOption, page]);
+
+  // //북마크 클릭 영화 제거
+  // const handleBookmarkClick = (movieid: string) => {
+  //   setSortedMovies((prevMovies) => {
+  //     const updatedMovies = prevMovies.filter(
+  //       (movie) => movie.movieId !== movieid,
+  //     );
+  //     return updatedMovies;
+  //   });
+  // };
+
   return (
     <>
       <Title>찜한영화</Title>
       <CategoryMenuBox>
         <CategoryMenu onClick={onToggle}>
           <FontAwesomeIcon icon={faChevronDown} width={20} />
-          <p>{selectedOption}</p>
+          <p>{sortOption}</p>
         </CategoryMenu>
       </CategoryMenuBox>
       <DropDownBoxWrap>
         <DropDownContainer>
           {isOpen && (
             <>
-              <ListItem onClick={onOptionClicked('이름순')}>이름순</ListItem>
-              <ListItem onClick={onOptionClicked('신작순')}>신작순</ListItem>
-              <ListItem onClick={onOptionClicked('평점순')}>평점순</ListItem>
+              <ListItem onClick={() => handleSortOptionChange('담은순')}>
+                담은순
+              </ListItem>
+              <ListItem onClick={() => handleSortOptionChange('신작순')}>
+                신작순
+              </ListItem>
+              <ListItem onClick={() => handleSortOptionChange('이름순')}>
+                이름순
+              </ListItem>
             </>
           )}
         </DropDownContainer>
       </DropDownBoxWrap>
       <Container>
-        {sortedMovies.map((movie) => (
-          <MovieItem key={movie.id}>
-            <div style={{ position: 'relative' }}>
-              <MovieImage src={movie.poster} alt={movie.title} />
-              <WatchBookmark movieId={movie.id} onClick={handleBookmarkClick} />
-            </div>
-            <p>{movie.title}</p>
-            <p>{movie.openat}</p>
-          </MovieItem>
-        ))}
+        {movies &&
+          moviesToShow.map((movie: WatchMovie) => (
+            <MovieItem key={movie.movieId}>
+              <div style={{ position: 'relative' }}>
+                <MovieImage
+                  src={`https://image.tmdb.org/t/p/w200/${movie.posterPath}`}
+                  alt={movie.title}
+                />
+                {/* <WatchBookmark
+                movieId={movie.movieId}
+                onClick={handleBookmarkClick}
+              /> */}
+              </div>
+              <p>{movie.title}</p>
+              <p>{movie.releaseDate.split('-')[0]}</p>
+            </MovieItem>
+          ))}
       </Container>
     </>
   );

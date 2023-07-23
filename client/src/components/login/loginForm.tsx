@@ -16,13 +16,16 @@ import {
   Signupmessage,
   Signuplink,
   OAuthbox,
-  KakaoLogo,
-  NaverLogo,
-  GoogleLogo,
 } from '../styles/LoginForm.styled';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
+import jwt_decode from 'jwt-decode';
+import NaverLogin from './Naverlogin';
+import KakaoLogin from './Kakaologin';
+import GoogleLogin from './Googlelogin';
+import { login } from '../../redux/reducers/isLogin';
+
 const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
   const { email, password } = useSelector((state: RootState) => state.signup);
@@ -31,6 +34,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
+
   // 이메일
   const isEmailValid = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,17 +74,63 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       return;
     }
     axios
-      .post('/login', formData)
+      .post('http://cinemaprincess.shop/login', formData)
       .then((response) => {
-        const accessToken = response.data.accessToken;
+        console.log(response.headers);
+        const accessToken = response.headers.authorization;
+        if (!accessToken) {
+          console.error('토큰이 제공되지 않았습니다.');
+          return;
+        }
         dispatch(setAccessToken(accessToken));
+        dispatch(login());
+        localStorage.setItem('isLogin', 'true');
+        const userId = UserIdFromAccessToken(accessToken);
+        if (!userId) {
+          alert('토큰이 만료되었습니다. 다시 로그인해주세요.');
+          navigate('/login');
+          return;
+        }
 
+        localStorage.setItem('userId', userId);
+        localStorage.setItem('accessToken', accessToken); // accessToken 저장
         onClose();
         navigate('/');
       })
       .catch(() => {
-        alert('아이디와 비밀번호를 확인해주세요.');
+        alert('아이디와 비밀번호를 확인해주세요');
       });
+  };
+
+  interface TokenPayload {
+    userId: number;
+    exp?: number;
+  }
+
+  const UserIdFromAccessToken = (accessToken: string): string => {
+    try {
+      const decoded = jwt_decode(accessToken);
+      const tokenPayload = decoded as TokenPayload;
+
+      // Check if the object has userId property and it is a number
+      if (typeof tokenPayload.userId === 'number') {
+        const userId = tokenPayload.userId;
+        // Check token expiry
+        if (
+          typeof tokenPayload.exp === 'number' &&
+          Date.now() >= tokenPayload.exp * 1000
+        ) {
+          throw new Error('Token expired');
+        }
+        return userId.toString();
+      } else {
+        throw new Error('Invalid token payload');
+      }
+    } catch (error) {
+      console.error('토큰 디코딩에 실패했습니다:', error);
+      console.error('잘못된 토큰:', accessToken);
+      return '';
+    }
   };
 
   return (
@@ -100,22 +150,13 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <LoginButton onClick={handleLogin}>로그인</LoginButton>
         <SignupmessageBox>
           <Signupmessage>Don&apos;t have an account?</Signupmessage>
-          <Signuplink>Sign up</Signuplink>
+          <Signuplink>Click Sign up</Signuplink>
         </SignupmessageBox>
         <div>or</div>
         <OAuthbox>
-          <KakaoLogo
-            src={process.env.PUBLIC_URL + '/images/Kakao.png'}
-            alt="Kakao"
-          />
-          <NaverLogo
-            src={process.env.PUBLIC_URL + '/images/Naver.png'}
-            alt="Naver"
-          />
-          <GoogleLogo
-            src={process.env.PUBLIC_URL + '/images/Google.png'}
-            alt="Google"
-          />
+          <KakaoLogin />
+          <NaverLogin />
+          <GoogleLogin />
         </OAuthbox>
       </ModalContainer>
     </ModalBackground>

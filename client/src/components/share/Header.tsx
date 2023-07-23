@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Searchbar from '../share/Searchbar';
 import { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../redux/store';
@@ -20,9 +20,10 @@ import SignupForm1 from '../signup/SignupForm1'; // SignupForm1 컴포넌트 추
 import LoginForm from '../login/loginForm'; // SignupForm1 컴포넌트 추가
 
 export default function Header() {
-  const isLoggedIn = useAppSelector((state: RootState) => state.isLogin);
+  const isLoggedIn = useAppSelector((state: RootState) => state.isLogin.status);
   const dispatch = useAppDispatch();
   const [username, setusername] = useState('');
+  const [Username, setUsername] = useState('');
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -30,6 +31,9 @@ export default function Header() {
   const handleLogout = () => {
     setusername('');
     dispatch(logout());
+    localStorage.removeItem('isLogin');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userId');
     navigate('/');
   };
   const handleLoginModalOpen = () => {
@@ -60,7 +64,7 @@ export default function Header() {
         </HeaderTitle>
       </Link>
       <Searchbar></Searchbar>
-      {!isLoggedIn ? (
+      {isLoggedIn ? (
         <ButtonContainer>
           <Link to="/mypage">
             <MypageContainer>

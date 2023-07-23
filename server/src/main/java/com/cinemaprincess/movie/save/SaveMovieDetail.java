@@ -4,6 +4,7 @@ import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreCache;
 import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.movie.entity.MovieDetail;
+import com.cinemaprincess.movie.entity.MovieDetailCache;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
@@ -46,35 +47,34 @@ public class SaveMovieDetail {
     private MovieDetail movieDetail;
     private final GenreCache genreCache;
     private final WatchProviderCache watchProviderCache;
+    private final MovieDetailCache movieDetailCache;
 
     RestTemplate restTemplate = new RestTemplate();
 
-    public String buildMovieDetailUrl(long movieId, String language) {
+    public String buildMovieDetailUrl(long movieId) {
         String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + movieId)
                 .queryParam("api_key", key)
-                .queryParam("language", language)
+                .queryParam("language", "ko")
                 .queryParam("append_to_response", "credits,videos,watch/providers,release_dates")
                 .build()
                 .toUriString();
     }
 
     public MovieDetail getMovieDetail(long movieId) {
-        try {
-            String url = buildMovieDetailUrl(movieId, "ko");
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-            String responseBody = response.getBody();
-            movieDetail = parseMovieDetail(responseBody);
+        MovieDetail movieDetail = movieDetailCache.getMovieDetailById(movieId);
+        if (movieDetail == null) {
+            try {
+                String url = buildMovieDetailUrl(movieId);
+                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+                String responseBody = response.getBody();
+                movieDetail = parseMovieDetail(responseBody);
 
-//            if (movieDetail != null && movieDetail.getOverview().isEmpty()) { // 한글 개요가 없을때 영어 개요 가져오기
-//                url = buildMovieDetailUrl(movieId, "en");
-//                response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-//                responseBody = response.getBody();
-//                String overview = parseOverview(responseBody);
-//                movieDetail.setOverview(overview);
-//            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                // 캐시에 저장
+                movieDetailCache.addMovieDetail(movieDetail);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return movieDetail;
     }
@@ -263,5 +263,3 @@ public class SaveMovieDetail {
         return releaseDateOptional.orElse(releaseDate);
     }
 }
-
-

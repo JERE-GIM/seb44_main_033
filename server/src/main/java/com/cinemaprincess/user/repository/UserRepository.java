@@ -14,6 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
     User findByUserId(Long userId);
+    User findUserByEmail(String email);
     @EntityGraph(attributePaths = { "watchlist", "genre" })
     @Query("SELECT DISTINCT u FROM User u " +
             "WHERE u.gender = :genderEnum " +

@@ -41,27 +41,39 @@ public class ReviewController {
 
         return new ResponseEntity<>(reviewResponseDto, HttpStatus.CREATED);
     }
-
+/*
     @PatchMapping("/{review-id}")
     public ResponseEntity patchReview(@PathVariable("review-id") @Positive long reviewId,
-                                        @Valid @RequestBody ReviewPatchDto reviewPatchDto) {
+                                      @Valid @RequestBody ReviewPatchDto reviewPatchDto) {
 
         ReviewResponseDto reviewResponseDto = reviewService.updateReview(reviewId,reviewPatchDto);
 
         return new ResponseEntity<>(reviewResponseDto,HttpStatus.OK);
 
     }
-
+*/
     @GetMapping("/{review-id}")
     public ResponseEntity getReview(@PathVariable("review-id") long reviewId){
         Review review = reviewService.findReview(reviewId);
 
         return new ResponseEntity<>(mapper.reviewToReviewResponseDto(review),HttpStatus.OK);
     }
+    @GetMapping("/{movie-id}/{user-id}")
+    public ResponseEntity getReviewByUserMovie(@PathVariable("movie-id") long movieId,
+                                               @PathVariable("user-id") long userId){
+        Review review = reviewService.findReviewByUserAndMovieDetail(userId,movieId);
 
+        if (review == null) {
+            // 리뷰를 찾지 못한 경우에는 null을 응답으로 보냄
+            return ResponseEntity.ok().body("{\"data\": null}");
+        }
+
+        // 리뷰를 찾은 경우 200 OK 응답과 함께 리뷰 정보를 반환
+        return new ResponseEntity<>(mapper.reviewToReviewResponseDto(review), HttpStatus.OK);
+    }
     @GetMapping
     public ResponseEntity getReviews(@Positive @RequestParam int page,
-                                       @Positive @RequestParam int size){
+                                     @Positive @RequestParam int size){
         Page<Review> reviewPage = reviewService.findReviews(page-1, size);
         List<Review> reviews = reviewPage.getContent();
 
@@ -77,9 +89,9 @@ public class ReviewController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @GetMapping("/votes/{review-id}/{user-id}")
+    @PostMapping("/votes/{review-id}/{user-id}")
     public ResponseEntity votesCount(@PathVariable("review-id") long reviewId,
-                                       @PathVariable("user-id") long userId){
+                                     @PathVariable("user-id") long userId){
         ReviewVoteDto reviewVoteDto = reviewService.votesCount(reviewId, userId);
         return new ResponseEntity<>(reviewVoteDto,HttpStatus.OK);
     }

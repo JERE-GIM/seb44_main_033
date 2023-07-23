@@ -7,16 +7,25 @@ import {
   Info,
   Title,
   Keyword,
+  Average,
 } from '../../styles/rankmovie/Card.styled';
+import { AiFillStar } from 'react-icons/ai';
 
 interface Props {
   poster: string;
   title: string;
   openat: number;
   country: string;
+  voteAverage?: number;
 }
 
-const Card: React.FC<Props> = ({ poster, title, country, openat }) => (
+const Card: React.FC<Props> = ({
+  poster,
+  title,
+  country,
+  openat,
+  voteAverage,
+}) => (
   <Container>
     <Base>
       <ImageWrapper>
@@ -26,6 +35,10 @@ const Card: React.FC<Props> = ({ poster, title, country, openat }) => (
         <Title>{title}</Title>
         <Keyword>{openat}</Keyword>
         <Keyword>{country}</Keyword>
+        <Average>
+          <AiFillStar />
+          <span>{voteAverage}</span>
+        </Average>
       </Info>
     </Base>
   </Container>

@@ -9,9 +9,12 @@ public class ReviewResponseDto {
     private long reviewId;
     private long userId;
     private long movieId;
+    private String movieTitle;
     private String content;
     private int score;
     private String username;
+    private String profileImgName;
+    private String profileImgPath;
     private int votesCount;
     private String createdAt;
     private String modifiedAt;

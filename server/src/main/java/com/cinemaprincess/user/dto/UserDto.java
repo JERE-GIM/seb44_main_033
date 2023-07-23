@@ -4,10 +4,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import com.cinemaprincess.response.PageInfo;
+import com.cinemaprincess.review.dto.ReviewResponseDto;
 import com.cinemaprincess.user.entity.User;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,8 +39,7 @@ public class UserDto {
         @NotBlank(message = "닉네임을 작성해 주세요.") // unique 옵션 프론트와 상의
         private String username;
 
-        private List<Long> genre;
-        private String provider;
+        private List<String> genre;
     }
 
     //회원정보 수정
@@ -49,7 +52,7 @@ public class UserDto {
 
         private String username;
 
-        private List<Long> genre;
+        private List<String> genre;
     }
 
     // password 수정
@@ -73,6 +76,7 @@ public class UserDto {
     //회원정보 응답
     @Setter
     @Getter
+    @Builder
     public static class Response {
         private Long userId;
         private String email;
@@ -81,9 +85,23 @@ public class UserDto {
         private String username;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private List<Long> genre;
+        private List<String> genre;
         private String provider;
         private String profileImgName;
         private String profileImgPath;
+    }
+
+    @Getter
+    public static class UserMultiResponseDto<T> {
+        private T data;
+        private List<ReviewResponseDto> reviews;
+        private PageInfo pageInfo;
+
+        public UserMultiResponseDto(T data, List<ReviewResponseDto> reviews, Page page) {
+            this.data = data;
+            this.reviews = reviews;
+            this.pageInfo = new PageInfo(page.getNumber() + 1,
+                    page.getSize(), page.getTotalElements(), page.getTotalPages());
+        }
     }
 }
