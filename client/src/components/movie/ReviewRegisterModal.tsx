@@ -34,12 +34,12 @@ export default function ReviewRegister({
   setRating,
   callback,
 }: IReviewRegister) {
-  const [comment, setComment] = useState(myReview ? myReview.content : '');
+  const [content, setContent] = useState(myReview?.content || '');
   const dispatch = useAppDispatch();
 
   const handleFetchUpdateMyReview = (reviewId: number) => {
     fetchUpdateMyReview(reviewId, {
-      content: comment,
+      content,
       score: rating,
     }).then(() => {
       dispatch(modalAction.close());
@@ -49,7 +49,7 @@ export default function ReviewRegister({
 
   const handleFetchCreateMyReview = () => {
     fetchCreateMyReview({
-      content: comment,
+      content,
       score: rating,
       movieId,
     }).then(() => {
@@ -70,13 +70,14 @@ export default function ReviewRegister({
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!content) return;
     if (myReview) handleFetchUpdateMyReview(myReview.reviewId);
     else handleFetchCreateMyReview();
   };
 
   const handleChangeTextarea = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => setComment(event.target.value);
+  ) => setContent(event.target.value);
 
   return (
     <>
@@ -92,7 +93,7 @@ export default function ReviewRegister({
             <Rating rating={rating} setRating={setRating} />
             <CommentTextarea
               placeholder="이 영화 어떠셨나요?"
-              value={comment}
+              value={content}
               onChange={handleChangeTextarea}
             />
             <Controller>
