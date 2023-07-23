@@ -68,14 +68,16 @@ export default function Movie() {
   const handleFetchGetMyReview = () => {
     fetchGetMyReview(Number(movieId))
       .then((res) => {
-        setMyReview(res.data);
-        setRating(res.data.score);
-      })
-      .catch((err) => {
-        if (err.response.data.message === '리뷰가 없습니다.') {
+        if (!res.data) {
           setMyReview(null);
           setRating(0);
-        } else alert(err);
+        } else {
+          setMyReview(res.data);
+          setRating(res.data.score);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
