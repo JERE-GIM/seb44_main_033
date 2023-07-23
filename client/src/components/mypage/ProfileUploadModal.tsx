@@ -15,14 +15,15 @@ import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';
 import { useEffect, useState } from 'react';
-import profile from '../../assets/profile.jpg';
 import { fetchUpdateProfileImage } from '../../api/userInfo';
 
 interface IProfileUploadModalProps {
+  currentProfileImage: string;
   callback: () => void;
 }
 
 export default function ProfileUploadModal({
+  currentProfileImage,
   callback,
 }: IProfileUploadModalProps) {
   const dispatch = useAppDispatch();
@@ -79,7 +80,7 @@ export default function ProfileUploadModal({
         </ModalHeader>
         <Form onSubmit={handleSubmitForm}>
           <Profile
-            src={imgPreview ? imgPreview : profile}
+            src={imgPreview ? imgPreview : currentProfileImage}
             alt="profile image"
           />
           <FileInputLabel htmlFor="imageUpload">

@@ -32,13 +32,13 @@ export const Info = styled.div`
 
 export const Title = styled.div`
   color: #292a32;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 22px;
-  margin-top: 10px;
-  margin-bottom: 3px;
+  margin-top: 13px;
+  margin-bottom: 4px;
   white-space: nowrap;
   max-width: 200px;
 `;
@@ -47,18 +47,18 @@ export const Keyword = styled.div`
   color: #292a32;
   padding-bottom: 1px;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 21px;
 `;
-export const Average = styled.div`
-  color: #74747b;
-  font-size: 14px;
+export const Ranking = styled.div`
+  position: absolute;
+  top: 7px;
+  left: 18px;
+  color: white;
+  font-size: 20px;
   font-weight: 700;
-  margin-top: 2px;
-  display: flex;
-  span {
-    display: flex;
-    margin-top: 1px;
-    margin-left: 5px;
-  }
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 4px;
+  z-index: 1;
 `;

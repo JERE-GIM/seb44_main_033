@@ -77,8 +77,8 @@ const SearchPage: React.FC = () => {
         {currentMovies.map((movie: Movie) => (
           <SearchCard
             key={movie.movieId}
-            posterPath={movie.posterPath}
             title={movie.title}
+            posterPath={movie.posterPath}
           />
         ))}
       </SearchMovie>
