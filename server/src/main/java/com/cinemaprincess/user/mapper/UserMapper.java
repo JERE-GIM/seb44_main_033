@@ -1,13 +1,11 @@
 package com.cinemaprincess.user.mapper;
 
 import com.cinemaprincess.review.dto.ReviewResponseDto;
-import org.mapstruct.Mapper;
-
+import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.user.dto.UserDto;
 import com.cinemaprincess.user.entity.User;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -17,7 +15,8 @@ public interface UserMapper {
 
     User patchPasswordToUser(UserDto.PatchToPassword userPatchToPassword);
 
-    default UserDto.Response userToReviewResponseDto(User user) {
+
+    default UserDto.Response userToResponseDto(User user) {
         UserDto.Response.ResponseBuilder response = UserDto.Response.builder();
 
         response.userId(user.getUserId());
@@ -32,23 +31,23 @@ public interface UserMapper {
         response.profileImgName(user.getProfileImgName());
         response.profileImgPath(user.getProfileImgPath());
 
-        List<ReviewResponseDto> reviewDtos = user.getReviews().stream()
-                .map(review -> {
-                    ReviewResponseDto reviewDto = new ReviewResponseDto();
-                    reviewDto.setReviewId(review.getReviewId());
-                    reviewDto.setUserId(review.getUser().getUserId());
-                    reviewDto.setMovieId(review.getMovieDetail().getMovie().getMovieId());
-                    reviewDto.setContent(review.getContent());
-                    reviewDto.setScore(review.getScore());
-                    reviewDto.setUsername(review.getUser().getUsername());
-                    reviewDto.setVotesCount(10);
-                    reviewDto.setCreatedAt(String.valueOf(review.getCreatedAt()));
-                    reviewDto.setModifiedAt(String.valueOf(review.getModifiedAt()));
-                    return reviewDto;
-                })
-                .collect(Collectors.toList());
-        response.reviews(reviewDtos);
-
         return response.build();
+    }
+
+    default ReviewResponseDto userToReviewResponseDtos(Review review) {
+        ReviewResponseDto reviewDto = new ReviewResponseDto();
+
+        reviewDto.setMovieTitle(review.getMovieDetail().getMovie().getTitle());
+        reviewDto.setReviewId(review.getReviewId());
+        reviewDto.setUserId(review.getUser().getUserId());
+        reviewDto.setMovieId(review.getMovieDetail().getMovie().getMovieId());
+        reviewDto.setContent(review.getContent());
+        reviewDto.setScore(review.getScore());
+        reviewDto.setUsername(review.getUser().getUsername());
+        reviewDto.setVotesCount(10);
+        reviewDto.setCreatedAt(String.valueOf(review.getCreatedAt()));
+        reviewDto.setModifiedAt(String.valueOf(review.getModifiedAt()));
+
+        return reviewDto;
     }
 }

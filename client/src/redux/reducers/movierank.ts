@@ -1,31 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchWatchlist } from '../../api/getWatchlist';
+import { fetchMovieRank } from '../../api/getMovierank';
 
 const initialState = {
   status: 'loading',
   movies: [],
   error: null as string | null,
 };
-const watchlistSlice = createSlice({
-  name: 'watchlist',
+const movierankSlice = createSlice({
+  name: 'movierank',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //fetchUpcoming
-      .addCase(fetchWatchlist.pending, (state) => {
+      //fetchMovieRank
+      .addCase(fetchMovieRank.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(fetchWatchlist.fulfilled, (state, action) => {
+      .addCase(fetchMovieRank.fulfilled, (state, action) => {
         state.status = 'succeed';
-        state.movies = action.payload.watchlistMovies;
+        state.movies = action.payload.content;
       })
-      .addCase(fetchWatchlist.rejected, (state, action) => {
+      .addCase(fetchMovieRank.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string | null;
       });
   },
 });
 
-export default watchlistSlice;
+export default movierankSlice;

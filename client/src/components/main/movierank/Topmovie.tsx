@@ -1,5 +1,6 @@
-import React from 'react';
-import { ITop, dummyTopMovie } from '../../../dummy/dummyTop';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import { fetchMovieRank, RankMovie } from '../../../api/getMovierank';
 import Slider from './Slider';
 import Card from './Card';
 import { Base, Title } from '../../styles/rankmovie/Topmovie.styled';
@@ -8,26 +9,30 @@ import { Base, Title } from '../../styles/rankmovie/Topmovie.styled';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-const TopMovieSlider: React.FC = () => {
+export default function TopMovie() {
+  const dispatch = useAppDispatch();
+  const movies = useAppSelector((state) => state.movierank.movies);
+
+  useEffect(() => {
+    dispatch(fetchMovieRank({ page: 1, size: 10 }));
+  }, []);
   return (
     <Base>
       <Title>박스 오피스 순위 </Title>
       <Slider>
-        {dummyTopMovie.map((movie: ITop) => {
+        {movies.map((movie: RankMovie) => {
           return (
             <Card
-              key={movie.id}
-              poster={movie.poster}
-              title={movie.title}
-              openat={movie.openat}
-              country={movie.country}
-              voteAverage={movie.voteAverage}
+              key={movie.movieId}
+              posterPath={movie.posterPath}
+              movieNm={movie.movieNm}
+              openDt={movie.openDt.split('-')[0]}
+              audiAcc={movie.audiAcc}
+              rank={movie.rank}
             />
           );
         })}
       </Slider>
     </Base>
   );
-};
-
-export default TopMovieSlider;
+}

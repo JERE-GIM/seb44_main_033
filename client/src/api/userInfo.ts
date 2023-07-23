@@ -3,7 +3,7 @@ import axios from 'axios';
 const accessToken = localStorage.getItem('accessToken');
 const userId = localStorage.getItem('userId');
 
-export const requestGetUserInfo = async () => {
+export const fetchGetUserInfo = async () => {
   const res = await axios.get(
     `http://cinemaprincess.shop/users/mypage/${userId}`,
     {
@@ -13,11 +13,19 @@ export const requestGetUserInfo = async () => {
   return res;
 };
 
+export const fetchGetProfileImage = async () => {
+  const res = await axios.get<Blob>(
+    `http://cinemaprincess.shop/users/mypage/edit/${userId}/upload`,
+    { responseType: 'blob', headers: { Authorization: accessToken } },
+  );
+  return res.data;
+};
+
 interface IUpdatePasswordData {
   password: string;
   newPassword: string;
 }
-export const requestUpdatePassword = async (data: IUpdatePasswordData) => {
+export const fetchUpdatePassword = async (data: IUpdatePasswordData) => {
   const res = await axios.patch(
     `http://cinemaprincess.shop/users/mypage/edit/pw/${userId}`,
     data,
@@ -33,7 +41,7 @@ interface IUpdateUserInfoData {
   age: number | null;
   genre: Array<string>;
 }
-export const requestUpdateUserInfo = async (data: IUpdateUserInfoData) => {
+export const fetchUpdateUserInfo = async (data: IUpdateUserInfoData) => {
   console.log('***', data);
   const res = await axios.patch(
     `http://cinemaprincess.shop/users/mypage/edit/${userId}`,
@@ -46,7 +54,7 @@ export const requestUpdateUserInfo = async (data: IUpdateUserInfoData) => {
   return res;
 };
 
-export const requestUpdateProfile = async (data: FormData) => {
+export const fetchUpdateProfileImage = async (data: FormData) => {
   const res = await axios.post(
     `http://cinemaprincess.shop/users/mypage/edit/${userId}/upload`,
     data,

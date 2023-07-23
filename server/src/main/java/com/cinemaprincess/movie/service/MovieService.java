@@ -11,6 +11,9 @@ import com.cinemaprincess.movie.repository.MovieDetailGenreRepository;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
+import com.cinemaprincess.user.entity.User;
+import com.cinemaprincess.user.repository.UserRepository;
+import com.cinemaprincess.watchlist.entity.WatchlistMovie;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,14 +22,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 
 @Service
@@ -38,6 +41,7 @@ public class MovieService {
     private final MovieJdbcRepository movieJdbcRepository;
     private final MovieDetailGenreRepository movieDetailGenreRepository;
     private final MovieMapper movieMapper;
+    private final UserRepository userRepository;
     RestTemplate restTemplate = new RestTemplate();
 
     public String buildMovieUrl(String keyword, int page) {
@@ -110,7 +114,6 @@ public class MovieService {
         return similarMovieDTOs;
     }
 
-
     public MovieDetail findMovie(Long movieId) {
         return findVerifiedMovie(movieId);
     }
@@ -120,5 +123,21 @@ public class MovieService {
 
         return optional
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MOVIE_NOT_FOUND));
+    }
+
+    public boolean findWatchlistMovie(Long movieId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication.getAuthorities().toString().equals("[ROLE_USER]")) {
+            String email = authentication.getName();
+            User user  = userRepository.findUserByEmail(email);
+            List<WatchlistMovie> watchlistMovies = user.getWatchlist().getWatchlistMovies();
+            for(WatchlistMovie watchlistMovie : watchlistMovies) {
+                if(watchlistMovie.getMovie().getMovieId() == movieId) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

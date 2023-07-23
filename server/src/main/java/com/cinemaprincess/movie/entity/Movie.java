@@ -1,11 +1,13 @@
 package com.cinemaprincess.movie.entity;
 
+import com.cinemaprincess.rank.MovieRank;
 import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.watchlist.entity.WatchlistMovie;
 import lombok.*;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import java.util.List;
 @Table(indexes = {
         @Index(name = "idx_releaseDate_title", columnList = "title")
 })
-public class Movie {
+public class Movie implements Serializable {
     @Id
     private long movieId;
 
@@ -39,4 +41,6 @@ public class Movie {
             movieDetail.setMovie(this);
         }
     }
+//    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+//    private List<MovieRank> movieRanks = new ArrayList<>();
 }

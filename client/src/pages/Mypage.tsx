@@ -12,15 +12,14 @@ import {
   SectionHeader,
   Username,
 } from './styles/Mypage.styled';
-import profile from '../assets/profile.jpg';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import UserInfoEditModal from '../components/mypage/UserInfoEditModal';
 import ProfileUploadModal from '../components/mypage/ProfileUploadModal';
 import { useEffect, useState } from 'react';
-import { requestGetUserInfo } from '../api/userInfo';
-import { requestDeleteAccount } from '../api/auth';
+import { fetchGetProfileImage, fetchGetUserInfo } from '../api/userInfo';
+import { fetchDeleteAccount } from '../api/auth';
 import { IMypageResponse } from '../types/user';
 import ReviewList from '../components/share/ReviewList';
 import { logout } from '../redux/reducers/isLogin';
@@ -28,16 +27,36 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Mypage() {
   const [userInfo, setUserInfo] = useState<IMypageResponse>();
+  const [profileImage, setProfileImage] = useState('');
   const { modal } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const deleteAccount = () => {
-    requestDeleteAccount().then(() => {
-      dispatch(modalAction.close());
-      dispatch(logout());
-      navigate('/');
-    });
+  const handleFetchDeleteAccount = () => {
+    fetchDeleteAccount()
+      .then(() => {
+        dispatch(modalAction.close());
+        dispatch(logout());
+        navigate('/');
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleFetchUserInfo = () => {
+    fetchGetUserInfo()
+      .then((res) => {
+        setUserInfo({ ...res.data });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleFetchProfileImage = () => {
+    fetchGetProfileImage()
+      .then((imageBlob) => {
+        const imageUrl = URL.createObjectURL(imageBlob);
+        setProfileImage(imageUrl);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleClickEditUserInfo = () => {
@@ -52,14 +71,11 @@ export default function Mypage() {
     dispatch(modalAction.open(MODAL_ROLE.PROFILE_UPLOAD));
   };
 
-  const fetchMyPageData = () => {
-    requestGetUserInfo().then((res) => {
-      setUserInfo({ ...res.data });
-    });
-  };
-
   useEffect(() => {
-    fetchMyPageData();
+    handleFetchUserInfo();
+    handleFetchProfileImage();
+
+    return () => URL.revokeObjectURL(profileImage);
   }, []);
 
   return (
@@ -68,7 +84,7 @@ export default function Mypage() {
         <>
           <Info>
             <ProfileContainer>
-              <Profile src={profile} alt="profile image" />
+              <Profile src={profileImage} alt="profile image" />
               <ProfileEditButton onClick={handleClickUploadProfile}>
                 변경
               </ProfileEditButton>
@@ -88,22 +104,25 @@ export default function Mypage() {
           </Info>
           <MyReviews>
             <SectionHeader>나의 리뷰</SectionHeader>
-            <ReviewList reviewList={userInfo.reviews} />
+            <ReviewList reviewList={userInfo.reviews} hasMovieTitle={true} />
           </MyReviews>
           {modal.status && modal.role === MODAL_ROLE.USER_INFO_EDIT && (
             <UserInfoEditModal
               user={userInfo.data}
-              callback={fetchMyPageData}
+              callback={handleFetchUserInfo}
             />
           )}
           {modal.status && modal.role === MODAL_ROLE.ACCOUNT_DELETE && (
             <ConfirmModal
               message="Cinema Princess에서 탈퇴하시겠습니까?"
-              callback={deleteAccount}
+              callback={handleFetchDeleteAccount}
             />
           )}
           {modal.status && modal.role === MODAL_ROLE.PROFILE_UPLOAD && (
-            <ProfileUploadModal />
+            <ProfileUploadModal
+              currentProfileImage={profileImage}
+              callback={handleFetchProfileImage}
+            />
           )}
         </>
       )}
