@@ -8,11 +8,19 @@ const userId = localStorage.getItem('userId')
   : null;
 
 export const fetchGetMovieInfo = async (movieId: number) => {
-  const res = await axios.get(`http://cinemaprincess.shop/movies/${movieId}`, {
-    headers: { Authorization: accessToken },
-  });
+  const res = await axios.get(`http://cinemaprincess.shop/movies/${movieId}`);
   return res;
-}; //
+};
+
+export const fetchGetMovieInfoLoggedIn = async (movieId: number) => {
+  const res = await axios.get(
+    `http://cinemaprincess.shop/movies/${movieId}/${userId}`,
+    {
+      headers: { Authorization: accessToken },
+    },
+  );
+  return res;
+};
 
 export const fetchGetMyReview = async (movieId: number) => {
   const res = await axios.get(
@@ -37,7 +45,7 @@ export const fetchCreateMyReview = async (data: ICreateMyReviewData) => {
     headers: { Authorization: accessToken },
   });
   return res;
-}; //
+};
 
 interface IUpdateReviewData {
   content: string;
@@ -55,7 +63,7 @@ export const fetchUpdateMyReview = async (
     },
   );
   return res;
-}; //
+};
 
 export const fetchDeleteMyReview = async (reviewId: number) => {
   const res = await axios.delete(
@@ -65,7 +73,7 @@ export const fetchDeleteMyReview = async (reviewId: number) => {
     },
   );
   return res;
-}; //
+};
 
 export const fetchAddToWatchlist = async (movieId: number) => {
   const res = await axios.post(
@@ -79,6 +87,24 @@ export const fetchAddToWatchlist = async (movieId: number) => {
 export const fetchDeleteInWatchlist = async (movieId: number) => {
   const res = await axios.delete(
     `http://cinemaprincess.shop/movies/${movieId}/${userId}`,
+    { headers: { Authorization: accessToken } },
+  );
+  return res;
+};
+
+export const fetchLikeReview = async (reviewId: number) => {
+  const res = await axios.post(
+    `http://cinemaprincess.shop/reviews/votes/${reviewId}/${userId}`,
+    null,
+    { headers: { Authorization: accessToken } },
+  );
+  return res;
+};
+
+export const fetchUnlikeReview = async (reviewId: number) => {
+  const res = await axios.post(
+    `http://cinemaprincess.shop/reviews/votes/cancel/${reviewId}/${userId}`,
+    null,
     { headers: { Authorization: accessToken } },
   );
   return res;

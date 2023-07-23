@@ -15,6 +15,8 @@ import {
 import profile from '../../assets/profile.png';
 import thumbUp from '../../assets/thumb-up.svg';
 import { IReview } from '../../types/movie';
+import { fetchLikeReview, fetchUnlikeReview } from '../../api/movie';
+import { useState } from 'react';
 
 interface IReviewListitem {
   review: IReview;
@@ -25,7 +27,29 @@ export default function ReviewListitem({
   review,
   hasMovieTitle,
 }: IReviewListitem) {
-  const $liked = false;
+  const [liked, setLiked] = useState({
+    status: review.reviewVoted,
+    count: review.votesCount,
+  });
+
+  const handleFetchLikeReview = (reviewId: number) => {
+    fetchLikeReview(reviewId)
+      .then(() => setLiked((prev) => ({ status: true, count: prev.count + 1 })))
+      .catch((err) => console.log(err));
+  };
+
+  const handleFetchUnlikeReview = (reviewId: number) => {
+    fetchUnlikeReview(reviewId)
+      .then(() =>
+        setLiked((prev) => ({ status: false, count: prev.count - 1 })),
+      )
+      .catch((err) => console.log(err));
+  };
+
+  const handleClickLike = (reviewId: number) => {
+    if (liked.status) handleFetchUnlikeReview(reviewId);
+    else handleFetchLikeReview(reviewId);
+  };
 
   return (
     <Wrapper>
@@ -50,9 +74,12 @@ export default function ReviewListitem({
         <Comment>{review.content}</Comment>
       </ReviewMiddle>
       <ReviewBottom>
-        <LikeButton $liked={$liked}>
-          <IconImage $liked={$liked} src={thumbUp} alt="like icon" />
-          <ButtonText $liked={$liked}>{review.votesCount}</ButtonText>
+        <LikeButton
+          $liked={liked.status}
+          onClick={() => handleClickLike(review.reviewId)}
+        >
+          <IconImage $liked={liked.status} src={thumbUp} alt="like icon" />
+          <ButtonText $liked={liked.status}>{liked.count}</ButtonText>
         </LikeButton>
       </ReviewBottom>
     </Wrapper>

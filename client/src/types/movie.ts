@@ -31,6 +31,7 @@ export interface IReview {
   posterPath: string;
   content: string;
   score: number;
+  reviewVoted: boolean;
   votesCount: number;
   createdAt: string;
   modifiedAt: string;

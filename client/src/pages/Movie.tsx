@@ -40,6 +40,7 @@ import { useParams } from 'react-router-dom';
 import {
   fetchDeleteMyReview,
   fetchGetMovieInfo,
+  fetchGetMovieInfoLoggedIn,
   fetchGetMyReview,
 } from '../api/movie';
 import ReviewList from '../components/share/ReviewList';
@@ -61,9 +62,14 @@ export default function Movie() {
   const { movieId } = useParams();
 
   const handleFetchGetMovieInfo = () => {
-    fetchGetMovieInfo(Number(movieId))
-      .then((res) => setMovieInfo(res.data))
-      .catch((err) => alert(err));
+    if (isLogin.status)
+      fetchGetMovieInfoLoggedIn(Number(movieId))
+        .then((res) => setMovieInfo(res.data))
+        .catch((err) => alert(err));
+    else
+      fetchGetMovieInfo(Number(movieId))
+        .then((res) => setMovieInfo(res.data))
+        .catch((err) => alert(err));
   };
 
   const handleFetchGetMyReview = () => {
