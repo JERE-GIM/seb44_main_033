@@ -10,7 +10,7 @@ export const Background = styled.div`
   justify-content: center;
   align-items: center;
 
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--black-80a);
 `;
 
 export const Modal = styled.div`
@@ -21,7 +21,7 @@ export const Modal = styled.div`
   display: flex;
   flex-direction: column;
 
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--white);
 `;
 
 export const ModalHeader = styled.header`

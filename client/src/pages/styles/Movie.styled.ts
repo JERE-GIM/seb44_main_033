@@ -3,11 +3,22 @@ import { Link } from 'react-router-dom';
 
 export const MovieCover = styled.div`
   position: relative;
+  height: 50vh;
+
+  &:after {
+    position: absolute;
+    content: '';
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(transparent, var(--black-80a));
+  }
 `;
 
 export const MovieCoverImage = styled.img`
   width: 100%;
-  height: 50vh;
+  height: 100%;
   object-fit: cover;
 `;
 
@@ -15,14 +26,18 @@ export const MovieHeader = styled.div`
   width: 100%;
   position: absolute;
   top: 50%;
-  left: 40px;
+  padding: 0 40px;
   color: white;
+
+  z-index: var(--z-index-1);
 `;
 
 export const MovieTitle = styled.h1`
   font-size: 40px;
   font-weight: 800;
   margin-bottom: 20px;
+
+  text-shadow: 1px 1px 2px var(--black-80a);
 `;
 
 export const MovieDescription = styled.p`
@@ -30,6 +45,7 @@ export const MovieDescription = styled.p`
   line-height: 25px;
   font-size: 18px;
 
+  text-shadow: 1px 1px 1px var(--black-80a);
   text-overflow: ellipsis;
   overflow: hidden;
   word-break: break-word;
@@ -38,43 +54,53 @@ export const MovieDescription = styled.p`
   -webkit-box-orient: vertical;
 `;
 
+export const MovieCoverBottom = styled.div`
+  width: 100%;
+  padding: 0 40px;
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+
+  z-index: var(--z-index-1);
+`;
+
+export const UserController = styled.div``;
+
 export const StarsContainer = styled.div`
   width: fit-content;
-  position: absolute;
-  left: 40px;
-  bottom: 40px;
+  padding-right: 60px;
 `;
 
 export const AverageRatingContainer = styled.div`
-  position: absolute;
-  left: 220px;
-  bottom: 40px;
-
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 `;
 
 export const Star = styled.img`
-  width: 32px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
+
   filter: invert(15%) sepia(83%) saturate(7433%) hue-rotate(272deg)
     brightness(92%) contrast(127%);
 `;
 
 export const AverageRatingText = styled.div`
-  margin-left: 5px;
+  margin-left: 10px;
 `;
 
 export const AverageRatingSpan = styled.span`
   color: white;
+  text-shadow: 1px 1px 1px var(--black-80a);
 
   &:first-child {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: 700;
   }
 
   &:last-child {
-    font-size: 15px;
+    font-size: 20px;
     margin-left: 5px;
   }
 `;

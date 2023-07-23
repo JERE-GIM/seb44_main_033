@@ -12,14 +12,14 @@ export const RadioButton = styled.input`
 `;
 
 export const Star = styled.img<{ $rated: boolean }>`
-  width: 16px;
-  height: 32px;
+  width: 20px;
+  height: 40px;
   cursor: pointer;
 
   filter: ${(props) =>
     props.$rated
       ? 'invert(88%) sepia(62%) saturate(1415%) hue-rotate(326deg) brightness(98%) contrast(104%)'
-      : 'invert(99%) sepia(99%) saturate(37%) hue-rotate(191deg) brightness(111%) contrast(92%)'}; // #f5f5f5
+      : 'invert(100%) sepia(0%) saturate(1511%) hue-rotate(63deg) brightness(75%) contrast(104%)'}; // #c4c4c4
 
   &:hover {
     filter: invert(95%) sepia(69%) saturate(6547%) hue-rotate(326deg)

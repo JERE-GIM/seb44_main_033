@@ -26,9 +26,11 @@ import {
   MovieHeader,
   MovieDescription,
   MovieVideo,
+  MovieCoverBottom,
+  UserController,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
-import starIcon from '../assets/starIcon.svg';
+import starIcon from '../assets/starIcon.png';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import Card from '../components/main/movierank/Card';
@@ -116,25 +118,33 @@ export default function Movie() {
               <MovieTitle>{movieInfo.data.title}</MovieTitle>
               <MovieDescription>{movieInfo.data.overview}</MovieDescription>
             </MovieHeader>
-            <StarsContainer onClick={handleOpenReviewModal}>
-              <Rating rating={rating} setRating={setRating} />
-            </StarsContainer>
-            <AverageRatingContainer>
-              <Star src={starIcon} alt="average rating icon" />
-              <AverageRatingText>
-                <AverageRatingSpan>
-                  {movieInfo.data.movieVote.voteAverage}
-                </AverageRatingSpan>
-                <AverageRatingSpan>
-                  ({movieInfo.data.movieVote.voteCount}명)
-                </AverageRatingSpan>
-              </AverageRatingText>
-            </AverageRatingContainer>
-            <WatchBookmark
-              movieId={Number(movieId)}
-              styleProps={{ fontSize: '40px', right: '40px', bottom: '40px' }}
-              defaultStatus={movieInfo.data.watchlistCheck}
-            />
+            <MovieCoverBottom>
+              <AverageRatingContainer>
+                <Star src={starIcon} alt="average rating icon" />
+                <AverageRatingText>
+                  <AverageRatingSpan>
+                    {movieInfo.data.movieVote.voteAverage}
+                  </AverageRatingSpan>
+                  <AverageRatingSpan>
+                    ({movieInfo.data.movieVote.voteCount}명)
+                  </AverageRatingSpan>
+                </AverageRatingText>
+              </AverageRatingContainer>
+              <UserController>
+                <StarsContainer onClick={handleOpenReviewModal}>
+                  <Rating rating={rating} setRating={setRating} />
+                </StarsContainer>
+                <WatchBookmark
+                  movieId={Number(movieId)}
+                  styleProps={{
+                    fontSize: '40px',
+                    right: '40px',
+                    bottom: '0',
+                  }}
+                  defaultStatus={movieInfo.data.watchlistCheck}
+                />
+              </UserController>
+            </MovieCoverBottom>
           </MovieCover>
           <MovieDetail>
             <MovieDetailCol>
