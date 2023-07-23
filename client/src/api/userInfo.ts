@@ -1,9 +1,8 @@
 import axios from 'axios';
-
-const accessToken = localStorage.getItem('accessToken');
-const userId = localStorage.getItem('userId');
+import { getAccessTokenAndUserId } from '../util/func';
 
 export const fetchGetUserInfo = async () => {
+  const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.get(
     `http://cinemaprincess.shop/users/mypage/${userId}`,
     {
@@ -14,6 +13,7 @@ export const fetchGetUserInfo = async () => {
 };
 
 export const fetchGetProfileImage = async () => {
+  const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.get<Blob>(
     `http://cinemaprincess.shop/users/mypage/edit/${userId}/upload`,
     { responseType: 'blob', headers: { Authorization: accessToken } },
@@ -26,6 +26,7 @@ interface IUpdatePasswordData {
   newPassword: string;
 }
 export const fetchUpdatePassword = async (data: IUpdatePasswordData) => {
+  const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.patch(
     `http://cinemaprincess.shop/users/mypage/edit/pw/${userId}`,
     data,
@@ -42,6 +43,7 @@ interface IUpdateUserInfoData {
   genre: Array<string>;
 }
 export const fetchUpdateUserInfo = async (data: IUpdateUserInfoData) => {
+  const [accessToken, userId] = getAccessTokenAndUserId();
   console.log('***', data);
   const res = await axios.patch(
     `http://cinemaprincess.shop/users/mypage/edit/${userId}`,
@@ -55,6 +57,7 @@ export const fetchUpdateUserInfo = async (data: IUpdateUserInfoData) => {
 };
 
 export const fetchUpdateProfileImage = async (data: FormData) => {
+  const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.post(
     `http://cinemaprincess.shop/users/mypage/edit/${userId}/upload`,
     data,

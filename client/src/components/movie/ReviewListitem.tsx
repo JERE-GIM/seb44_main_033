@@ -17,6 +17,7 @@ import thumbUp from '../../assets/thumb-up.svg';
 import { IReview } from '../../types/movie';
 import { fetchLikeReview, fetchUnlikeReview } from '../../api/movie';
 import { useState } from 'react';
+import { getAccessTokenAndUserId } from '../../util/func';
 
 interface IReviewListitem {
   review: IReview;
@@ -32,7 +33,7 @@ export default function ReviewListitem({
     count: review.votesCount,
   });
 
-  const userId = localStorage.getItem('userId');
+  const [, userId] = getAccessTokenAndUserId();
 
   const handleFetchLikeReview = (reviewId: number) => {
     fetchLikeReview(reviewId)

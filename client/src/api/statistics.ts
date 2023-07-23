@@ -1,10 +1,8 @@
 import axios from 'axios';
-
-const accessToken = localStorage.getItem('accessToken')
-  ? localStorage.getItem('accessToken')
-  : null;
+import { getAccessTokenAndUserId } from '../util/func';
 
 export const fetchGetStatisticsYearlyGenres = async (year: number) => {
+  const [accessToken] = getAccessTokenAndUserId();
   const res = await axios.get(
     `http://cinemaprincess.shop/statistics/genres?year=${year}`,
     {
