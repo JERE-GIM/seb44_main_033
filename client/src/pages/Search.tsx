@@ -49,11 +49,8 @@ const SearchPage: React.FC = () => {
         {currentMovies.map((movie: Movie) => (
           <Card
             key={movie.movieId}
-            poster={movie.posterPath}
-            title={movie.title}
-            openat={Number(movie.releaseDate)} // 오류 많이 일어남 (뭔지--)
-            country={movie.country}
-            voteAverage={movie.voteAverage}
+            posterPath={movie.posterPath}
+            movieNm={movie.title}
           />
         ))}
       </SearchMovie>

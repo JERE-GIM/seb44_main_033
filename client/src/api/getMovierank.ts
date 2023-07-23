@@ -1,22 +1,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-// 와치리스트 불러오기
+// 박스오피스 순위
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const BASE_URL = 'http://cinemaprincess.shop/';
 
-export interface WatchMovie {
-  watchlistId: string;
-  movieId: number;
+export interface RankMovie {
+  rank: number;
+  movieNm: string;
+  openDt: string;
+  audiAcc: number;
   posterPath: string;
-  title: string;
-  releaseDate: string;
-  createdAt: string;
+  movieId: number;
 }
 
-export const fetchWatchlist = createAsyncThunk(
-  'watchlist/fetchWatchlist',
-  async (userId: number) => {
-    const url = `${BASE_URL}users/mypage/watchlist/${userId}`;
+export const fetchMovieRank = createAsyncThunk(
+  'movierank/fetchMovieRank',
+  async ({ page, size }: { page: number; size: number }) => {
+    const url = `${BASE_URL}movieRank?page=${page}&size=${size}`;
     const token = localStorage.getItem('accessToken');
     try {
       const response = await axios.get(url, {
