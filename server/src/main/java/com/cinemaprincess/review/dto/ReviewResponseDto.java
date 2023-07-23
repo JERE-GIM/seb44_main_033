@@ -13,8 +13,8 @@ public class ReviewResponseDto {
     private String content;
     private int score;
     private String username;
-    private String profileImgName;
-    private String profileImgPath;
+    private String posterPath;
+    private boolean reviewVoted;
     private int votesCount;
     private String createdAt;
     private String modifiedAt;

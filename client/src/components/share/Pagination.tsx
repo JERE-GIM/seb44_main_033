@@ -1,25 +1,36 @@
-import React from 'react';
 import styled from 'styled-components';
+import React from 'react';
+
 interface Props {
   total: number;
   current: number;
-  onPageChange: (page: number) => void;
+  onPageClick: (page: number) => void;
+  onPrevClick: () => void;
+  onNextClick: () => void;
 }
 
-const Pagination: React.FC<Props> = ({ total, current, onPageChange }) => {
+const Pagination: React.FC<Props> = ({
+  total,
+  current,
+  onPageClick,
+  onPrevClick,
+  onNextClick,
+}) => {
   const pages = Array.from({ length: total }, (_, i) => i + 1);
 
   return (
     <PaginationWrapper>
+      <PageButton onClick={onPrevClick}>이전</PageButton>
       {pages.map((page) => (
         <PageButton
           key={page}
-          onClick={() => onPageChange(page)}
+          onClick={() => onPageClick(page)}
           style={{ fontWeight: page === current ? 'bold' : 'normal' }}
         >
           {page}
         </PageButton>
       ))}
+      <PageButton onClick={onNextClick}>다음</PageButton>
     </PaginationWrapper>
   );
 };

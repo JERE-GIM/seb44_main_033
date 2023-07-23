@@ -55,6 +55,29 @@ public class MovieController {
 
         return new ResponseEntity<>(new MovieMultiResponseDto<>(movieDetailResponseDto, responseDtos, reviewPage), HttpStatus.OK);
     }
+    // 로그인 이후에 영화 상세조회
+    @GetMapping("/{movie-id}/{user-id}")
+    public ResponseEntity getMovie(@PathVariable("movie-id") long movieId,
+                                   @PathVariable("user-id") long userId,
+                                   @RequestParam(value = "page", defaultValue = "1") int page) {
+        boolean watchlistCheck = movieService.findWatchlistMovie(movieId);
+
+        MovieDetail movieDetail = movieService.findMovie(movieId);
+        Page<ReviewResponseDto> reviewPage = reviewService.findReviewsByMovieId(movieId, page - 1);
+        List<ReviewResponseDto> responseDtos = reviewPage.getContent();
+
+        // 각 리뷰에 대한 좋아요 여부 확인 및 응답에 반영
+        for (ReviewResponseDto reviewDto : responseDtos) {
+            boolean isLiked = reviewService.checkReviewLikeStatus(reviewDto.getReviewId(), userId);
+            reviewDto.setReviewVoted(isLiked); // reviewVoted 필드에 좋아요 여부 값을 설정
+        }
+
+        MovieDetailResponseDto movieDetailResponseDto = movieMapper.MovieDetailToMovieDetailResponseDto(movieDetail);
+        movieDetailResponseDto.setSimilarMovies(movieService.getSimilarMovies(movieId));
+        movieDetailResponseDto.setWatchlistCheck(watchlistCheck);
+
+        return new ResponseEntity<>(new MovieMultiResponseDto<>(movieDetailResponseDto, responseDtos, reviewPage), HttpStatus.OK);
+    }
 
     // 신작
     @GetMapping("/new")

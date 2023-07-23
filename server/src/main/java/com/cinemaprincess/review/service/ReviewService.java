@@ -45,31 +45,35 @@ public class ReviewService {
     private final MovieVoteRepository movieVoteRepository;
 
     public ReviewResponseDto createReview(ReviewPostDto reviewPostDto) {
+        long movieId = reviewPostDto.getMovieId();
+        long userId = reviewPostDto.getUserId();
+
+        if (hasDuplicateReview(movieId, userId)) {
+            throw new BusinessLogicException(ExceptionCode.DUPLICATE_REVIEW);
+        }
         Review review = mapper.reviewPostDtoToReview(reviewPostDto);
         User user = userService.findUser(reviewPostDto.getUserId());
         review.setUser(user);
         MovieDetail movieDetail = movieService.findMovie(reviewPostDto.getMovieId());
         review.setMovieDetail(movieDetail);
 
-//        updateMovieVote(movieDetail, 0, review.getScore(), 1);
+        updateMovieVote(movieDetail, 0, review.getScore(), 1);
 
         Review savedReview = this.reviewRepository.save(review);
         return mapper.reviewToReviewResponseDto(savedReview);
     }
-
+/*
     public ReviewResponseDto updateReview(Long reviewId, ReviewPatchDto reviewPatchDto) {
         reviewPatchDto.setReviewId(reviewId);
         Review review = mapper.reviewPatchDtoToReview(reviewPatchDto);
         Review findReview = findVerifiedReview(review.getReviewId());
 
-//        Optional.ofNullable(review.getScore())
-//                .ifPresent(score -> {
-//                    int oldScore = findReview.getScore();
-//                    findReview.setScore(score);
-//                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
-//                });
         Optional.ofNullable(review.getScore())
-                .ifPresent(findReview::setScore);
+                .ifPresent(score -> {
+                    int oldScore = findReview.getScore();
+                    findReview.setScore(score);
+                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
+                });
         Optional.ofNullable(review.getContent())
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());
@@ -77,7 +81,7 @@ public class ReviewService {
         Review updatedReview = reviewRepository.save(findReview);
         return mapper.reviewToReviewResponseDto(updatedReview);
     }
-
+*/
     public Review findReview(long reviewId) {
         return findVerifiedReview(reviewId);
     }
@@ -105,7 +109,7 @@ public class ReviewService {
     public void deleteReview(long reviewId) {
         Review review = findVerifiedReview(reviewId);
 
-//        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
+        updateMovieVote(review.getMovieDetail(), review.getScore(), 0, -1);
 
         reviewRepository.delete(review);
     }
@@ -171,24 +175,88 @@ public class ReviewService {
         Review findReview = findVerifiedReview(reviewId);
         User findUser = findVerifiedUser(userId);
         Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
-        ReviewVote saveReview;
 
-        if (optionalReviewVote.isEmpty()) {
+        if (optionalReviewVote.isPresent()) {
+            // 좋아요를 취소할 때는 해당 ReviewVote 엔티티를 삭제
+            reviewVoteRepository.delete(optionalReviewVote.get());
+            findReview.updateVoteCount(false);
+        } else {
+            // 좋아요를 누를 때는 새로운 ReviewVote 엔티티 생성
             ReviewVote reviewVote = ReviewVote.builder().review(findReview).user(findUser).build();
             findReview.updateVoteCount(true);
-            saveReview = reviewVoteRepository.save(reviewVote);
-        } else {
-            ReviewVote findReviewVote = optionalReviewVote.get();
-            findReviewVote.updateVote();
-            saveReview = reviewVoteRepository.save(findReviewVote);
-            findReview.updateVoteCount(findReviewVote.isReviewVoted());
+            reviewVoteRepository.save(reviewVote);
         }
 
         Review updatedReview = reviewRepository.save(findReview);
         ReviewVoteDto reviewVoteDto = new ReviewVoteDto();
-        reviewVoteDto.setReviewVoteStatus(saveReview.isReviewVoted());
+        reviewVoteDto.setReviewVoteStatus(!optionalReviewVote.isPresent());
         reviewVoteDto.setTotalVoteCount(updatedReview.getVotesCount());
 
         return reviewVoteDto;
     }
+
+    public ReviewVoteDto addVote(long reviewId, long userId) {
+        Review findReview = findVerifiedReview(reviewId);
+        User findUser = findVerifiedUser(userId);
+        Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
+
+        if (optionalReviewVote.isPresent()) {
+            // 이미 좋아요를 누른 경우에는 아무 작업도 하지 않고 예외 처리
+            throw new BusinessLogicException(ExceptionCode.DUPLICATE_REVIEW_VOTE);
+        } else {
+            // 좋아요를 누를 때는 새로운 ReviewVote 엔티티 생성
+            ReviewVote reviewVote = ReviewVote.builder().review(findReview).user(findUser).build();
+            findReview.updateVoteCount(true);
+            reviewVoteRepository.save(reviewVote);
+        }
+
+        Review updatedReview = reviewRepository.save(findReview);
+        ReviewVoteDto reviewVoteDto = new ReviewVoteDto();
+        reviewVoteDto.setReviewVoteStatus(true); // 좋아요를 눌렀으므로 true 설정
+        reviewVoteDto.setTotalVoteCount(updatedReview.getVotesCount());
+
+        return reviewVoteDto;
+    }
+
+    public ReviewVoteDto cancelVote(long reviewId, long userId) {
+        Review findReview = findVerifiedReview(reviewId);
+        User findUser = findVerifiedUser(userId);
+        Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
+
+        if (optionalReviewVote.isPresent()) {
+            // 좋아요를 취소할 때는 해당 ReviewVote 엔티티를 삭제
+            reviewVoteRepository.delete(optionalReviewVote.get());
+            findReview.updateVoteCount(false);
+        }
+
+        Review updatedReview = reviewRepository.save(findReview);
+        ReviewVoteDto reviewVoteDto = new ReviewVoteDto();
+        reviewVoteDto.setReviewVoteStatus(false); // 좋아요를 취소했으므로 false 설정
+        reviewVoteDto.setTotalVoteCount(updatedReview.getVotesCount());
+
+        return reviewVoteDto;
+    }
+
+    private boolean hasDuplicateReview(long movieId, long userId) {
+        User user = userService.findUser(userId);
+        MovieDetail movieDetail = movieService.findMovie(movieId);
+
+        Optional<Review> existingReview = reviewRepository.findByUserAndMovieDetail(user, movieDetail);
+        return existingReview.isPresent();
+    }
+
+    public boolean checkReviewLikeStatus(long reviewId, long userId) {
+        // 리뷰와 유저를 데이터베이스에서 조회
+        Review findReview = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+
+        // 리뷰와 유저를 기반으로 ReviewVote 정보를 데이터베이스에서 조회
+        Optional<ReviewVote> optionalReviewVote = reviewVoteRepository.findByReviewAndUser(findReview, findUser);
+
+        // ReviewVote 정보가 존재하면 해당 유저가 좋아요를 눌렀으므로 true를 반환, 없으면 false를 반환
+        return optionalReviewVote.isPresent();
+    }
+
 }

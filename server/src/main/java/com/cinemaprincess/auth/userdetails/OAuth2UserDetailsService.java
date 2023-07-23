@@ -8,6 +8,7 @@ import com.cinemaprincess.auth.userInfo.NaverUserInfo;
 import com.cinemaprincess.auth.userInfo.OAuth2UserInfo;
 import com.cinemaprincess.auth.utils.CustomAuthorityUtils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -26,6 +27,8 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
+    @Value("${file.path}")
+    private String uploadPath;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -60,6 +63,11 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService {
         // DB 에 존재하지 않는 Email 이라면 회원가입 처리
         Optional<User> findUser = userRepository.findByEmail(email);
         User user = findUser.orElseGet(() -> new User(email, password, username, roles, provider));
+
+        // 기본 프로필 이미지 설정
+        user.setProfileImgPath(uploadPath + "default_image.png");
+        user.setProfileImgName("default_image.png");
+
         userRepository.save(user);
 
         return new UsersDetails(user, oAuth2User.getAttributes());
