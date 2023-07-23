@@ -15,7 +15,7 @@ import {
 import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';
-import { requestCreateMyReview, requestUpdateMyReview } from '../../api/movie';
+import { fetchCreateMyReview, fetchUpdateMyReview } from '../../api/movie';
 
 interface IReviewRegister {
   movieTitle: string;
@@ -37,6 +37,27 @@ export default function ReviewRegister({
   const [comment, setComment] = useState(myReview ? myReview.content : '');
   const dispatch = useAppDispatch();
 
+  const handleFetchUpdateMyReview = (reviewId: number) => {
+    fetchUpdateMyReview(reviewId, {
+      content: comment,
+      score: rating,
+    }).then(() => {
+      dispatch(modalAction.close());
+      callback();
+    });
+  };
+
+  const handleFetchCreateMyReview = () => {
+    fetchCreateMyReview({
+      content: comment,
+      score: rating,
+      movieId,
+    }).then(() => {
+      dispatch(modalAction.close());
+      callback();
+    });
+  };
+
   const handleCloseModalUnsaved = () => {
     if (myReview) setRating(myReview.score);
     else setRating(0);
@@ -49,23 +70,8 @@ export default function ReviewRegister({
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (myReview)
-      requestUpdateMyReview(myReview.reviewId, {
-        content: comment,
-        score: rating,
-      }).then(() => {
-        dispatch(modalAction.close());
-        callback();
-      });
-    else
-      requestCreateMyReview({
-        content: comment,
-        score: rating,
-        movieId,
-      }).then(() => {
-        dispatch(modalAction.close());
-        callback();
-      });
+    if (myReview) handleFetchUpdateMyReview(myReview.reviewId);
+    else handleFetchCreateMyReview();
   };
 
   const handleChangeTextarea = (

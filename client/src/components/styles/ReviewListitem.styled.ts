@@ -20,14 +20,16 @@ export const ReviewMiddle = styled.div`
 
 export const ReviewBottom = styled.div``;
 
-export const ProfileImage = styled.img`
+export const Image = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 50%;
   margin-right: 5px;
 `;
 
-export const Username = styled.div``;
+export const Username = styled.div`
+  font-weight: 600;
+`;
 
 export const MovieTitle = styled.div`
   font-weight: 600;

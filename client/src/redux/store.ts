@@ -6,7 +6,10 @@ import modalReducer from './reducers/modal';
 import authReducer from './reducers/authSlice';
 import tabmovie from './reducers/tabmovieSlice';
 import monthly from './reducers/monthlySlice';
+import watchlist from './reducers/watchlistSlice';
 import search from './reducers/searchSlice';
+import movierank from './reducers/movierank';
+
 const store = configureStore({
   reducer: {
     isLogin: isLoginReducer,
@@ -15,7 +18,9 @@ const store = configureStore({
     auth: authReducer,
     tabmovie: tabmovie.reducer,
     monthly: monthly.reducer,
+    watchlist: watchlist.reducer,
     search: search.reducer,
+    movierank: movierank.reducer,
   },
 });
 

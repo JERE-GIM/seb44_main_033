@@ -46,12 +46,15 @@ public class MovieController {
     @GetMapping("/{movie-id}")
     public ResponseEntity getMovie(@PathVariable("movie-id") long movieId,
                                    @RequestParam(value = "page", defaultValue = "1") int page) {
+        boolean watchlistCheck = movieService.findWatchlistMovie(movieId);
+
         MovieDetail movieDetail = movieService.findMovie(movieId);
         Page<ReviewResponseDto> reviewPage = reviewService.findReviewsByMovieId(movieId, page - 1);
         List<ReviewResponseDto> responseDtos = reviewPage.getContent();
 
         MovieDetailResponseDto movieDetailResponseDto = movieMapper.MovieDetailToMovieDetailResponseDto(movieDetail);
         movieDetailResponseDto.setSimilarMovies(movieService.getSimilarMovies(movieId));
+        movieDetailResponseDto.setWatchlistCheck(watchlistCheck);
 
         return new ResponseEntity<>(new MovieMultiResponseDto<>(movieDetailResponseDto, responseDtos, reviewPage), HttpStatus.OK);
     }

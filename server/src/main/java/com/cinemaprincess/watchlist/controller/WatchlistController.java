@@ -36,7 +36,7 @@ public class WatchlistController {
     // MovieDetail Page 에서 Watchlist Movie 개별 삭제
     @DeleteMapping("/movies/{movie-id}/{user-id}")
     public ResponseEntity deleteWatchListFromMoviePage(@PathVariable("user-id") @Positive Long userId,
-                                          @PathVariable("movie-id") @Positive Long movieId) {
+                                                       @PathVariable("movie-id") @Positive Long movieId) {
         watchlistService.deleteMovieFromWatchlist(userId, movieId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204

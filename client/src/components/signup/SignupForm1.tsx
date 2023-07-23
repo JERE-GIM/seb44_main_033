@@ -56,6 +56,24 @@ import { useNavigate } from 'react-router-dom';
 import NaverLogin from '../login/Naverlogin';
 import KakaoLogin from '../login/Kakaologin';
 import GoogleLogin from '../login/Googlelogin';
+
+// 닉네임
+export const isUserNameValid = (username: string): boolean => {
+  return username.trim() !== '' && username.length <= 12;
+};
+
+// 이메일
+export const isEmailValid = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return email.trim() !== '' && emailRegex.test(email);
+};
+
+// 비번
+export const isPasswordValid = (password: string): boolean => {
+  const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9\s]).{8,20}$/;
+  return password.trim() !== '' && passwordRegex.test(password);
+};
+
 const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
   const { currentPage, username, email, password, gender, age, genres } =
@@ -68,22 +86,6 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // 모달 창 내부를 클릭했을 때에는 모달 창 안닫힘
     e.stopPropagation();
-  };
-  // 닉네임
-  const isUserNameValid = (username: string): boolean => {
-    return username.trim() !== '' && username.length <= 12;
-  };
-
-  // 이메일
-  const isEmailValid = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return email.trim() !== '' && emailRegex.test(email);
-  };
-
-  // 비번
-  const isPasswordValid = (password: string): boolean => {
-    const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9\s]).{8,20}$/;
-    return password.trim() !== '' && passwordRegex.test(password);
   };
 
   const handleNext = () => {

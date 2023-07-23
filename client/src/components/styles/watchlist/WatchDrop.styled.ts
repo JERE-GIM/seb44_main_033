@@ -60,6 +60,9 @@ export const MovieItem = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  > p {
+    margin-top: 2px;
+  }
 `;
 
 export const MovieImage = styled.img`

@@ -3,28 +3,49 @@ import { BookmarkButton } from '../styles/watchlist/WatchBookMark.styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark as faBookmarkSolid } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faBookmarkRegular } from '@fortawesome/free-regular-svg-icons';
+import { fetchAddToWatchlist, fetchDeleteInWatchlist } from '../../api/movie';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { MODAL_ROLE, modalAction } from '../../redux/reducers/modal';
 
 export interface BookmarkButtonProps {
-  movieId: string;
-  onClick: (movieId: string) => void;
+  movieId: number;
+  styleProps: { fontSize: string; right: string; bottom: string };
+  defaultStatus?: boolean;
 }
 
 export const WatchBookmark: React.FC<BookmarkButtonProps> = ({
   movieId,
-  onClick,
+  styleProps,
+  defaultStatus,
 }) => {
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { isLogin } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+  const [isBookmarked, setIsBookmarked] = useState(
+    defaultStatus ? defaultStatus : false,
+  );
 
   const handleBookmarkClick = () => {
+    if (!isLogin.status) return dispatch(modalAction.open(MODAL_ROLE.LOGIN));
+    if (!isBookmarked)
+      fetchAddToWatchlist(movieId).catch((err) => console.log(err));
+    else fetchDeleteInWatchlist(movieId).catch((err) => console.log(err));
+
     setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked);
-    onClick(movieId);
   };
 
   return (
-    <BookmarkButton onClick={handleBookmarkClick}>
+    <BookmarkButton
+      $right={styleProps.right}
+      $bottom={styleProps.bottom}
+      onClick={handleBookmarkClick}
+    >
       <FontAwesomeIcon
-        icon={isBookmarked ? faBookmarkRegular : faBookmarkSolid}
-        style={{ cursor: 'pointer', fontSize: '30px' }}
+        icon={faBookmarkSolid}
+        style={{
+          cursor: 'pointer',
+          fontSize: styleProps.fontSize,
+          color: isBookmarked ? 'var(--purple)' : 'var(--gray-dark)',
+        }}
       />
     </BookmarkButton>
   );

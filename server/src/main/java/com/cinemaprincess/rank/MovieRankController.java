@@ -44,10 +44,10 @@ public class MovieRankController {
         List<MovieRankDto> movieRankDtoList = new ArrayList<>();
         // 영화 정보 출력 예시
         for (DailyBoxOffice dailyBoxOffice : boxOfficeResult.getDailyBoxOfficeList()) {
-            log.info("순위: " + dailyBoxOffice.getRank());
-            log.info("영화 제목: " + dailyBoxOffice.getMovieNm());
-            log.info("개봉 일자: " + dailyBoxOffice.getOpenDt());
-            log.info("누적 관객수: " + dailyBoxOffice.getAudiAcc());
+//            log.info("순위: " + dailyBoxOffice.getRank());
+//            log.info("영화 제목: " + dailyBoxOffice.getMovieNm());
+//            log.info("개봉 일자: " + dailyBoxOffice.getOpenDt());
+//            log.info("누적 관객수: " + dailyBoxOffice.getAudiAcc());
             //여기서 dailyBoxOffice를 movierank로 변환시켜서 저장
 //            movieRankService.saveMovieRank(dailyBoxOffice.getRank(), dailyBoxOffice.movieNm,
 //                    dailyBoxOffice.openDt, dailyBoxOffice.audiAcc);

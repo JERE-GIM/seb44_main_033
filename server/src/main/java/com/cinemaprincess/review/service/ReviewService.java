@@ -69,7 +69,7 @@ public class ReviewService {
 //                    updateMovieVote(findReview.getMovieDetail(), oldScore, score, 0);
 //                });
         Optional.ofNullable(review.getScore())
-                        .ifPresent(findReview::setScore);
+                .ifPresent(findReview::setScore);
         Optional.ofNullable(review.getContent())
                 .ifPresent(findReview::setContent);
         findReview.setModifiedAt(LocalDateTime.now());
@@ -117,18 +117,15 @@ public class ReviewService {
         return new PageImpl<>(reviewDtos, reviewPage.getPageable(), reviewPage.getTotalElements());
     }
     public Review findReviewByUserAndMovieDetail(long userId, long movieId){
-        Optional<Review> optionalReview = reviewRepository.findByUserAndMovieDetail(
-                userRepository.findById(userId).orElseThrow(() ->
-                                new BusinessLogicException(ExceptionCode.USER_NOT_FOUND)),
-                movieDetailRepository.findById(movieId).orElseThrow(() ->
-                                new BusinessLogicException(ExceptionCode.MOVIE_NOT_FOUND))
-                );
-        return optionalReview.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
+        User user = userRepository.findById(userId).orElse(null);
+        MovieDetail movieDetail = movieDetailRepository.findById(movieId).orElse(null);
+
+        Optional<Review> optionalReview = reviewRepository.findByUserAndMovieDetail(user, movieDetail);
+        return optionalReview.orElse(null);
     }
 
     public Page<ReviewResponseDto> findReviewsByUserId(long userId, int page) {
-        Page<Review> reviewPage = reviewRepository.findByMovieDetail_Id(userId, PageRequest.of(page, 40));
+        Page<Review> reviewPage = reviewRepository.findByUserUserId(userId, PageRequest.of(page, 40));
         List<ReviewResponseDto> reviewDtos = mapper.reviewsToReviewResponseDtos(reviewPage.getContent());
 
         return new PageImpl<>(reviewDtos, reviewPage.getPageable(), reviewPage.getTotalElements());
