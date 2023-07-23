@@ -94,8 +94,11 @@ export default function Movie() {
     dispatch(modalAction.open(MODAL_ROLE.LOGIN));
   };
 
-  const handleOpenReviewModal = () => {
-    if (!isLogin.status) return AskLogin();
+  const handleOpenReviewModal = (event?: React.MouseEvent<HTMLDivElement>) => {
+    if (!isLogin.status) {
+      event?.stopPropagation();
+      return AskLogin();
+    }
     dispatch(modalAction.open(MODAL_ROLE.REVIEW_WRITE));
   };
 
@@ -131,7 +134,7 @@ export default function Movie() {
                 </AverageRatingText>
               </AverageRatingContainer>
               <UserController>
-                <StarsContainer onClick={handleOpenReviewModal}>
+                <StarsContainer onClickCapture={handleOpenReviewModal}>
                   <Rating rating={rating} setRating={setRating} />
                 </StarsContainer>
                 <WatchBookmark
