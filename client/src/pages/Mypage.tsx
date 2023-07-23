@@ -74,6 +74,8 @@ export default function Mypage() {
   useEffect(() => {
     handleFetchUserInfo();
     handleFetchProfileImage();
+
+    return () => URL.revokeObjectURL(profileImage);
   }, []);
 
   return (
@@ -102,7 +104,7 @@ export default function Mypage() {
           </Info>
           <MyReviews>
             <SectionHeader>나의 리뷰</SectionHeader>
-            <ReviewList reviewList={userInfo.reviews} />
+            <ReviewList reviewList={userInfo.reviews} hasMovieTitle={true} />
           </MyReviews>
           {modal.status && modal.role === MODAL_ROLE.USER_INFO_EDIT && (
             <UserInfoEditModal
@@ -117,7 +119,10 @@ export default function Mypage() {
             />
           )}
           {modal.status && modal.role === MODAL_ROLE.PROFILE_UPLOAD && (
-            <ProfileUploadModal callback={handleFetchProfileImage} />
+            <ProfileUploadModal
+              currentProfileImage={profileImage}
+              callback={handleFetchProfileImage}
+            />
           )}
         </>
       )}

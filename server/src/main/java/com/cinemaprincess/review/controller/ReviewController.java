@@ -65,11 +65,13 @@ public class ReviewController {
 
         if (review == null) {
             // 리뷰를 찾지 못한 경우에는 null을 응답으로 보냄
-            return ResponseEntity.ok().body("{\"data\": null}");
+            return ResponseEntity.ok().body(null);
         }
 
         // 리뷰를 찾은 경우 200 OK 응답과 함께 리뷰 정보를 반환
         return new ResponseEntity<>(mapper.reviewToReviewResponseDto(review), HttpStatus.OK);
+//        String responseJson = "{\"data\": " + mapper.reviewToReviewResponseDto(review) + "}";
+//        return ResponseEntity.ok().body(responseJson);
     }
     @GetMapping
     public ResponseEntity getReviews(@Positive @RequestParam int page,

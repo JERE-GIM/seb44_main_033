@@ -8,7 +8,9 @@ const userId = localStorage.getItem('userId')
   : null;
 
 export const fetchGetMovieInfo = async (movieId: number) => {
-  const res = await axios.get(`http://cinemaprincess.shop/movies/${movieId}`);
+  const res = await axios.get(`http://cinemaprincess.shop/movies/${movieId}`, {
+    headers: { Authorization: accessToken },
+  });
   return res;
 }; //
 
@@ -75,9 +77,8 @@ export const fetchAddToWatchlist = async (movieId: number) => {
 };
 
 export const fetchDeleteInWatchlist = async (movieId: number) => {
-  const res = await axios.post(
+  const res = await axios.delete(
     `http://cinemaprincess.shop/movies/${movieId}/${userId}`,
-    null,
     { headers: { Authorization: accessToken } },
   );
   return res;

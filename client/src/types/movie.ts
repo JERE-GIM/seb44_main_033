@@ -28,6 +28,7 @@ export interface IReview {
   username: string;
   movieId: number;
   movieTitle: string;
+  moviePosterPath: string;
   content: string;
   score: number;
   votesCount: number;
@@ -48,6 +49,7 @@ export interface IMovieInfo {
   overview: string;
   backdropPath: string;
   posterPath: string;
+  videoPath: string;
   releaseDate: number;
   genres: Array<IGenre>;
   certification: string;
@@ -57,6 +59,7 @@ export interface IMovieInfo {
   movieVote: IMovieVote;
   similarMovies: Array<ISimilarMovie>;
   watchProviders: Array<IMovieProvider>;
+  watchlistCheck: boolean;
 }
 
 export interface IMovieResponse {
