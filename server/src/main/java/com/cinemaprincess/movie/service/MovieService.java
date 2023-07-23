@@ -13,29 +13,24 @@ import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.movie.repository.MovieRepository;
 import com.cinemaprincess.user.entity.User;
 import com.cinemaprincess.user.repository.UserRepository;
-import com.cinemaprincess.utils.RestTemplateConfig;
 import com.cinemaprincess.watchlist.entity.WatchlistMovie;
-import com.cinemaprincess.watchlist.service.WatchlistService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -47,12 +42,10 @@ public class MovieService {
     private final MovieDetailGenreRepository movieDetailGenreRepository;
     private final MovieMapper movieMapper;
     private final UserRepository userRepository;
-    private final RestTemplateConfig restTemplateConfig;
-    private final WatchlistService watchlistService;
-    @Value("${tmdb.key}")
-    String key;
+    RestTemplate restTemplate = new RestTemplate();
 
     public String buildMovieUrl(String keyword, int page) {
+        String key = "8799558ac2f2609cd5ff89aa63a87f10";
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/" + keyword)
                 .queryParam("api_key", key)
                 .queryParam("language", "ko")
@@ -65,8 +58,8 @@ public class MovieService {
     public List<Movie> findMovieListByKeyword(String keyword, int page) {
         List<Movie> movies = new ArrayList<>();
         try {
-            String url = this.buildMovieUrl(keyword, page);
-            ResponseEntity<String> response = restTemplateConfig.restTemplate().exchange(url, HttpMethod.GET, null, String.class);
+            String url = buildMovieUrl(keyword, page);
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
             String responseBody = response.getBody();
 
             JsonParser jsonParser = new JsonParser();
@@ -109,7 +102,7 @@ public class MovieService {
         long genreId = movieDetailGenre.getGenre().getGenreId();
 
         List<MovieDetail> similarMovieDetails =
-                movieDetailGenreRepository.findSimilarMovieDetailsWithVote(genreId, movieId, PageRequest.of(0, 10, Sort.unsorted()));
+                movieDetailGenreRepository.findSimilarMovieDetailsWithVote(genreId, movieId, PageRequest.of(0,10, Sort.unsorted()));
 
         // 유사 영화 DTO 리스트 생성
         List<MovieDto.Response> similarMovieDTOs = new ArrayList<>();
@@ -135,13 +128,17 @@ public class MovieService {
     public boolean findWatchlistMovie(Long movieId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication.getAuthorities().toString().equals("[ROLE_USER]")) {
+        if(authentication.getAuthorities().toString().equals("[ROLE_USER]")) {
             String email = authentication.getName();
-            User user = userRepository.findUserByEmail(email);
-            List<WatchlistMovie> watchlistMovies = user.getWatchlist().getWatchlistMovies();
-            for (WatchlistMovie watchlistMovie : watchlistMovies) {
-                if (watchlistMovie.getMovie().getMovieId() == movieId) {
-                    return true;
+            User user  = userRepository.findUserByEmail(email);
+            if(user.getWatchlist() == null) {
+                return false;
+            } else {
+                List<WatchlistMovie> watchlistMovies = user.getWatchlist().getWatchlistMovies();
+                for(WatchlistMovie watchlistMovie : watchlistMovies) {
+                    if(watchlistMovie.getMovie().getMovieId() == movieId) {
+                        return true;
+                    }
                 }
             }
         }

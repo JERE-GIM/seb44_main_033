@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import Searchbar from '../share/Searchbar';
-import { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../redux/store';
 import { Link, useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
@@ -27,7 +27,9 @@ export default function Header() {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const isMovieDetailPage = location.pathname.includes('/movie/');
+  const [isAtTop, setIsAtTop] = useState(true);
   const handleLogout = () => {
     setusername('');
     dispatch(logout());
@@ -36,6 +38,17 @@ export default function Header() {
     localStorage.removeItem('userId');
     navigate('/');
   };
+  useEffect(() => {
+    const onScroll = () => {
+      setIsAtTop(window.scrollY === 0);
+    };
+
+    window.addEventListener('scroll', onScroll);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
   const handleLoginModalOpen = () => {
     setIsLoginModalOpen(true); // 모달 창 열기
   };
@@ -53,9 +66,9 @@ export default function Header() {
   };
 
   return (
-    <HeaderContainer>
+    <HeaderContainer isMovieDetailPage={isMovieDetailPage && isAtTop}>
       <Link to="/">
-        <HeaderTitle>
+        <HeaderTitle isMovieDetailPage={isMovieDetailPage && isAtTop}>
           <LogoImage
             src={process.env.PUBLIC_URL + '/images/Cinemalogo.png'}
             alt="Logo"
@@ -65,27 +78,48 @@ export default function Header() {
       </Link>
       <Searchbar></Searchbar>
       {isLoggedIn ? (
-        <ButtonContainer>
+        <ButtonContainer isMovieDetailPage={isMovieDetailPage && isAtTop}>
           <Link to="/mypage">
-            <MypageContainer>
+            <MypageContainer isMovieDetailPage={isMovieDetailPage && isAtTop}>
               <FontAwesomeIcon icon={faCircleUser} size="2x" />
               <MyPageId>{username}</MyPageId>
             </MypageContainer>
           </Link>
-          <Button onClick={handleLogout}>로그아웃</Button>
+          <Button
+            isMovieDetailPage={isMovieDetailPage && isAtTop}
+            onClick={handleLogout}
+          >
+            로그아웃
+          </Button>
           <Link to="/watchlist">
-            <Button>찜한 영화</Button>
+            <Button isMovieDetailPage={isMovieDetailPage && isAtTop}>
+              찜한 영화
+            </Button>
           </Link>
           <Link to="/statistics">
-            <Button>통계자료</Button>
+            <Button isMovieDetailPage={isMovieDetailPage && isAtTop}>
+              통계자료
+            </Button>
           </Link>
         </ButtonContainer>
       ) : (
-        <ButtonContainer>
-          <Button onClick={handleLoginModalOpen}>로그인</Button>
-          <Button onClick={handleSignupModalOpen}>회원 가입</Button>
+        <ButtonContainer isMovieDetailPage={isMovieDetailPage && isAtTop}>
+          <Button
+            isMovieDetailPage={isMovieDetailPage && isAtTop}
+            onClick={handleLoginModalOpen}
+          >
+            로그인
+          </Button>
+          <Button
+            isMovieDetailPage={isMovieDetailPage && isAtTop}
+            onClick={handleSignupModalOpen}
+          >
+            회원 가입
+          </Button>
           <Link to="/statistics">
-            <Button>통계자료</Button>
+            <Button isMovieDetailPage={isMovieDetailPage && isAtTop}>
+              통계자료
+            </Button>
           </Link>
         </ButtonContainer>
       )}
