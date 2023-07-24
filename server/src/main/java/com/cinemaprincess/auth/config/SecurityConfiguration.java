@@ -60,12 +60,13 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         // 요청 접근 권한
-                                .antMatchers("/", "/login/", "/login/**", "/signup", "/oauth2/**").permitAll()
-                                .antMatchers(HttpMethod.GET, "/movies/**").permitAll()
-                                .antMatchers(HttpMethod.GET, "/reviews/*").permitAll()
-                                .antMatchers(HttpMethod.GET, "/search", "/search/**").permitAll()
-                                .antMatchers(HttpMethod.GET, "/movieRank", "/movieRank/**").permitAll()
-                                .anyRequest().authenticated()
+                        .antMatchers("/", "/login/", "/login/**", "/signup", "/oauth2/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/movies/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/reviews/*").permitAll()
+                        .antMatchers(HttpMethod.POST, "/movies/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.GET, "/search", "/search/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/movieRank", "/movieRank/**").permitAll()
+                        .anyRequest().authenticated()
                 )
 
                 .oauth2Login()

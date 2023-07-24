@@ -3,11 +3,8 @@ package com.cinemaprincess.movie.save;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
-import com.cinemaprincess.movie.repository.MovieDetailRepository;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
-import com.cinemaprincess.movie.vote.MovieVote;
-import com.cinemaprincess.movie.vote.MovieVoteRepository;
-import com.cinemaprincess.movie.vote.SaveMovieVote;
+import com.cinemaprincess.utils.RestTemplateConfig;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -41,13 +37,10 @@ import java.util.stream.StreamSupport;
 public class SaveMovieList {
     private final MovieJdbcRepository movieJdbcRepository;
     private final SaveMovieDetail saveMovieDetail;
-    private final SaveMovieVote saveMovieVote;
-    private final MovieVoteRepository movieVoteRepository;
-    private final MovieDetailRepository movieDetailRepository;
+    private final RestTemplateConfig restTemplateConfig;
 
     @Value("${tmdb.key}")
     String key;
-    RestTemplate restTemplate = new RestTemplate();
     LinkedHashMap<String, String> dateMap = new LinkedHashMap<>();
 
     public String buildMovieListUrl(String startDate, String endDate, int page) {
@@ -64,9 +57,9 @@ public class SaveMovieList {
 
     // 멀티스레딩으로 DB에 저장
     public void getMovieList() {
-        try {
-            ExecutorService executorService = Executors.newFixedThreadPool(20); // 적절한 스레드 풀 크기 선택
+        ExecutorService executorService = Executors.newFixedThreadPool(30);
 
+        try {
             List<CompletableFuture<List<Movie>>> futures = dateMap.entrySet().stream()
                     .flatMap(entry -> {
                         String startDate = entry.getKey();
@@ -76,7 +69,7 @@ public class SaveMovieList {
                         return IntStream.rangeClosed(1, pages)
                                 .mapToObj(i -> CompletableFuture.supplyAsync(() -> {
                                     String url = buildMovieListUrl(startDate, endDate, i);
-                                    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+                                    ResponseEntity<String> response = restTemplateConfig.restTemplate().exchange(url, HttpMethod.GET, null, String.class);
                                     String responseBody = response.getBody();
                                     return parseMovieList(responseBody);
                                 }, executorService));
@@ -131,10 +124,10 @@ public class SaveMovieList {
             movieJdbcRepository.saveMovieDetailGenres(movieDetailGenres);
 
             log.info("MovieDetailGenre 저장 완료");
-
-            executorService.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            executorService.shutdown();
         }
     }
 
@@ -174,9 +167,9 @@ public class SaveMovieList {
     }
 
     // 500p가 될때까지의 기간을 key, value 값으로 저장
-    public void setDateMap() {
-        LocalDate startDate = LocalDate.parse("2018-01-01");
-        LocalDate endDate = LocalDate.parse("2023-12-31");
+    public void setDateMap(String start, String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         while (startDate.isBefore(endDate.plusDays(1))) {
