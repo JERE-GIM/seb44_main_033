@@ -53,6 +53,7 @@ table {
 a, button {
 	cursor: pointer;
 	text-decoration:none;
+	color:var(--black)
 }
 `;
 

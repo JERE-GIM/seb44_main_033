@@ -74,7 +74,9 @@ export default function ReviewListitem({
             <Image
               src={`https://image.tmdb.org/t/p/w200/${review.posterPath}`}
             />
-            <MovieTitle>{review.movieTitle}</MovieTitle>
+            <MovieTitle to={`/movie/${review.movieId}`}>
+              {review.movieTitle}
+            </MovieTitle>
           </>
         )}
       </ReviewTop>
