@@ -106,9 +106,9 @@ public class MovieController {
                 new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
     }
 
-    @GetMapping("/monthly")
+    @GetMapping("/yearly")
     public ResponseEntity getMonthlyMovies() {
-        List<Movie> movies = movieService.findMonthlyMovies();
+        List<Movie> movies = movieService.findYearlyMovies();
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
