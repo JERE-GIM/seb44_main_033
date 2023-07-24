@@ -28,24 +28,18 @@ public class StatisticsController {
 
     private final ReviewService reviewService;
     private final UserService userService;
-    private final MovieService movieService;
     private final GenreService genreService;
-
-    // TODO: 결제 구현시 인터셉터 추가...
 
     /*
         사용자들의 연령별, 성별별 선호 장르 통계
     */
 
-    /** 수정 필요해진부분 2
-     *
     @GetMapping("/users")
     public ResponseEntity getUsersStatistics(@RequestParam("gender") String gender,
                                              @RequestParam("age") String age) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUsersStatistics(gender, age));
     }
 
-    */
     /*
         일/주/월별 가장 많이 리뷰를 받은 영화들의 순위
     */

@@ -18,7 +18,7 @@ export const HeaderContainer = styled.header<HeaderContainerProps>`
   ${({ isMovieDetailPage }) =>
     isMovieDetailPage &&
     `
-    position: absolute;
+    position: fixed;
     border-bottom: 0px solid #f1c6d4;
     background-color: transparent;
     `}

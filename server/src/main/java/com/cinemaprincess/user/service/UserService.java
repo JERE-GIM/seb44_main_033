@@ -13,7 +13,7 @@ import java.util.UUID;
 import com.cinemaprincess.genre.Genre;
 import com.cinemaprincess.genre.GenreRepository;
 import com.cinemaprincess.user.dto.UserStatisticsDto;
-import com.cinemaprincess.statistics.dto.StatisticsDto;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -162,35 +162,39 @@ public class UserService {
 
         return findUser;
     }
-    /** 하루님 장르가 List<String> 타입으로 바꼈습니다..! **/
-//    public Map<String, Integer> getUsersStatistics(String gender, String age) {
-//        int minAge = calculateMinAge(age);
-//        int maxAge = calculateMaxAge(age);
-//        User.Gender genderEnum = User.Gender.valueOf(gender);
-//
-//        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
-//                .map(user -> new UserStatisticsDto(user.getGenre()))
-//                .collect(Collectors.toList());
-//
-//        Map<String, Integer> genreCount = new HashMap<>();
-//
-//        for (UserStatisticsDto userStatistics : allUsersGenre) {
-//            for (Long genreId : userStatistics.getGenreIds()) {
-//                Genre genre = genreRepository.getGenreNameByGenreId(genreId);
-//                String genreName = genre.getGenreName();
-//                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
-//            }
-//        }
-//
-//        return genreCount;
-//    }
+
+    /*
+        파라미터로 받은 성별, 연령대의 사용자들의 선호 장르를 리턴
+     */
+
+    public Map<String, Integer> getUsersStatistics(String gender, String age) {
+        int minAge = this.calculateMinAge(age);
+        int maxAge = this.calculateMaxAge(age);
+        User.Gender genderEnum = User.Gender.valueOf(gender);
+
+        List<UserStatisticsDto> allUsersGenre = userRepository.findByAgeRangeAndGender(genderEnum, minAge, maxAge).stream()
+                .map(user -> new UserStatisticsDto(user.getGenre()))
+                .collect(Collectors.toList());
+
+        Map<String, Integer> genreCount = new HashMap<>();
+
+        for (UserStatisticsDto userStatistics : allUsersGenre) {
+            for (String genreName : userStatistics.getGenreNames()) {
+                genreCount.put(genreName, genreCount.getOrDefault(genreName, 0) + 1);
+            }
+        }
+
+        return genreCount;
+    }
 
     private int calculateMinAge(String age){
         int ageGroup = Integer.parseInt(age);
         return ageGroup / 10 * 10;
     }
+
     private int calculateMaxAge(String age){
         int ageGroup = Integer.parseInt(age);
         return (ageGroup / 10 * 10) + 9;
     }
+
 }

@@ -268,7 +268,7 @@ export const GenreBox = styled.div`
 export const GenreTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
-  margin-right: 27px;
+  margin-right: 20px;
 `;
 
 export const GenreBoxLabel = styled.label`

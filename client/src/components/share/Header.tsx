@@ -4,7 +4,7 @@ import Searchbar from '../share/Searchbar';
 import { useAppSelector, useAppDispatch } from '../../redux/store';
 import { Link, useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
-import { login, logout } from '../../redux/reducers/isLogin';
+import { logout } from '../../redux/reducers/isLogin';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-regular-svg-icons';
 import {
@@ -23,7 +23,6 @@ export default function Header() {
   const isLoggedIn = useAppSelector((state: RootState) => state.isLogin.status);
   const dispatch = useAppDispatch();
   const [username, setusername] = useState('');
-  const [Username, setUsername] = useState('');
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const navigate = useNavigate();

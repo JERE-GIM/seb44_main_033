@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { fetchSearch, Movie } from '../api/getSearch';
-import Card from '../components/main/movierank/Card';
+import SearchCard from '../components/share/SearchCard';
 import Pagination from '../components/share/Pagination';
-import { useState } from 'react';
 import styled from 'styled-components';
 
 const SearchPage: React.FC = () => {
@@ -32,8 +31,37 @@ const SearchPage: React.FC = () => {
     }
   }, [dispatch, navigate, searchTerm, currentPage, moviesPerPage]);
 
-  const handlePageChange = (page: number) => {
+  const handlePageClick = (page: number) => {
     setCurrentPage(page);
+    dispatch(
+      fetchSearch({ keyword: searchTerm, page: page, size: moviesPerPage }),
+    );
+  };
+
+  const handlePrevClick = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      dispatch(
+        fetchSearch({
+          keyword: searchTerm,
+          page: currentPage - 1,
+          size: moviesPerPage,
+        }),
+      );
+    }
+  };
+
+  const handleNextClick = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      dispatch(
+        fetchSearch({
+          keyword: searchTerm,
+          page: currentPage + 1,
+          size: moviesPerPage,
+        }),
+      );
+    }
   };
 
   const startIndex = (currentPage - 1) * moviesPerPage;
@@ -47,17 +75,19 @@ const SearchPage: React.FC = () => {
       <SearchTitle>&quot;{searchTerm}&quot; 검색 결과</SearchTitle>
       <SearchMovie>
         {currentMovies.map((movie: Movie) => (
-          <Card
+          <SearchCard
             key={movie.movieId}
+            title={movie.title}
             posterPath={movie.posterPath}
-            movieNm={movie.title}
           />
         ))}
       </SearchMovie>
       <Pagination
         total={totalPages}
         current={currentPage}
-        onPageChange={handlePageChange}
+        onPageClick={handlePageClick}
+        onPrevClick={handlePrevClick}
+        onNextClick={handleNextClick}
       />
     </Container>
   );
