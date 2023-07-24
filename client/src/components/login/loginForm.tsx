@@ -97,7 +97,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       return;
     }
     axios
-      .post('http://cinemaprincess.shop/login', formData)
+      .post(`${process.env.REACT_APP_BASE_URL}/login`, formData)
       .then((response) => {
         console.log(response.headers);
         const accessToken = response.headers.authorization;
