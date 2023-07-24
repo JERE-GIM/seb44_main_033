@@ -5,7 +5,7 @@ import signupReducer from './reducers/singupSlice';
 import modalReducer from './reducers/modal';
 import authReducer from './reducers/authSlice';
 import tabmovie from './reducers/tabmovieSlice';
-import monthly from './reducers/monthlySlice';
+import yearly from './reducers/yearlySlice';
 import watchlist from './reducers/watchlistSlice';
 import search from './reducers/searchSlice';
 import movierank from './reducers/movierank';
@@ -17,7 +17,7 @@ const store = configureStore({
     modal: modalReducer,
     auth: authReducer,
     tabmovie: tabmovie.reducer,
-    monthly: monthly.reducer,
+    yearly: yearly.reducer,
     watchlist: watchlist.reducer,
     search: search.reducer,
     movierank: movierank.reducer,

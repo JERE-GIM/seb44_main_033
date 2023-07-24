@@ -1,31 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchMonthly } from '../../api/getMonthly';
+import { fetchYearly } from '../../api/getMonthly';
 
 const initialState = {
   status: 'loading',
   movies: [],
   error: null as string | null,
 };
-const monthlySlice = createSlice({
-  name: 'monthly',
+const yearlySlice = createSlice({
+  name: 'yearly',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       //fetchMonthly
-      .addCase(fetchMonthly.pending, (state) => {
+      .addCase(fetchYearly.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(fetchMonthly.fulfilled, (state, action) => {
+      .addCase(fetchYearly.fulfilled, (state, action) => {
         state.status = 'succeed';
         state.movies = action.payload.data;
       })
-      .addCase(fetchMonthly.rejected, (state, action) => {
+      .addCase(fetchYearly.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string | null;
       });
   },
 });
 
-export default monthlySlice;
+export default yearlySlice;
