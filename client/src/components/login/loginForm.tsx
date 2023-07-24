@@ -164,10 +164,15 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <LogoTitle>CINEMA PRINCESS</LogoTitle>
         <SubTitle>Login</SubTitle>
         <EmailBox>
-          <EmailInput placeholder="Email" onChange={handleEmailChange} />
+          <EmailInput
+            type="email"
+            placeholder="Email"
+            onChange={handleEmailChange}
+          />
         </EmailBox>
         <PasswordBox>
           <PasswordInput
+            type="password"
             placeholder="Password"
             onChange={handlePasswordChange}
           />

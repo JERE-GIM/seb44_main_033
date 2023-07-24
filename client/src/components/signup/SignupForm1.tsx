@@ -204,6 +204,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <PasswordBox>
               <PasswordInput
                 value={password}
+                type="password"
                 placeholder="Password"
                 onChange={handlePasswordChange}
               />
