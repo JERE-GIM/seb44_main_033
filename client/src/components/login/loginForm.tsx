@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setEmail, setPassword } from '../../redux/reducers/singupSlice';
 import { setAccessToken } from '../../redux/reducers/authSlice';
@@ -18,22 +18,45 @@ import {
   OAuthbox,
 } from '../styles/LoginForm.styled';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
 import jwt_decode from 'jwt-decode';
 import NaverLogin from './Naverlogin';
 import KakaoLogin from './Kakaologin';
 import GoogleLogin from './Googlelogin';
-import { login } from '../../redux/reducers/isLogin';
+import { login, logout } from '../../redux/reducers/isLogin';
 
 const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();
   const { email, password } = useSelector((state: RootState) => state.signup);
-  const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
+  // axios인터셉터 사용
+  useEffect(() => {
+    axios.interceptors.request.use(
+      async (config) => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          const decoded = jwt_decode(token) as TokenPayload;
+          if (decoded?.exp && decoded.exp < Date.now() / 1000) {
+            // 토큰만료 후에 로그아웃
+            dispatch(logout());
+            localStorage.removeItem('isLogin');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('accessToken');
+          } else {
+            // 유효하면 추가?
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      },
+    );
+  }, [dispatch]);
 
   // 이메일
   const isEmailValid = (email: string): boolean => {
@@ -88,14 +111,12 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         const userId = UserIdFromAccessToken(accessToken);
         if (!userId) {
           alert('토큰이 만료되었습니다. 다시 로그인해주세요.');
-          navigate('/login');
           return;
         }
 
         localStorage.setItem('userId', userId);
         localStorage.setItem('accessToken', accessToken); // accessToken 저장
         onClose();
-        navigate('/');
       })
       .catch(() => {
         alert('아이디와 비밀번호를 확인해주세요');
@@ -112,14 +133,18 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       const decoded = jwt_decode(accessToken);
       const tokenPayload = decoded as TokenPayload;
 
-      // Check if the object has userId property and it is a number
       if (typeof tokenPayload.userId === 'number') {
         const userId = tokenPayload.userId;
-        // Check token expiry
         if (
           typeof tokenPayload.exp === 'number' &&
           Date.now() >= tokenPayload.exp * 1000
         ) {
+          // Token is expired, so log the user out
+          // dispatch(logout());
+          // localStorage.removeItem('isLogin');
+          // localStorage.removeItem('userId');
+          // localStorage.removeItem('accessToken');
+          // alert('토큰이 만료되었습니다. 다시 로그인해주세요.');
           throw new Error('Token expired');
         }
         return userId.toString();
