@@ -41,6 +41,7 @@ export const HeaderTitle = styled.h1<HeaderContainerProps>`
     `
      color: white;
      background-color: transparent; 
+     text-shadow: 2px 2px gray;
     `}
 `;
 
@@ -76,8 +77,10 @@ export const Button = styled.button<HeaderContainerProps>`
     isMovieDetailPage &&
     `
      border: 1px solid white;
-     color: #939393;
+     color: white;
      background-color: transparent; 
+     box-shadow: 1px 1px gray;
+     text-shadow: 1px 1px gray;
     `}
   &:active {
     background-color: #6600cc;

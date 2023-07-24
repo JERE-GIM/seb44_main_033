@@ -166,10 +166,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     };
 
     axios
-      .post(
-        `http://ec2-54-180-99-202.ap-northeast-2.compute.amazonaws.com:8080/signup`,
-        formData,
-      )
+      .post(`${process.env.REACT_APP_BASE_URL}/signup`, formData)
       .then(() => {
         alert('회원가입에 성공하였습니다.');
         onClose();

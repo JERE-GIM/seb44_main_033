@@ -1,7 +1,7 @@
 import React from 'react';
 import { KakaoLogo } from '../styles/SignupForm1.styled';
 
-const KAKAO_OAUTH_URL = `http://cinemaprincess.shop/oauth2/authorization/kakao`;
+const KAKAO_OAUTH_URL = `${process.env.REACT_APP_BASE_URL}/oauth2/authorization/kakao`;
 
 const KakaoLogin: React.FC = () => {
   const handleLogin = () => {

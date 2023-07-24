@@ -1,7 +1,7 @@
 import React from 'react';
 import { NaverLogo } from '../styles/SignupForm1.styled';
 
-const NAVER_OAUTH_URL = `http://cinemaprincess.shop/oauth2/authorization/naver`;
+const NAVER_OAUTH_URL = `${process.env.REACT_APP_BASE_URL}/oauth2/authorization/naver`;
 
 const NaverLogin: React.FC = () => {
   const handleLogin = () => {

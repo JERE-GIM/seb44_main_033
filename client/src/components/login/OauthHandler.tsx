@@ -30,7 +30,6 @@ export const OauthHandler: React.FC = () => {
           throw new Error('Invalid token payload');
         }
 
-        // Check token expiry
         if (
           typeof tokenPayload.exp === 'number' &&
           Date.now() >= tokenPayload.exp * 1000
@@ -39,11 +38,9 @@ export const OauthHandler: React.FC = () => {
         }
       } catch (error) {
         console.error('사용자 정보를 받아오는데 실패하였습니다:', error);
-        // Handle error for the user here
       }
     }
   }, [location, dispatch]);
 
-  // This component only handles side effects, does not render any UI
   return null;
 };

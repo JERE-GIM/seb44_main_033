@@ -15,7 +15,7 @@ export const fetchGetStatisticsYearlyGenres = async (year: number) => {
 export const fetchGetStatisticsusers = async (age: number, gender: string) => {
   const [accessToken] = getAccessTokenAndUserId();
   const res = await axios.get(
-    `http://cinemaprincess.shop/statistics/users?age=${age}gender=${gender}`,
+    `${process.env.REACT_APP_BASE_URL}/statistics/users?age=${age}gender=${gender}`,
     {
       headers: { Authorization: accessToken },
     },
