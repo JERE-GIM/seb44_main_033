@@ -179,7 +179,7 @@ export default function Movie() {
           </MovieDetail>
           <MovieVideo>
             <SectionTitle>영상</SectionTitle>
-            <YouTube videoId={movieInfo.data.videoPath.slice(30)} />
+            <YouTube videoId={movieInfo.data.videoPath.slice(1)} />
           </MovieVideo>
           <MovieReviews>
             <SectionTitle>영화 리뷰</SectionTitle>
