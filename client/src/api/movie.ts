@@ -2,14 +2,16 @@ import axios from 'axios';
 import { getAccessTokenAndUserId } from '../util/func';
 
 export const fetchGetMovieInfo = async (movieId: number) => {
-  const res = await axios.get(`http://cinemaprincess.shop/movies/${movieId}`);
+  const res = await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/movies/${movieId}`,
+  );
   return res;
 };
 
 export const fetchGetMovieInfoLoggedIn = async (movieId: number) => {
   const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.get(
-    `http://cinemaprincess.shop/movies/${movieId}/${userId}`,
+    `${process.env.REACT_APP_BASE_URL}/movies/${movieId}/${userId}`,
     {
       headers: { Authorization: accessToken },
     },
@@ -20,7 +22,7 @@ export const fetchGetMovieInfoLoggedIn = async (movieId: number) => {
 export const fetchGetMyReview = async (movieId: number) => {
   const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.get(
-    `http://cinemaprincess.shop/reviews/${movieId}/${userId}`,
+    `${process.env.REACT_APP_BASE_URL}/reviews/${movieId}/${userId}`,
     {
       headers: { Authorization: accessToken },
     },
@@ -37,9 +39,13 @@ export const fetchCreateMyReview = async (data: ICreateMyReviewData) => {
   const [accessToken, userId] = getAccessTokenAndUserId();
   const newData = { ...data, userId };
 
-  const res = await axios.post(`http://cinemaprincess.shop/reviews`, newData, {
-    headers: { Authorization: accessToken },
-  });
+  const res = await axios.post(
+    `${process.env.REACT_APP_BASE_URL}/reviews`,
+    newData,
+    {
+      headers: { Authorization: accessToken },
+    },
+  );
   return res;
 };
 
@@ -53,7 +59,7 @@ export const fetchUpdateMyReview = async (
 ) => {
   const [accessToken] = getAccessTokenAndUserId();
   const res = await axios.patch(
-    `http://cinemaprincess.shop/reviews/${reviewId}`,
+    `${process.env.REACT_APP_BASE_URL}/reviews/${reviewId}`,
     data,
     {
       headers: { Authorization: accessToken },
@@ -65,7 +71,7 @@ export const fetchUpdateMyReview = async (
 export const fetchDeleteMyReview = async (reviewId: number) => {
   const [accessToken] = getAccessTokenAndUserId();
   const res = await axios.delete(
-    `http://cinemaprincess.shop/reviews/${reviewId}`,
+    `${process.env.REACT_APP_BASE_URL}/reviews/${reviewId}`,
     {
       headers: { Authorization: accessToken },
     },
@@ -76,7 +82,7 @@ export const fetchDeleteMyReview = async (reviewId: number) => {
 export const fetchAddToWatchlist = async (movieId: number) => {
   const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.post(
-    `http://cinemaprincess.shop/movies/${movieId}/${userId}`,
+    `${process.env.REACT_APP_BASE_URL}/movies/${movieId}/${userId}`,
     null,
     { headers: { Authorization: accessToken } },
   );
@@ -86,7 +92,7 @@ export const fetchAddToWatchlist = async (movieId: number) => {
 export const fetchDeleteInWatchlist = async (movieId: number) => {
   const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.delete(
-    `http://cinemaprincess.shop/movies/${movieId}/${userId}`,
+    `${process.env.REACT_APP_BASE_URL}/movies/${movieId}/${userId}`,
     { headers: { Authorization: accessToken } },
   );
   return res;
@@ -95,7 +101,7 @@ export const fetchDeleteInWatchlist = async (movieId: number) => {
 export const fetchLikeReview = async (reviewId: number) => {
   const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.post(
-    `http://cinemaprincess.shop/reviews/votes/${reviewId}/${userId}`,
+    `${process.env.REACT_APP_BASE_URL}/reviews/votes/${reviewId}/${userId}`,
     null,
     { headers: { Authorization: accessToken } },
   );
@@ -105,7 +111,7 @@ export const fetchLikeReview = async (reviewId: number) => {
 export const fetchUnlikeReview = async (reviewId: number) => {
   const [accessToken, userId] = getAccessTokenAndUserId();
   const res = await axios.post(
-    `http://cinemaprincess.shop/reviews/votes/cancel/${reviewId}/${userId}`,
+    `${process.env.REACT_APP_BASE_URL}/reviews/votes/cancel/${reviewId}/${userId}`,
     null,
     { headers: { Authorization: accessToken } },
   );
