@@ -2,9 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 // 개봉예정 영화 탭 부분
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const BASE_URL = 'http://cinemaprincess.shop/';
-
 export interface Movie {
   movieId: number;
   posterPath: string;
@@ -16,7 +13,7 @@ export interface Movie {
 export const fetchUpcoming = createAsyncThunk(
   'upcoming/fetchUpcoming',
   async (_, { rejectWithValue }) => {
-    const url = `${BASE_URL}movies/upcoming`;
+    const url = `${process.env.REACT_APP_BASE_URL}/movies/upcoming`;
     const response = await axios.get(url);
     try {
       if (response.status >= 200 && response.status < 300) {

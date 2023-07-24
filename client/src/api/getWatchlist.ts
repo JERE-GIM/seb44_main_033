@@ -1,8 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { getAccessTokenAndUserId } from '../util/func';
 // 와치리스트 불러오기
-
-const BASE_URL = 'http://cinemaprincess.shop/';
 
 export interface WatchMovie {
   watchlistId: string;
@@ -15,13 +14,14 @@ export interface WatchMovie {
 
 export const fetchWatchlist = createAsyncThunk(
   'watchlist/fetchWatchlist',
-  async (userId: number) => {
-    const url = `${BASE_URL}users/mypage/watchlist/${userId}`;
-    const token = localStorage.getItem('accessToken');
+  async () => {
+    const [accessToken, userId] = getAccessTokenAndUserId();
+    const url = `${process.env.REACT_APP_BASE_URL}/users/mypage/watchlist/${userId}`;
+
     try {
       const response = await axios.get(url, {
         headers: {
-          Authorization: token,
+          Authorization: accessToken,
         },
       });
       console.log(response.data);

@@ -11,6 +11,7 @@ import {
   TabItem,
   TabContentContainer,
 } from '../../styles/tabmovie/Tab.styled';
+import { Link } from 'react-router-dom';
 
 export default function TabMenu() {
   const [activeTab, setActiveTab] = useState('신작');
@@ -70,20 +71,22 @@ export default function TabMenu() {
           {/*  upcomingMovies 배열을 사용하여 개봉예정 영화만 렌더링, 날짜순! */}
           {activeTab === '개봉예정'
             ? sortedMovies.map((movie: Movie) => (
-                <TabCard
-                  key={movie.movieId}
-                  posterPath={movie.posterPath}
-                  title={movie.title}
-                  releaseDate={movie.releaseDate}
-                />
+                <Link to={`/movie/${movie.movieId}`} key={movie.movieId}>
+                  <TabCard
+                    posterPath={movie.posterPath}
+                    title={movie.title}
+                    releaseDate={movie.releaseDate}
+                  />
+                </Link>
               ))
             : movies.map((movie: Movie) => (
-                <TabCard
-                  key={movie.movieId}
-                  posterPath={movie.posterPath}
-                  title={movie.title}
-                  releaseDate={movie.releaseDate.split('-')[0]}
-                />
+                <Link to={`/movie/${movie.movieId}`} key={movie.movieId}>
+                  <TabCard
+                    posterPath={movie.posterPath}
+                    title={movie.title}
+                    releaseDate={movie.releaseDate.split('-')[0]}
+                  />
+                </Link>
               ))}
         </TabSlider>
       </TabContentContainer>
