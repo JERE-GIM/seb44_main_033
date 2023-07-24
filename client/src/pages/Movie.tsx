@@ -50,6 +50,7 @@ import YouTube from 'react-youtube';
 import LoginForm from '../components/login/loginForm';
 import { WatchBookmark } from '../components/watch/WatchBookMark';
 import Empty from '../components/share/Empty';
+import TabCard from '../components/main/tabmovie/TabCard';
 
 export default function Movie() {
   const [movieInfo, setMovieInfo] = useState<IMovieResponse>();
@@ -213,13 +214,10 @@ export default function Movie() {
               {movieInfo.data.similarMovies.map((similarMovie) => (
                 <RecommentListItem key={similarMovie.movieId}>
                   <RecommentListItemLink to={`/movie/${similarMovie.movieId}`}>
-                    <Card
-                      posterPath={
-                        similarMovie.posterPath
-                          ? `${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${similarMovie.posterPath}`
-                          : defaultPoster
-                      }
-                      movieNm={similarMovie.title}
+                    <TabCard
+                      posterPath={similarMovie.posterPath}
+                      title={similarMovie.title}
+                      releaseDate={similarMovie.releaseDate.slice(0, 4)}
                     />
                   </RecommentListItemLink>
                 </RecommentListItem>
