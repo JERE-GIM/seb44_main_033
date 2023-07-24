@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import { setAccessToken } from '../../redux/reducers/authSlice';
+import { login } from '../../redux/reducers/isLogin';
 
 interface TokenPayload {
   userId: string;
@@ -18,7 +19,13 @@ export const OauthHandler: React.FC = () => {
     const accessToken = params.get('access_token');
 
     if (accessToken) {
+      params.delete('access_token');
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState(null, '', newUrl);
+
       dispatch(setAccessToken(accessToken));
+      dispatch(login());
+      localStorage.setItem('isLogin', 'true');
 
       try {
         const decoded = jwt_decode(accessToken);

@@ -173,8 +173,11 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         navigate('/');
       })
       .catch((error) => {
-        console.log(error);
-        alert('필수 사항을 모두 체크해주세요');
+        if (error.response && error.response.data) {
+          alert(error.response.data.message);
+        } else {
+          alert('회원가입에 실패하였습니다.');
+        }
       });
   };
   return (
