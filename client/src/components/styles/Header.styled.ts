@@ -19,7 +19,7 @@ export const HeaderContainer = styled.header<HeaderContainerProps>`
     isMovieDetailPage &&
     `
     position: fixed;
-    border-bottom: 0px solid #f1c6d4;
+    border-bottom: 0px solid #939393;
     background-color: transparent;
     `}
   a {
@@ -41,7 +41,7 @@ export const HeaderTitle = styled.h1<HeaderContainerProps>`
     `
      color: white;
      background-color: transparent; 
-     text-shadow: 2px 2px gray;
+     text-shadow: 2px 2px 2px gray;
     `}
 `;
 
@@ -79,8 +79,8 @@ export const Button = styled.button<HeaderContainerProps>`
      border: 1px solid white;
      color: white;
      background-color: transparent; 
-     box-shadow: 1px 1px gray;
-     text-shadow: 1px 1px gray;
+     box-shadow: 1px 1px 1px 1px gray;
+     text-shadow: 1px 1px 1px gray;
     `}
   &:active {
     background-color: #6600cc;
