@@ -7,20 +7,22 @@ import {
   Info,
   Title,
 } from '../../components/styles/rankmovie/Card.styled';
-
+import { Link } from 'react-router-dom';
 interface Props {
+  movieId: number;
   title: string;
   posterPath: string;
 }
-
-const SearchCard: React.FC<Props> = ({ posterPath, title }) => (
+const SearchCard: React.FC<Props> = ({ movieId, posterPath, title }) => (
   <Container>
     <Base>
       <ImageWrapper>
-        <Image
-          src={`https://image.tmdb.org/t/p/w200/${posterPath}`}
-          alt="movie poster"
-        />
+        <Link to={`http://cinemaprincess.shop/movie/${movieId}`}>
+          <Image
+            src={`https://image.tmdb.org/t/p/w200/${posterPath}`}
+            alt="movie poster"
+          />
+        </Link>
       </ImageWrapper>
       <Info>
         <Title>{title}</Title>
