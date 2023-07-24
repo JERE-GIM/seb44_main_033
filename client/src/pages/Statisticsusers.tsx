@@ -1,31 +1,27 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
-  Options,
   Selectbox,
   StatisticTitle,
   StatisticsHeader,
   StyledChart,
   Wrapper,
 } from './styles/Statisticsusers.styled';
+import { fetchGetStatisticsusers } from '../api/statistics';
 
 const CHART_FIELD = {
   GENRE: 'Genre',
-  GENRE_DATA: 'Preference Ratio',
+  GENRE_DATA: 'Preferred Genres by Age and Gender',
 };
 
-const genders = ['Male', 'Female'];
-const ages = ['10', '20', '30', '40', '50', '60'];
-
 function Statisticsusers() {
-  const [gender, setGender] = useState(genders[0]);
-  const [age, setAge] = useState(ages[0]);
+  const [age, setAge] = useState(10);
+  const [gender, setGender] = useState('male');
   const [data, setData] = useState([
     [CHART_FIELD.GENRE, CHART_FIELD.GENRE_DATA],
   ]);
 
   const options = {
-    title: `Preference Ratio by Gender: ${gender} and Age Group: ${age}`,
+    title: `Preferred Movie Genres by Age and Gender`,
   };
 
   const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -33,39 +29,42 @@ function Statisticsusers() {
   };
 
   const handleAgeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setAge(event.target.value);
+    setAge(Number(event.target.value));
+  };
+
+  const handleFetchGetStatisticsusers = () => {
+    fetchGetStatisticsusers(age, gender)
+      .then((res) => {
+        const newData = [[CHART_FIELD.GENRE, CHART_FIELD.GENRE_DATA]];
+        Object.keys(res.data).forEach((genreName) =>
+          newData.push([genreName, res.data[genreName]]),
+        );
+        setData(newData);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
-    axios
-      .get(
-        `http://cinemaprincess.shop/statistics/users?age=${age}&gender=${gender}`,
-      )
-      .then((res) => {
-        setData([[CHART_FIELD.GENRE, CHART_FIELD.GENRE_DATA], ...res.data]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    handleFetchGetStatisticsusers();
   }, [gender, age]);
 
   return (
     <Wrapper>
       <StatisticsHeader>
-        <StatisticTitle>Statistics | Movie Genre Preference for</StatisticTitle>
+        <StatisticTitle>
+          Statistics | Preferred Movie Genre by Age and Gender
+        </StatisticTitle>
         <Selectbox onChange={handleGenderChange} value={gender}>
-          {genders.map((genderValue) => (
-            <Options key={genderValue} value={genderValue}>
-              {genderValue}
-            </Options>
-          ))}
+          <option value="male">Male</option>
+          <option value="female">Female</option>
         </Selectbox>
         <Selectbox onChange={handleAgeChange} value={age}>
-          {ages.map((ageValue) => (
-            <Options key={ageValue} value={ageValue}>
-              {ageValue}
-            </Options>
-          ))}
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+          <option value="60">60</option>
         </Selectbox>
       </StatisticsHeader>
       <StyledChart chartType="Bar" data={data} options={options} />

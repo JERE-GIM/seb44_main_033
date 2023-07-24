@@ -11,3 +11,14 @@ export const fetchGetStatisticsYearlyGenres = async (year: number) => {
   );
   return res;
 };
+
+export const fetchGetStatisticsusers = async (age: number, gender: string) => {
+  const [accessToken] = getAccessTokenAndUserId();
+  const res = await axios.get(
+    `http://cinemaprincess.shop/statistics/users?age=${age}gender=${gender}`,
+    {
+      headers: { Authorization: accessToken },
+    },
+  );
+  return res;
+};
