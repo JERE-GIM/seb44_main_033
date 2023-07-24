@@ -4,8 +4,8 @@ export const MovieInfoWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  margin-top: 20px;
+  align-items: flex-start;
+  margin-top: 40px;
   padding: 0 20px;
 `;
 
@@ -17,7 +17,7 @@ export const MovieInfoContainer = styled.div`
 
 export const MovieInfoText = styled.div`
   width: fit-content;
-  height: 25px;
+  height: 30px;
 `;
 
 export const MovieInfoSpan = styled.span`

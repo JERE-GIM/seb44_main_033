@@ -24,4 +24,9 @@ code {
   --purple-dark: #6600cc;
   --purple-deep: #4d0099;
   --red: #d0393e;
+
+  --black-80a: rgba(0, 0, 0, 0.8);
+
+  --z-index-1: 1;
+  --z-index-2: 2;
 }

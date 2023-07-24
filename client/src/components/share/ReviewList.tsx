@@ -10,6 +10,7 @@ import ReviewListitem from '../movie/ReviewListitem';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 
 export const REVIEW_SLIDE_TO_SHOW = 4;
+export const ROW_PER_SLIDE = 2;
 
 export const SLIDE_SETTINGS = {
   dots: false,
@@ -18,7 +19,7 @@ export const SLIDE_SETTINGS = {
   speed: 500,
   slidesToShow: REVIEW_SLIDE_TO_SHOW,
   slidesToScroll: REVIEW_SLIDE_TO_SHOW,
-  rows: 2,
+  rows: ROW_PER_SLIDE,
   slidesPerRow: 1,
   swipe: true,
   draggable: false,
@@ -42,7 +43,7 @@ interface IReviewListProps {
 function ReviewList({ reviewList, hasMovieTitle }: IReviewListProps) {
   return (
     <ReviewListWrapper>
-      {reviewList.length >= REVIEW_SLIDE_TO_SHOW ? (
+      {reviewList.length >= REVIEW_SLIDE_TO_SHOW * ROW_PER_SLIDE ? (
         <Slider {...SLIDE_SETTINGS}>
           {reviewList.map((review) => (
             <ReviewListitem

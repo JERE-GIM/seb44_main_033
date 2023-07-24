@@ -55,6 +55,7 @@ const genreValues = [
   '전쟁',
   'TV 영화',
 ];
+const MAX_GENRE_LENGTH = 3;
 
 interface IUserInfoInput {
   username: string;
@@ -220,7 +221,7 @@ export default function UserInfoEditModal({
                         setUserInfoInput({
                           ...userInfoInput,
                           genre:
-                            userInfoInput.genre.length >= 2
+                            userInfoInput.genre.length >= MAX_GENRE_LENGTH
                               ? [event.target.value]
                               : userInfoInput.genre.concat(event.target.value),
                         });

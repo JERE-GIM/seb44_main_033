@@ -9,8 +9,9 @@ export const Background = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: var(--z-index-2);
 
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--black-80a);
 `;
 
 export const Modal = styled.div`
@@ -22,7 +23,7 @@ export const Modal = styled.div`
   flex-direction: column;
   justify-content: center;
 
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--white);
 `;
 
 export const ConfirmMessage = styled.p`

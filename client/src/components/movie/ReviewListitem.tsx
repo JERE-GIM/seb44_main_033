@@ -15,6 +15,9 @@ import {
 import profile from '../../assets/profile.png';
 import thumbUp from '../../assets/thumb-up.svg';
 import { IReview } from '../../types/movie';
+import { fetchLikeReview, fetchUnlikeReview } from '../../api/movie';
+import { useState } from 'react';
+import { getAccessTokenAndUserId } from '../../util/func';
 
 interface IReviewListitem {
   review: IReview;
@@ -25,7 +28,37 @@ export default function ReviewListitem({
   review,
   hasMovieTitle,
 }: IReviewListitem) {
-  const $liked = false;
+  const [liked, setLiked] = useState({
+    status: review.reviewVoted,
+    count: review.votesCount,
+  });
+  const [isFetching, setIsFetching] = useState(false);
+
+  const [, userId] = getAccessTokenAndUserId();
+
+  const handleFetchLikeReview = (reviewId: number) => {
+    setIsFetching(() => true);
+    fetchLikeReview(reviewId)
+      .then(() => setLiked((prev) => ({ status: true, count: prev.count + 1 })))
+      .catch((err) => console.log(err))
+      .finally(() => setIsFetching(() => false));
+  };
+
+  const handleFetchUnlikeReview = (reviewId: number) => {
+    setIsFetching(() => true);
+    fetchUnlikeReview(reviewId)
+      .then(() =>
+        setLiked((prev) => ({ status: false, count: prev.count - 1 })),
+      )
+      .catch((err) => console.log(err))
+      .finally(() => setIsFetching(() => false));
+  };
+
+  const handleClickLike = (reviewId: number) => {
+    if (isFetching) return;
+    if (liked.status) handleFetchUnlikeReview(reviewId);
+    else handleFetchLikeReview(reviewId);
+  };
 
   return (
     <Wrapper>
@@ -39,7 +72,7 @@ export default function ReviewListitem({
         {hasMovieTitle && (
           <>
             <Image
-              src={`https://image.tmdb.org/t/p/w200/${review.moviePosterPath}`}
+              src={`https://image.tmdb.org/t/p/w200/${review.posterPath}`}
             />
             <MovieTitle>{review.movieTitle}</MovieTitle>
           </>
@@ -50,9 +83,13 @@ export default function ReviewListitem({
         <Comment>{review.content}</Comment>
       </ReviewMiddle>
       <ReviewBottom>
-        <LikeButton $liked={$liked}>
-          <IconImage $liked={$liked} src={thumbUp} alt="like icon" />
-          <ButtonText $liked={$liked}>{review.votesCount}</ButtonText>
+        <LikeButton
+          $liked={liked.status}
+          onClick={() => handleClickLike(review.reviewId)}
+          disabled={review.userId === Number(userId)}
+        >
+          <IconImage $liked={liked.status} src={thumbUp} alt="like icon" />
+          <ButtonText $liked={liked.status}>{liked.count}</ButtonText>
         </LikeButton>
       </ReviewBottom>
     </Wrapper>

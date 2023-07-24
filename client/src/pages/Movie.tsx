@@ -26,9 +26,12 @@ import {
   MovieHeader,
   MovieDescription,
   MovieVideo,
+  MovieCoverBottom,
+  UserController,
+  RecommentListItemLink,
 } from './styles/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
-import starIcon from '../assets/starIcon.svg';
+import starIcon from '../assets/starIcon.png';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import Card from '../components/main/movierank/Card';
@@ -37,6 +40,7 @@ import { useParams } from 'react-router-dom';
 import {
   fetchDeleteMyReview,
   fetchGetMovieInfo,
+  fetchGetMovieInfoLoggedIn,
   fetchGetMyReview,
 } from '../api/movie';
 import ReviewList from '../components/share/ReviewList';
@@ -45,6 +49,7 @@ import MyReview from '../components/movie/MyReview';
 import YouTube from 'react-youtube';
 import LoginForm from '../components/login/loginForm';
 import { WatchBookmark } from '../components/watch/WatchBookMark';
+import Empty from '../components/share/Empty';
 
 export default function Movie() {
   const [movieInfo, setMovieInfo] = useState<IMovieResponse>();
@@ -57,22 +62,29 @@ export default function Movie() {
   const { movieId } = useParams();
 
   const handleFetchGetMovieInfo = () => {
-    fetchGetMovieInfo(Number(movieId))
-      .then((res) => setMovieInfo(res.data))
-      .catch((err) => alert(err));
+    if (isLogin.status)
+      fetchGetMovieInfoLoggedIn(Number(movieId))
+        .then((res) => setMovieInfo(res.data))
+        .catch((err) => alert(err));
+    else
+      fetchGetMovieInfo(Number(movieId))
+        .then((res) => setMovieInfo(res.data))
+        .catch((err) => alert(err));
   };
 
   const handleFetchGetMyReview = () => {
     fetchGetMyReview(Number(movieId))
       .then((res) => {
-        setMyReview(res.data);
-        setRating(res.data.score);
-      })
-      .catch((err) => {
-        if (err.response.data.message === '리뷰가 없습니다.') {
+        if (!res.data) {
           setMyReview(null);
           setRating(0);
-        } else alert(err);
+        } else {
+          setMyReview(res.data);
+          setRating(res.data.score);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -92,8 +104,11 @@ export default function Movie() {
     dispatch(modalAction.open(MODAL_ROLE.LOGIN));
   };
 
-  const handleOpenReviewModal = () => {
-    if (!isLogin.status) return AskLogin();
+  const handleOpenReviewModal = (event?: React.MouseEvent<HTMLDivElement>) => {
+    if (!isLogin.status) {
+      event?.stopPropagation();
+      return AskLogin();
+    }
     dispatch(modalAction.open(MODAL_ROLE.REVIEW_WRITE));
   };
 
@@ -101,7 +116,9 @@ export default function Movie() {
     if (movieId) {
       fetchMoviePageData();
     }
-  }, []);
+
+    window.scrollTo(0, 0);
+  }, [movieId]);
 
   return (
     <>
@@ -109,32 +126,40 @@ export default function Movie() {
         <>
           <MovieCover>
             <MovieCoverImage
-              src={`https://image.tmdb.org/t/p/w500/${movieInfo.data.backdropPath}`}
+              src={`https://image.tmdb.org/t/p/w1280/${movieInfo.data.backdropPath}`}
               alt="cover image"
             />
             <MovieHeader>
               <MovieTitle>{movieInfo.data.title}</MovieTitle>
               <MovieDescription>{movieInfo.data.overview}</MovieDescription>
             </MovieHeader>
-            <StarsContainer onClick={handleOpenReviewModal}>
-              <Rating rating={rating} setRating={setRating} />
-            </StarsContainer>
-            <AverageRatingContainer>
-              <Star src={starIcon} alt="average rating icon" />
-              <AverageRatingText>
-                <AverageRatingSpan>
-                  {movieInfo.data.movieVote.voteAverage}
-                </AverageRatingSpan>
-                <AverageRatingSpan>
-                  ({movieInfo.data.movieVote.voteCount}명)
-                </AverageRatingSpan>
-              </AverageRatingText>
-            </AverageRatingContainer>
-            <WatchBookmark
-              movieId={Number(movieId)}
-              styleProps={{ fontSize: '40px', right: '40px', bottom: '40px' }}
-              defaultStatus={movieInfo.data.watchlistCheck}
-            />
+            <MovieCoverBottom>
+              <AverageRatingContainer>
+                <Star src={starIcon} alt="average rating icon" />
+                <AverageRatingText>
+                  <AverageRatingSpan>
+                    {movieInfo.data.movieVote.voteAverage}
+                  </AverageRatingSpan>
+                  <AverageRatingSpan>
+                    ({movieInfo.data.movieVote.voteCount}명)
+                  </AverageRatingSpan>
+                </AverageRatingText>
+              </AverageRatingContainer>
+              <UserController>
+                <StarsContainer onClickCapture={handleOpenReviewModal}>
+                  <Rating rating={rating} setRating={setRating} />
+                </StarsContainer>
+                <WatchBookmark
+                  movieId={Number(movieId)}
+                  styleProps={{
+                    fontSize: '40px',
+                    right: '40px',
+                    bottom: '0',
+                  }}
+                  defaultStatus={movieInfo.data.watchlistCheck}
+                />
+              </UserController>
+            </MovieCoverBottom>
           </MovieCover>
           <MovieDetail>
             <MovieDetailCol>
@@ -153,11 +178,15 @@ export default function Movie() {
           </MovieDetail>
           <MovieVideo>
             <SectionTitle>영상</SectionTitle>
-            <YouTube videoId={movieInfo.data.videoPath.slice(1)} />
+            <YouTube videoId={movieInfo.data.videoPath.slice(30)} />
           </MovieVideo>
           <MovieReviews>
-            <SectionTitle>코멘트</SectionTitle>
-            <ReviewList reviewList={movieInfo.reviews} />
+            <SectionTitle>영화 리뷰</SectionTitle>
+            {movieInfo.reviews.length === 0 ? (
+              <Empty message="리뷰가 없습니다. 첫 리뷰를 남겨보세요!" />
+            ) : (
+              <ReviewList reviewList={movieInfo.reviews} />
+            )}
           </MovieReviews>
           {movieInfo.data.watchProviders.length !== 0 && (
             <MovieOTTInfo>
@@ -181,16 +210,18 @@ export default function Movie() {
           <MovieRecommend>
             <SectionTitle>비슷한 영화 추천</SectionTitle>
             <RecommendList>
-              {movieInfo.data.similarMovies.map((similarMovie, index) => (
-                <RecommentListItem key={similarMovie.movieId + index}>
-                  <Card
-                    posterPath={
-                      similarMovie.posterPath
-                        ? `https://image.tmdb.org/t/p/w200/${similarMovie.posterPath}`
-                        : defaultPoster
-                    }
-                    movieNm={similarMovie.title}
-                  />
+              {movieInfo.data.similarMovies.map((similarMovie) => (
+                <RecommentListItem key={similarMovie.movieId}>
+                  <RecommentListItemLink to={`/movie/${similarMovie.movieId}`}>
+                    <Card
+                      posterPath={
+                        similarMovie.posterPath
+                          ? `https://image.tmdb.org/t/p/w200/${similarMovie.posterPath}`
+                          : defaultPoster
+                      }
+                      movieNm={similarMovie.title}
+                    />
+                  </RecommentListItemLink>
                 </RecommentListItem>
               ))}
             </RecommendList>
