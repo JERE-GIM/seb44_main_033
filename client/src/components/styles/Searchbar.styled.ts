@@ -3,10 +3,11 @@ import styled from 'styled-components';
 export const SearchbarContainer = styled.div`
   display: flex;
   align-items: center;
-  border: 1px solid lightgray;
+  border: 2px solid lightgray;
   border-radius: 4px;
   height: 40px;
   margin-left: 40px;
+  box-shadow: 1px 0px white;
 `;
 
 export const SearchInput = styled.input`
