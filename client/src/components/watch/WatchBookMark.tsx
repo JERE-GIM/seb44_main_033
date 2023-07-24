@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BookmarkButton } from '../styles/watchlist/WatchBookMark.styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark as faBookmarkSolid } from '@fortawesome/free-solid-svg-icons';
-import { faBookmark as faBookmarkRegular } from '@fortawesome/free-regular-svg-icons';
 import { fetchAddToWatchlist, fetchDeleteInWatchlist } from '../../api/movie';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { MODAL_ROLE, modalAction } from '../../redux/reducers/modal';

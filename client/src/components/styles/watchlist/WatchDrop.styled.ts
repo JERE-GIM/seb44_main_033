@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-
+import { Link } from 'react-router-dom';
 export const Title = styled.div`
   font-size: 25px;
   font-weight: 700;
@@ -52,7 +52,7 @@ export const Container = styled.div`
   flex-wrap: wrap;
 `;
 
-export const MovieItem = styled.div`
+export const MovieItem = styled(Link)`
   width: 25%;
   padding: 10px;
   display: flex;

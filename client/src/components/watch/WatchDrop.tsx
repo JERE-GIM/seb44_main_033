@@ -18,9 +18,6 @@ import { fetchWatchlist, WatchMovie } from '../../api/getWatchlist';
 
 export default function WatchDrop() {
   const [isOpen, setIsopen] = useState<boolean>(false);
-  // const [selectedOption, setSelectedOption] = useState<string>('담은순');
-
-  // const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const dispatch = useAppDispatch();
   const movies = useAppSelector((state) => state.watchlist.movies);
@@ -34,11 +31,11 @@ export default function WatchDrop() {
   };
 
   useEffect(() => {
-    const userId = 1;
-    dispatch(fetchWatchlist(userId));
+    // const userId = 1;
+    dispatch(fetchWatchlist());
   }, []);
 
-  //무한스크롤
+  //무한스크롤s
   const handleScroll = () => {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
     if (scrollHeight - scrollTop === clientHeight) {
@@ -55,33 +52,28 @@ export default function WatchDrop() {
 
   //필터기능
   useEffect(() => {
-    const sortedMovies = movies.slice().sort((a: WatchMovie, b: WatchMovie) => {
-      if (sortOption === '담은순') {
-        return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      } else if (sortOption === '신작순') {
-        return (
-          new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()
-        );
-      } else if (sortOption === '이름순') {
-        return a.title.localeCompare(b.title);
-      } else {
-        return 0;
-      }
-    });
-    setMoviesToShow(sortedMovies.slice(0, page * 8));
+    if (movies) {
+      const sortedMovies = movies
+        .slice()
+        .sort((a: WatchMovie, b: WatchMovie) => {
+          if (sortOption === '담은순') {
+            return (
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            );
+          } else if (sortOption === '신작순') {
+            return (
+              new Date(b.releaseDate).getTime() -
+              new Date(a.releaseDate).getTime()
+            );
+          } else if (sortOption === '이름순') {
+            return a.title.localeCompare(b.title);
+          } else {
+            return 0;
+          }
+        });
+      setMoviesToShow(sortedMovies.slice(0, page * 8));
+    }
   }, [movies, sortOption, page]);
-
-  // //북마크 클릭 영화 제거
-  // const handleBookmarkClick = (movieid: string) => {
-  //   setSortedMovies((prevMovies) => {
-  //     const updatedMovies = prevMovies.filter(
-  //       (movie) => movie.movieId !== movieid,
-  //     );
-  //     return updatedMovies;
-  //   });
-  // };
 
   return (
     <>
@@ -112,16 +104,21 @@ export default function WatchDrop() {
       <Container>
         {movies &&
           moviesToShow.map((movie: WatchMovie) => (
-            <MovieItem key={movie.movieId}>
+            <MovieItem to={`/movie/${movie.movieId}`} key={movie.movieId}>
               <div style={{ position: 'relative' }}>
                 <MovieImage
-                  src={`https://image.tmdb.org/t/p/w200/${movie.posterPath}`}
+                  src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${movie.posterPath}`}
                   alt={movie.title}
                 />
-                {/* <WatchBookmark
-                movieId={movie.movieId}
-                onClick={handleBookmarkClick}
-              /> */}
+                <WatchBookmark
+                  movieId={movie.movieId}
+                  styleProps={{
+                    fontSize: '30px',
+                    right: '5px',
+                    bottom: '20px',
+                  }}
+                  defaultStatus={true}
+                />
               </div>
               <p>{movie.title}</p>
               <p>{movie.releaseDate.split('-')[0]}</p>

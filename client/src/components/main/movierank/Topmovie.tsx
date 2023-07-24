@@ -8,6 +8,7 @@ import { Base, Title } from '../../styles/rankmovie/Topmovie.styled';
 // import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Link } from 'react-router-dom';
 
 export default function TopMovie() {
   const dispatch = useAppDispatch();
@@ -22,14 +23,15 @@ export default function TopMovie() {
       <Slider>
         {movies.map((movie: RankMovie) => {
           return (
-            <Card
-              key={movie.movieId}
-              posterPath={movie.posterPath}
-              movieNm={movie.movieNm}
-              openDt={movie.openDt.split('-')[0]}
-              audiAcc={movie.audiAcc}
-              rank={movie.rank}
-            />
+            <Link to={`/movie/${movie.movieId}`} key={movie.movieId}>
+              <Card
+                posterPath={movie.posterPath}
+                movieNm={movie.movieNm}
+                openDt={movie.openDt.split('-')[0]}
+                audiAcc={movie.audiAcc}
+                rank={movie.rank}
+              />
+            </Link>
           );
         })}
       </Slider>

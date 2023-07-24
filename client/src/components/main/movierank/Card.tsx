@@ -40,7 +40,9 @@ const Card: React.FC<Props> = ({
       <Container>
         <Base>
           <ImageWrapper>
-            <Image src={`https://image.tmdb.org/t/p/w200/${posterPath}`} />
+            <Image
+              src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${posterPath}`}
+            />
           </ImageWrapper>
           <Info>
             <Title>{movieNm}</Title>
