@@ -187,7 +187,7 @@ public class SaveMovieDetail {
         String videoPath = "";
         if (videoArray.size() != 0) {
             JsonObject videoObject = videoArray.get(0).getAsJsonObject();
-            videoPath = "https://youtube.com/embed/" + videoObject.get("key").getAsString();
+            videoPath = "/" + videoObject.get("key").getAsString();
         }
         return videoPath;
     }
