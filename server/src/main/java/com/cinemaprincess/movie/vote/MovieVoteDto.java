@@ -1,6 +1,5 @@
 package com.cinemaprincess.movie.vote;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

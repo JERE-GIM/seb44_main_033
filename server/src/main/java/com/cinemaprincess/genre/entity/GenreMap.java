@@ -1,4 +1,4 @@
-package com.cinemaprincess.genre;
+package com.cinemaprincess.genre.entity;
 
 import org.springframework.stereotype.Component;
 
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class GenreCache {
+public class GenreMap {
     private Map<Long, Genre> genreMap = new HashMap<>();
 
     public void addGenre(Genre genre) {

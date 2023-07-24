@@ -1,4 +1,4 @@
-package com.cinemaprincess.movie.watch_provider;
+package com.cinemaprincess.movie.watch_provider.dto;
 
 import lombok.Getter;
 import lombok.Setter;

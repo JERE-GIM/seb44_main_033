@@ -1,16 +1,13 @@
 package com.cinemaprincess.movie.entity;
 
-import com.cinemaprincess.movie.watch_provider.WatchProvider;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.cinemaprincess.movie.watch_provider.entity.WatchProvider;
+import lombok.Data;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"movie_id", "provider_id"})) // 고유 제약 조건 설정
 public class MovieDetailWatchProvider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

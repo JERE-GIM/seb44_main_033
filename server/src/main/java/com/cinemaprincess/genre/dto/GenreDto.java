@@ -1,4 +1,4 @@
-package com.cinemaprincess.genre;
+package com.cinemaprincess.genre.dto;
 
 import lombok.Getter;
 import lombok.Setter;

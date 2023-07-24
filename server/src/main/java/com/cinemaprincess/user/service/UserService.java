@@ -9,10 +9,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.cinemaprincess.genre.Genre;
-import com.cinemaprincess.genre.GenreRepository;
+import com.cinemaprincess.genre.repository.GenreRepository;
 import com.cinemaprincess.user.dto.UserStatisticsDto;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;

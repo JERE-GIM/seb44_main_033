@@ -4,9 +4,9 @@
 ////import com.cinemaprincess.helper.MovieTestHelper;
 ////import com.cinemaprincess.movie.entity.Movie;
 ////import com.cinemaprincess.movie.save.SaveMovieList;
-////import com.cinemaprincess.movie.watch_provider.WatchProvider;
-////import com.cinemaprincess.movie.watch_provider.WatchProviderRepository;
-////import com.cinemaprincess.movie.watch_provider.WatchProviderService;
+////import com.cinemaprincess.movie.watch_provider.entity.WatchProvider;
+////import com.cinemaprincess.movie.watch_provider.repository.WatchProviderRepository;
+////import com.cinemaprincess.movie.watch_provider.service.WatchProviderService;
 ////import org.hamcrest.Matchers;
 ////import org.junit.jupiter.api.DisplayName;
 ////import org.junit.jupiter.api.Test;
@@ -83,12 +83,12 @@
 //
 //import com.cinemaprincess.helper.MovieTestHelper;
 //import com.cinemaprincess.movie.entity.Movie;
-//import com.cinemaprincess.movie.entity.MovieDetailCache;
+//import com.cinemaprincess.movie.cache.MovieDetailCache;
 //import com.cinemaprincess.movie.save.SaveMovieDetail;
 //import com.cinemaprincess.movie.save.SaveMovieList;
-//import com.cinemaprincess.movie.watch_provider.WatchProvider;
-//import com.cinemaprincess.movie.watch_provider.WatchProviderRepository;
-//import com.cinemaprincess.movie.watch_provider.WatchProviderService;
+//import com.cinemaprincess.movie.watch_provider.entity.WatchProvider;
+//import com.cinemaprincess.movie.watch_provider.repository.WatchProviderRepository;
+//import com.cinemaprincess.movie.watch_provider.service.WatchProviderService;
 //import org.hamcrest.Matchers;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

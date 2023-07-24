@@ -1,16 +1,13 @@
 package com.cinemaprincess.movie.repository;
 
 import com.cinemaprincess.movie.entity.MovieDetail;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import java.time.Month;
 import java.util.List;
 
-public interface MovieDetailRepository extends JpaRepository<MovieDetail,Long> {
+public interface MovieDetailRepository extends JpaRepository<MovieDetail, Long> {
     @Query("SELECT md " +
             "FROM MovieDetail md " +
             "JOIN md.movieVote mv " +
@@ -19,4 +16,7 @@ public interface MovieDetailRepository extends JpaRepository<MovieDetail,Long> {
             "AND mv.voteCount >= 100 " +
             "ORDER BY RAND()")
     List<MovieDetail> findByReleaseDateYear(String year, Pageable pageable);
+
+    @Query("select md from MovieDetail md join fetch md.movie")
+    List<MovieDetail> findAll();
 }
