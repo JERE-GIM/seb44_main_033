@@ -29,7 +29,9 @@ const router = createBrowserRouter([
       { path: 'statistics', element: <Statistics /> },
       { path: 'statistics/genre', element: <YearlyGenres /> },
       { path: 'statistics/users', element: <Statisticsusers /> },
-      { path: 'oauth2/redirect', element: <OauthHandler /> }, //추가
+      { path: 'login/oauth2/code/google', element: <OauthHandler /> },
+      { path: 'login/oauth2/code/naver', element: <OauthHandler /> },
+      { path: 'login/oauth2/code/kakao', element: <OauthHandler /> },
     ],
   },
 ]);
