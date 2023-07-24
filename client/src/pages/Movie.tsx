@@ -65,11 +65,11 @@ export default function Movie() {
     if (isLogin.status)
       fetchGetMovieInfoLoggedIn(Number(movieId))
         .then((res) => setMovieInfo(res.data))
-        .catch((err) => alert(err));
+        .catch((err) => console.log(err));
     else
       fetchGetMovieInfo(Number(movieId))
         .then((res) => setMovieInfo(res.data))
-        .catch((err) => alert(err));
+        .catch((err) => console.log(err));
   };
 
   const handleFetchGetMyReview = () => {
