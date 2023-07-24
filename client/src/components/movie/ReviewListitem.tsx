@@ -72,9 +72,11 @@ export default function ReviewListitem({
         {hasMovieTitle && (
           <>
             <Image
-              src={`https://image.tmdb.org/t/p/w200/${review.posterPath}`}
+              src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${review.posterPath}`}
             />
-            <MovieTitle>{review.movieTitle}</MovieTitle>
+            <MovieTitle to={`/movie/${review.movieId}`}>
+              {review.movieTitle}
+            </MovieTitle>
           </>
         )}
       </ReviewTop>

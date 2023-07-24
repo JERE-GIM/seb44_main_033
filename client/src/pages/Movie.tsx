@@ -65,11 +65,11 @@ export default function Movie() {
     if (isLogin.status)
       fetchGetMovieInfoLoggedIn(Number(movieId))
         .then((res) => setMovieInfo(res.data))
-        .catch((err) => alert(err));
+        .catch((err) => console.log(err));
     else
       fetchGetMovieInfo(Number(movieId))
         .then((res) => setMovieInfo(res.data))
-        .catch((err) => alert(err));
+        .catch((err) => console.log(err));
   };
 
   const handleFetchGetMyReview = () => {
@@ -126,7 +126,7 @@ export default function Movie() {
         <>
           <MovieCover>
             <MovieCoverImage
-              src={`https://image.tmdb.org/t/p/w1280/${movieInfo.data.backdropPath}`}
+              src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w1280/${movieInfo.data.backdropPath}`}
               alt="cover image"
             />
             <MovieHeader>
@@ -164,7 +164,7 @@ export default function Movie() {
           <MovieDetail>
             <MovieDetailCol>
               <MoviePoster
-                src={`https://image.tmdb.org/t/p/w500/${movieInfo.data.posterPath}`}
+                src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w500/${movieInfo.data.posterPath}`}
                 alt="poster image"
               />
             </MovieDetailCol>
@@ -194,7 +194,7 @@ export default function Movie() {
               {movieInfo.data.watchProviders.map((provider) => (
                 <OTTContainer key={provider.providerId}>
                   <OTTImage
-                    src={`https://image.tmdb.org/t/p/w200/${provider.logoPath}`}
+                    src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${provider.logoPath}`}
                   />
                   <OTTText
                     to={provider.url}
@@ -216,7 +216,7 @@ export default function Movie() {
                     <Card
                       posterPath={
                         similarMovie.posterPath
-                          ? `https://image.tmdb.org/t/p/w200/${similarMovie.posterPath}`
+                          ? `${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${similarMovie.posterPath}`
                           : defaultPoster
                       }
                       movieNm={similarMovie.title}

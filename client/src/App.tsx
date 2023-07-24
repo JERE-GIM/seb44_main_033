@@ -11,11 +11,13 @@ import Statistics from './pages/Statistics';
 import YearlyGenres from './pages/YearlyGenres';
 import { OauthHandler } from './components/login/OauthHandler';
 import Statisticsusers from './pages/Statisticsusers';
+import Error from './pages/Error';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    errorElement: <Error />,
     children: [
       { path: '', element: <Main /> },
       { path: 'signup', element: <Signup /> },

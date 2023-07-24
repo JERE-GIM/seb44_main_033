@@ -38,6 +38,9 @@ export default function Mypage() {
       .then(() => {
         dispatch(modalAction.close());
         dispatch(logout());
+        localStorage.removeItem('isLogin');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userId');
         navigate('/');
       })
       .catch((err) => console.log(err));

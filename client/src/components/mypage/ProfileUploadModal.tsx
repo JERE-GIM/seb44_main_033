@@ -22,6 +22,8 @@ interface IProfileUploadModalProps {
   callback: () => void;
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
 export default function ProfileUploadModal({
   currentProfileImage,
   callback,
@@ -58,6 +60,8 @@ export default function ProfileUploadModal({
   const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : '';
     if (!file) return;
+    if (file.size > MAX_FILE_SIZE)
+      return alert('파일 사이즈는 5MB 이하로 업로드 가능합니다.');
 
     setImgFile(file);
     setImgPreview(URL.createObjectURL(file));
