@@ -10,6 +10,7 @@ import Search from './pages/Search';
 import Statistics from './pages/Statistics';
 import YearlyGenres from './pages/YearlyGenres';
 import { OauthHandler } from './components/login/OauthHandler';
+import Statisticsusers from './pages/Statisticsusers';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: 'search', element: <Search /> },
       { path: 'statistics', element: <Statistics /> },
       { path: 'statistics/genre', element: <YearlyGenres /> },
+      { path: 'statistics/users', element: <Statisticsusers /> },
       { path: 'oauth2/redirect', element: <OauthHandler /> }, //추가
     ],
   },
