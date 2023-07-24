@@ -7,10 +7,10 @@ export interface Movie {
   posterPath: string;
 }
 
-export const fetchMonthly = createAsyncThunk(
-  'monthly/fetchMonthly',
+export const fetchYearly = createAsyncThunk(
+  'yearly/fetchYearly',
   async (_, { rejectWithValue }) => {
-    const url = `${process.env.REACT_APP_BASE_URL}/movies/monthly`;
+    const url = `${process.env.REACT_APP_BASE_URL}/movies/yearly`;
     const response = await axios.get(url);
     try {
       if (response.status >= 200 && response.status < 300) {
