@@ -18,6 +18,8 @@ import { IReview } from '../../types/movie';
 import { fetchLikeReview, fetchUnlikeReview } from '../../api/movie';
 import { useState } from 'react';
 import { getAccessTokenAndUserId } from '../../util/func';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { MODAL_ROLE, modalAction } from '../../redux/reducers/modal';
 
 interface IReviewListitem {
   review: IReview;
@@ -33,7 +35,8 @@ export default function ReviewListitem({
     count: review.votesCount,
   });
   const [isFetching, setIsFetching] = useState(false);
-
+  const { isLogin } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
   const [, userId] = getAccessTokenAndUserId();
 
   const handleFetchLikeReview = (reviewId: number) => {
@@ -56,6 +59,7 @@ export default function ReviewListitem({
 
   const handleClickLike = (reviewId: number) => {
     if (isFetching) return;
+    if (!isLogin.status) return dispatch(modalAction.open(MODAL_ROLE.LOGIN));
     if (liked.status) handleFetchUnlikeReview(reviewId);
     else handleFetchLikeReview(reviewId);
   };
@@ -65,7 +69,6 @@ export default function ReviewListitem({
       <ReviewTop>
         {!hasMovieTitle && (
           <>
-            <Image src={profile} />
             <Username>{review.username}</Username>
           </>
         )}
