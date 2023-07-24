@@ -5,6 +5,7 @@ import { RightBase } from '../../styles/tabmovie/Botmovie.styled';
 import { Title } from '../../styles/monthmovie/Monthmovie';
 import MonthSlider from './Monthslider';
 import MonthCard from './Monthcard';
+import { Link } from 'react-router-dom';
 
 export default function MonthMovie() {
   const dispatch = useAppDispatch();
@@ -19,7 +20,9 @@ export default function MonthMovie() {
       <MonthSlider>
         {movies.map((movie: Movie) => {
           return (
-            <MonthCard key={movie.movieId} posterPath={movie.posterPath} />
+            <Link to={`/movie/${movie.movieId}`} key={movie.movieId}>
+              <MonthCard posterPath={movie.posterPath} />
+            </Link>
           );
         })}
       </MonthSlider>
