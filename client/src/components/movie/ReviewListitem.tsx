@@ -69,7 +69,6 @@ export default function ReviewListitem({
       <ReviewTop>
         {!hasMovieTitle && (
           <>
-            <Image src={profile} />
             <Username>{review.username}</Username>
           </>
         )}
