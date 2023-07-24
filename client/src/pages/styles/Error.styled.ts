@@ -8,7 +8,6 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
 `;
 
 export const MessageRow = styled.div`
