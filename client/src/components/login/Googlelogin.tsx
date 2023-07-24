@@ -6,7 +6,6 @@ const GOOGLE_OAUTH_URL = `${process.env.REACT_APP_BASE_URL}/oauth2/authorization
 const GoogleLogin: React.FC = () => {
   const handleLogin = () => {
     window.location.href = GOOGLE_OAUTH_URL;
-    console.log('성공');
   };
 
   return (
