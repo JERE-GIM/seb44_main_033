@@ -35,7 +35,7 @@ function MovieInfo({ movieInfo }: IMovieInfoProps) {
           <MovieInfoSpan>
             {movieInfo.certification === ''
               ? '미정'
-              : movieInfo.certification === 'All'
+              : movieInfo.certification.toUpperCase() === 'ALL'
               ? '전체'
               : `${movieInfo.certification}세`}
           </MovieInfoSpan>

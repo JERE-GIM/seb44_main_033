@@ -109,7 +109,7 @@ export const MovieDetail = styled.section`
   width: 1320px;
   display: flex;
   margin: 0 auto;
-  padding-top: 30px;
+  padding-top: 40px;
 
   & > div:first-child {
     width: 280px;
@@ -132,19 +132,19 @@ export const MoviePoster = styled.img`
 export const MovieVideo = styled.section`
   width: 1320px;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 100px;
 `;
 
 export const MovieReviews = styled.section`
   width: 1320px;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 100px;
 `;
 
 export const MovieOTTInfo = styled.section`
   width: 1320px;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 100px;
 `;
 
 export const OTTContainer = styled.div`
@@ -170,7 +170,7 @@ export const OTTText = styled(Link)`
 export const MovieRecommend = styled.section`
   width: 1320px;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 100px;
 `;
 
 export const RecommendList = styled.ul`
@@ -191,5 +191,5 @@ export const RecommentListItemLink = styled(Link)``;
 export const SectionTitle = styled.h2`
   font-size: 25px;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 `;

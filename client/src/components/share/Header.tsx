@@ -69,7 +69,7 @@ export default function Header() {
       <Link to="/">
         <HeaderTitle isMovieDetailPage={isMovieDetailPage && isAtTop}>
           <LogoImage
-            src={process.env.PUBLIC_URL + '/images/Cinemalogo.png'}
+            src={process.env.PUBLIC_URL + '/images/logo.png'}
             alt="Logo"
           />
           CINEMA PRINCESS

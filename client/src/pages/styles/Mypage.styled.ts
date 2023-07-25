@@ -79,11 +79,11 @@ export const Button = styled.button`
 export const MyReviews = styled.section`
   width: 1320px;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 40px;
 `;
 
 export const SectionHeader = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 `;
