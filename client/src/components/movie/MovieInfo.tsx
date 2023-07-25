@@ -1,10 +1,10 @@
-import { IMovieInfo } from '../../types/movie';
 import {
   MovieInfoContainer,
   MovieInfoSpan,
   MovieInfoText,
   MovieInfoWrapper,
-} from '../styles/MovieInfo.styled';
+} from '../../styles/components/movie/MovieInfo.styled';
+import { IMovieInfo } from '../../types/movie';
 
 interface IMovieInfoProps {
   movieInfo: IMovieInfo;

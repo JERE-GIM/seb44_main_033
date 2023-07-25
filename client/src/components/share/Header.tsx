@@ -15,7 +15,7 @@ import {
   Button,
   MypageContainer,
   MyPageId,
-} from '../styles/Header.styled';
+} from '../../styles/components/share/Header.styled';
 import SignupForm1 from '../signup/SignupForm1'; // SignupForm1 컴포넌트 추가
 import LoginForm from '../login/loginForm'; // SignupForm1 컴포넌트 추가
 

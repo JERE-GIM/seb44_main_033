@@ -5,7 +5,7 @@ import {
   NonSlider,
   PrevButtonTransformed,
   ReviewListWrapper,
-} from '../styles/ReviewList.styled';
+} from '../../styles/components/share/ReviewList.styled';
 import ReviewListitem from '../movie/ReviewListitem';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 

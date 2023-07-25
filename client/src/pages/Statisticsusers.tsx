@@ -5,7 +5,7 @@ import {
   StatisticsHeader,
   StyledChart,
   Wrapper,
-} from './styles/Statisticsusers.styled';
+} from '../styles/pages/Statisticsusers.styled';
 import { fetchGetStatisticsusers } from '../api/statistics';
 
 const CHART_FIELD = {

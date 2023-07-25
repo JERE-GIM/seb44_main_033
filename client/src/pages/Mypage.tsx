@@ -11,7 +11,7 @@ import {
   ProfileEditButton,
   SectionHeader,
   Username,
-} from './styles/Mypage.styled';
+} from '../styles/pages/Mypage.styled';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
 import ConfirmModal from '../components/movie/ConfirmModal';

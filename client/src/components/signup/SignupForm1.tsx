@@ -49,7 +49,7 @@ import {
   MessageBox,
   Alertmessage,
   SignupButton2,
-} from '../styles/SignupForm1.styled';
+} from '../../styles/components/account/SignupForm1.styled';
 import { RootState } from '../../redux/store';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';

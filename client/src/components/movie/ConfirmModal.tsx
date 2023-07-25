@@ -7,12 +7,12 @@ import {
   Button,
   ConfirmButtons,
   ConfirmMessage,
-  Background,
   Modal,
   ConfirmCheckbox,
   ConfirmCheckboxText,
   ConfirmCheckboxInput,
-} from '../styles/ConfirmModal.styled';
+  Background,
+} from '../../styles/components/movie/ConfirmModal.styled';
 
 interface IConfirmModal {
   message: string;

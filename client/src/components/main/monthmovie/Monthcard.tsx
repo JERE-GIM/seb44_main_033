@@ -4,7 +4,7 @@ import {
   Base,
   ImageWrapper,
   Image,
-} from '../../styles/monthmovie/Monthcard';
+} from '../../../styles/components/main/monthmovie/Monthcard';
 
 interface Props {
   posterPath: string;

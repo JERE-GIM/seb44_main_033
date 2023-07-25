@@ -5,7 +5,7 @@ import {
   MessageLink,
   MessageRow,
   Wrapper,
-} from './styles/Error.styled';
+} from '../styles/pages/Error.styled';
 
 function Error() {
   return (

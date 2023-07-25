@@ -13,7 +13,7 @@ import {
   SubmitButton,
   InvalidMessage,
   TextLength,
-} from '../styles/ReviewRegisterModal.styled';
+} from '../../styles/components/movie/ReviewRegisterModal.styled';
 import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';

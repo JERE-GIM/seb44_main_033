@@ -1,4 +1,4 @@
-import { Base } from '../../styles/tabmovie/Botmovie.styled';
+import { Base } from '../../../styles/components/main/tabmovie/Botmovie.styled';
 import TabMenu from './Tab';
 
 const BotMovieTab: React.FC = () => {

@@ -12,7 +12,7 @@ import {
   Container,
   MovieItem,
   MovieImage,
-} from '../styles/watchlist/WatchDrop.styled';
+} from '../../styles/components/watchlist/WatchDrop.styled';
 import { WatchBookmark } from './WatchBookMark';
 import { fetchWatchlist, WatchMovie } from '../../api/getWatchlist';
 

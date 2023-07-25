@@ -8,7 +8,7 @@ import {
   MyReviewControlButton,
   MyReviewRegisterButton,
   MyReviewWrapper,
-} from '../styles/MyReview.styled';
+} from '../../styles/components/movie/MyReview.styled';
 
 interface IMyReviewProps {
   myReview: IReview | null;

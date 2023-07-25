@@ -1,4 +1,8 @@
-import { Icon, Message, Wrapper } from '../styles/Empty.styled';
+import {
+  Icon,
+  Message,
+  Wrapper,
+} from '../../styles/components/share/Empty.styled';
 import errorIcon from '../../assets/errorIcon.svg';
 
 interface IEmptyProps {

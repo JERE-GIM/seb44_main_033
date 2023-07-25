@@ -29,7 +29,7 @@ import {
   MovieCoverBottom,
   UserController,
   RecommentListItemLink,
-} from './styles/Movie.styled';
+} from '../styles/pages/Movie.styled';
 import ConfirmModal from '../components/movie/ConfirmModal';
 import starIcon from '../assets/starIcon.png';
 import { useAppDispatch, useAppSelector } from '../redux/store';

@@ -4,7 +4,7 @@ import {
   RadioButton,
   ReversedStar,
   Star,
-} from '../styles/Rating.styled';
+} from '../../styles/components/movie/Rating.styled';
 import halfStarIcon from '../../assets/halfStarIcon.png';
 import { useState } from 'react';
 

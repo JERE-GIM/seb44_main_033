@@ -6,7 +6,7 @@ import {
   Image,
   Info,
   Title,
-} from '../../components/styles/rankmovie/Card.styled';
+} from '../../styles/components/main/rankmovie/Card.styled';
 import { Link } from 'react-router-dom';
 interface Props {
   movieId: number;

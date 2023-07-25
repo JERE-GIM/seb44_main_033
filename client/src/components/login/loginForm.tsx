@@ -2,6 +2,13 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setEmail, setPassword } from '../../redux/reducers/singupSlice';
 import { setAccessToken } from '../../redux/reducers/authSlice';
+import axios from 'axios';
+import { RootState } from '../../redux/store';
+import jwt_decode from 'jwt-decode';
+import NaverLogin from './Naverlogin';
+import KakaoLogin from './Kakaologin';
+import GoogleLogin from './Googlelogin';
+import { login, logout } from '../../redux/reducers/isLogin';
 import {
   ModalBackground,
   ModalContainer,
@@ -16,14 +23,7 @@ import {
   Signupmessage,
   Signuplink,
   OAuthbox,
-} from '../styles/LoginForm.styled';
-import axios from 'axios';
-import { RootState } from '../../redux/store';
-import jwt_decode from 'jwt-decode';
-import NaverLogin from './Naverlogin';
-import KakaoLogin from './Kakaologin';
-import GoogleLogin from './Googlelogin';
-import { login, logout } from '../../redux/reducers/isLogin';
+} from '../../styles/components/account/LoginForm.styled';
 
 const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useDispatch();

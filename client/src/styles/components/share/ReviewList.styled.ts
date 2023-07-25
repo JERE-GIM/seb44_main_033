@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { NextButton, PrevButton } from './rankmovie/Slider.styled';
+import { NextButton, PrevButton } from '../main/rankmovie/Slider.styled';
 
 export const ReviewListWrapper = styled.ul`
   .slick-active:not(:first-child) {

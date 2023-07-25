@@ -4,7 +4,7 @@ import {
   RadioButton,
   ReversedStar,
   Star,
-} from '../styles/ReviewStars.styled';
+} from '../../styles/components/share/ReviewStars.styled';
 import halfStarIcon from '../../assets/halfStarIcon.png';
 import { ratingValues } from './Rating';
 

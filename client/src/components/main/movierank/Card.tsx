@@ -8,7 +8,7 @@ import {
   Title,
   Keyword,
   Ranking,
-} from '../../styles/rankmovie/Card.styled';
+} from '../../../styles/components/main/rankmovie/Card.styled';
 
 interface Props {
   rank?: number;
