@@ -19,7 +19,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,7 +31,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -93,7 +96,6 @@ public class MovieService {
         return movies;
     }
 
-
     public List<MovieDto.Response> getSimilarMovies(long movieId) {
         MovieDetail movieDetail = findVerifiedMovie(movieId);
 
@@ -101,7 +103,7 @@ public class MovieService {
         long genreId = movieDetailGenre.getGenre().getGenreId();
 
         List<MovieDetail> similarMovieDetails =
-                movieDetailGenreRepository.findSimilarMovieDetailsWithVote(genreId, movieId, PageRequest.of(0,10, Sort.unsorted()));
+                movieDetailGenreRepository.findSimilarMovieDetailsWithVote(genreId, movieId, PageRequest.of(0, 10, Sort.unsorted()));
 
         // 유사 영화 DTO 리스트 생성
         List<MovieDto.Response> similarMovieDTOs = new ArrayList<>();
@@ -127,15 +129,15 @@ public class MovieService {
     public boolean findWatchlistMovie(Long movieId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication.getAuthorities().toString().equals("[ROLE_USER]")) {
+        if (authentication.getAuthorities().toString().equals("[ROLE_USER]")) {
             String email = authentication.getName();
-            User user  = userRepository.findUserByEmail(email);
-            if(user.getWatchlist() == null) {
+            User user = userRepository.findUserByEmail(email);
+            if (user.getWatchlist() == null) {
                 return false;
             } else {
                 List<WatchlistMovie> watchlistMovies = user.getWatchlist().getWatchlistMovies();
-                for(WatchlistMovie watchlistMovie : watchlistMovies) {
-                    if(watchlistMovie.getMovie().getMovieId() == movieId) {
+                for (WatchlistMovie watchlistMovie : watchlistMovies) {
+                    if (watchlistMovie.getMovie().getMovieId() == movieId) {
                         return true;
                     }
                 }

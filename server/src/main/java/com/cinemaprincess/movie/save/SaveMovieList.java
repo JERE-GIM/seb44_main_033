@@ -3,7 +3,9 @@ package com.cinemaprincess.movie.save;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
+import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
+import com.cinemaprincess.movie.vote.MovieVote;
 import com.cinemaprincess.utils.RestTemplateConfig;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -12,8 +14,6 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -56,9 +57,10 @@ public class SaveMovieList {
     }
 
     // 멀티스레딩으로 DB에 저장
-    public void getMovieList() {
+    public List<Movie> getMovieList() {
         ExecutorService executorService = Executors.newFixedThreadPool(30);
 
+        List<Movie> allMovies = new ArrayList<>();
         try {
             List<CompletableFuture<List<Movie>>> futures = dateMap.entrySet().stream()
                     .flatMap(entry -> {
@@ -69,9 +71,7 @@ public class SaveMovieList {
                         return IntStream.rangeClosed(1, pages)
                                 .mapToObj(i -> CompletableFuture.supplyAsync(() -> {
                                     String url = buildMovieListUrl(startDate, endDate, i);
-                                    ResponseEntity<String> response = restTemplateConfig.restTemplate().exchange(url, HttpMethod.GET, null, String.class);
-                                    String responseBody = response.getBody();
-                                    return parseMovieList(responseBody);
+                                    return parseMovieList(restTemplateConfig.restTemplate(url));
                                 }, executorService));
                     })
                     .collect(Collectors.toList());
@@ -82,11 +82,27 @@ public class SaveMovieList {
                             .flatMap(List::stream)
                             .collect(Collectors.toList()));
 
-            List<Movie> allMovies = combinedFuture.get();
+            allMovies = combinedFuture.get();
 
             movieJdbcRepository.saveMovies(allMovies);
             log.info("Movie 저장 완료");
 
+            return allMovies;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            executorService.shutdown();
+        }
+
+        return allMovies;
+    }
+
+    public List<MovieDetail> saveMovieDetails() {
+        ExecutorService executorService = Executors.newFixedThreadPool(30);
+
+        List<Movie> allMovies = this.getMovieList();
+        List<MovieDetail> movieDetails = new ArrayList<>();
+        try {
             List<CompletableFuture<MovieDetail>> detailFutures = allMovies.stream()
                     .map(movie -> CompletableFuture.supplyAsync(() -> {
                         MovieDetail movieDetail = saveMovieDetail.getMovieDetail(movie.getMovieId());
@@ -100,11 +116,41 @@ public class SaveMovieList {
                             .map(CompletableFuture::join)
                             .collect(Collectors.toList()));
 
-            List<MovieDetail> movieDetails = movieDetailsFuture.get();
+            movieDetails = movieDetailsFuture.get();
 
             movieJdbcRepository.saveMovieDetails(movieDetails);
 
             log.info("MovieDetail 저장 완료");
+
+            return movieDetails;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            executorService.shutdown();
+        }
+
+        return movieDetails;
+    }
+
+    public void saveMovieVoteAndGenreAndProvider() {
+        ExecutorService executorService = Executors.newFixedThreadPool(30);
+
+        List<MovieDetail> movieDetails = this.saveMovieDetails();
+        try {
+            List<CompletableFuture<MovieVote>> voteFutures = movieDetails.stream()
+                    .map(movieDetail -> CompletableFuture.supplyAsync(movieDetail::getMovieVote, executorService))
+                    .collect(Collectors.toList());
+
+            CompletableFuture<List<MovieVote>> movieVotesFuture = CompletableFuture.allOf(voteFutures.toArray(new CompletableFuture[0]))
+                    .thenApply(v -> voteFutures.stream()
+                            .map(CompletableFuture::join)
+                            .collect(Collectors.toList()));
+
+            List<MovieVote> movieVotes = movieVotesFuture.get();
+
+            movieJdbcRepository.saveMovieVote(movieVotes);
+
+            log.info("MovieVote 저장 완료");
 
             List<CompletableFuture<List<MovieDetailGenre>>> movieDetailGenreFutures = movieDetails.stream()
                     .map(movieDetail -> CompletableFuture.supplyAsync(movieDetail::getMovieDetailGenres, executorService))
@@ -124,6 +170,26 @@ public class SaveMovieList {
             movieJdbcRepository.saveMovieDetailGenres(movieDetailGenres);
 
             log.info("MovieDetailGenre 저장 완료");
+
+            List<CompletableFuture<List<MovieDetailWatchProvider>>> movieDetailProviderFutures = movieDetails.stream()
+                    .map(movieDetail -> CompletableFuture.supplyAsync(movieDetail::getMovieDetailWatchProviders, executorService))
+                    .collect(Collectors.toList());
+
+            CompletableFuture<Void> allMovieDetailProvidersFuture = CompletableFuture.allOf(movieDetailProviderFutures.toArray(new CompletableFuture[0]));
+
+            CompletableFuture<List<MovieDetailWatchProvider>> movieDetailProvidersFuture = allMovieDetailProvidersFuture.thenApply(v ->
+                    movieDetailProviderFutures.stream()
+                            .map(CompletableFuture::join)
+                            .flatMap(List::stream)
+                            .collect(Collectors.toList())
+            );
+
+            List<MovieDetailWatchProvider> movieDetailWatchProviders = movieDetailProvidersFuture.get();
+
+            movieJdbcRepository.saveMovieDetailWatchProviders(movieDetailWatchProviders);
+
+            log.info("MovieDetailProviders 저장 완료");
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -204,7 +270,7 @@ public class SaveMovieList {
             startDate = nextDate.plusDays(1);
             log.info("{}, {}, {}p", key, value, pages);
             // 500p가 되면 DB에 저장
-            getMovieList();
+            this.saveMovieVoteAndGenreAndProvider();
             dateMap.clear();
         }
     }

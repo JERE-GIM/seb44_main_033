@@ -1,6 +1,5 @@
 package com.cinemaprincess.movie.controller;
 
-import com.cinemaprincess.genre.GenreService;
 import com.cinemaprincess.movie.dto.MovieDetailResponseDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
@@ -9,8 +8,6 @@ import com.cinemaprincess.movie.save.SaveKoreaMovie;
 import com.cinemaprincess.movie.save.SaveLatestMovie;
 import com.cinemaprincess.movie.save.SaveMovieList;
 import com.cinemaprincess.movie.service.MovieService;
-import com.cinemaprincess.movie.vote.SaveMovieVote;
-import com.cinemaprincess.movie.watch_provider.WatchProviderService;
 import com.cinemaprincess.response.MovieMultiResponseDto;
 import com.cinemaprincess.response.SingleResponseDto;
 import com.cinemaprincess.review.dto.ReviewResponseDto;
@@ -21,9 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/movies")
@@ -35,9 +31,6 @@ public class MovieController {
     private final SaveMovieList saveMovieList;
     private final SaveKoreaMovie saveKoreaMovie;
     private final SaveLatestMovie saveLatestMovie;
-    private final SaveMovieVote movieVote;
-    private final GenreService genreService;
-    private final WatchProviderService watchProviderService;
 
     // 영화 상세조회
     @GetMapping("/{movie-id}")
@@ -55,6 +48,7 @@ public class MovieController {
 
         return new ResponseEntity<>(new MovieMultiResponseDto<>(movieDetailResponseDto, responseDtos, reviewPage), HttpStatus.OK);
     }
+
     // 로그인 이후에 영화 상세조회
     @GetMapping("/{movie-id}/{user-id}")
     public ResponseEntity getMovie(@PathVariable("movie-id") long movieId,
@@ -114,25 +108,18 @@ public class MovieController {
                 new SingleResponseDto<>(movieMapper.moviesToMovieResponseDtos(movies)), HttpStatus.OK);
     }
 
+    // 영화 업데이트
     @PostMapping("/save")
     public ResponseEntity saveMovies() {
-        String start = LocalTime.now().toString();
+        String start = LocalDate.now().toString();
         saveLatestMovie.setDateMap(start, "2023-12-31");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/save/vote")
-    public ResponseEntity saveVote() throws ExecutionException, InterruptedException {
-        movieVote.getMovieVote();
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
+    // DB 초기 저장
     @PostMapping("/init")
     public ResponseEntity initialize() {
-        genreService.getGenreList();
-        watchProviderService.getProviderList();
         saveMovieList.setDateMap("1950-01-01", "2023-12-31");
         saveKoreaMovie.setDateMap("1950-01-01", "2023-12-31");
         saveLatestMovie.setDateMap("2023-01-01", "2023-12-31");

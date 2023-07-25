@@ -1,19 +1,14 @@
-package com.cinemaprincess.movie.watch_provider;
+package com.cinemaprincess.movie.watch_provider.entity;
 
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.List;
 
-
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @Entity
 public class WatchProvider {
     @Id

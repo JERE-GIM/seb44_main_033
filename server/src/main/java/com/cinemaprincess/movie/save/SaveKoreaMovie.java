@@ -1,6 +1,7 @@
 package com.cinemaprincess.movie.save;
 
 import com.cinemaprincess.movie.entity.Movie;
+import com.cinemaprincess.movie.entity.MovieDetail;
 import com.cinemaprincess.movie.repository.MovieJdbcRepository;
 import com.cinemaprincess.utils.RestTemplateConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,18 @@ public class SaveKoreaMovie extends SaveMovieList {
     }
 
     @Override
-    public void getMovieList() {
-        super.getMovieList();
+    public List<Movie> getMovieList() {
+        return super.getMovieList();
+    }
+
+    @Override
+    public List<MovieDetail> saveMovieDetails() {
+        return super.saveMovieDetails();
+    }
+
+    @Override
+    public void saveMovieVoteAndGenreAndProvider() {
+        super.saveMovieVoteAndGenreAndProvider();
     }
 
     @Override

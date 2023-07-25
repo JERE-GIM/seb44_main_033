@@ -1,9 +1,6 @@
 package com.cinemaprincess.statistics.controller;
 
-import com.cinemaprincess.genre.GenreService;
-import com.cinemaprincess.movie.entity.Movie;
-import com.cinemaprincess.movie.service.MovieService;
-import com.cinemaprincess.review.entity.Review;
+import com.cinemaprincess.genre.service.GenreService;
 import com.cinemaprincess.review.service.ReviewService;
 import com.cinemaprincess.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class MovieDetailCache {
+public class MovieDetailMap {
     private Map<Long, MovieDetail> movieDetailMap = new HashMap<>();
 
     public void addMovieDetail(MovieDetail movieDetail) {

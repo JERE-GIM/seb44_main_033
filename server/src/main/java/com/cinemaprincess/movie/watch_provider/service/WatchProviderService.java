@@ -1,15 +1,16 @@
-package com.cinemaprincess.movie.watch_provider;
+package com.cinemaprincess.movie.watch_provider.service;
 
-import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.movie.watch_provider.entity.WatchProvider;
+import com.cinemaprincess.movie.watch_provider.entity.WatchProviderMap;
+import com.cinemaprincess.movie.watch_provider.repository.WatchProviderRepository;
+import com.cinemaprincess.utils.RestTemplateConfig;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
@@ -20,10 +21,12 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class WatchProviderService {
-    String key = "8799558ac2f2609cd5ff89aa63a87f10";
-    RestTemplate restTemplate = new RestTemplate();
     private final WatchProviderRepository watchProviderRepository;
-    private final WatchProviderCache watchProviderCache;
+    private final WatchProviderMap watchProviderMap;
+    private final RestTemplateConfig restTemplateConfig;
+
+    @Value("${tmdb.key}")
+    String key;
 
     public String buildProviderUrl() {
         return UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/watch/providers/movie")
@@ -35,12 +38,10 @@ public class WatchProviderService {
     public void getProviderList() {
         try {
             String url = buildProviderUrl();
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-            String responseBody = response.getBody();
-            List<WatchProvider> watchProviders = parseProviderList(responseBody);
+            List<WatchProvider> watchProviders = parseProviderList(restTemplateConfig.restTemplate(url));
 
             for (WatchProvider provider : watchProviders) {
-                watchProviderCache.addWatchProvider(provider);
+                watchProviderMap.addWatchProvider(provider);
             }
 
             watchProviderRepository.saveAll(watchProviders);

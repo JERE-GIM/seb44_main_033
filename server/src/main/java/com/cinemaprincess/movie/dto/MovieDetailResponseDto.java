@@ -1,13 +1,11 @@
 package com.cinemaprincess.movie.dto;
 
-import com.cinemaprincess.genre.GenreDto;
-import com.cinemaprincess.movie.vote.MovieVote;
+import com.cinemaprincess.genre.dto.GenreDto;
 import com.cinemaprincess.movie.vote.MovieVoteDto;
-import com.cinemaprincess.movie.watch_provider.WatchProviderDto;
+import com.cinemaprincess.movie.watch_provider.dto.WatchProviderDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Range;
 
 import java.util.List;
 
