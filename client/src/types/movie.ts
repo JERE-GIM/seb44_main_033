@@ -51,7 +51,7 @@ export interface IMovieInfo {
   backdropPath: string;
   posterPath: string;
   videoPath: string;
-  releaseDate: number;
+  releaseDate: string;
   genres: Array<IGenre>;
   certification: string;
   runtime: number;
