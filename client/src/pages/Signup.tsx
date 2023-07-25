@@ -1,4 +1,4 @@
-import SignupForm1 from '../components/signup/SignupForm1';
+import SignupForm1 from '../components/account/SignupForm1';
 import { SignupStyle } from '../styles/pages/Signup.styled';
 
 export default function Signup() {

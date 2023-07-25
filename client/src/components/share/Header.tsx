@@ -16,8 +16,8 @@ import {
   MypageContainer,
   MyPageId,
 } from '../../styles/components/share/Header.styled';
-import SignupForm1 from '../signup/SignupForm1'; // SignupForm1 컴포넌트 추가
-import LoginForm from '../login/loginForm'; // SignupForm1 컴포넌트 추가
+import SignupForm1 from '../account/SignupForm1'; // SignupForm1 컴포넌트 추가
+import LoginForm from '../account/loginForm';
 
 export default function Header() {
   const isLoggedIn = useAppSelector((state: RootState) => state.isLogin.status);

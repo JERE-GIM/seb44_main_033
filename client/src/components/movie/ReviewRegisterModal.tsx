@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IReview } from '../../types/movie';
-import Rating from '../share/Rating';
+import Rating from './Rating';
 import {
   Background,
   CloseButton,

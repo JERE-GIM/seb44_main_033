@@ -6,7 +6,7 @@ import {
   PrevButtonTransformed,
   ReviewListWrapper,
 } from '../../styles/components/share/ReviewList.styled';
-import ReviewListitem from '../movie/ReviewListitem';
+import ReviewListitem from './ReviewListitem';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 
 export const REVIEW_SLIDE_TO_SHOW = 4;

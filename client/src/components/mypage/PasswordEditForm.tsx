@@ -4,7 +4,7 @@ import {
   TextInputLabel,
 } from '../../styles/components/mypage/UserInfoEditModal.styled';
 import { fetchUpdatePassword } from '../../api/userInfo';
-import { isPasswordValid } from '../signup/SignupForm1';
+import { isPasswordValid } from '../account/SignupForm1';
 import {
   EditCompleteButton,
   PasswordEditContainer,

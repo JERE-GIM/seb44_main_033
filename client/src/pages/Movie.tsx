@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ReviewRegisterModal from '../components/movie/ReviewRegisterModal';
 import { IMovieResponse, IReview } from '../types/movie';
-import Rating from '../components/share/Rating';
+import Rating from '../components/movie/Rating';
 import {
   Star,
   AverageRatingContainer,
@@ -30,7 +30,7 @@ import {
   UserController,
   RecommentListItemLink,
 } from '../styles/pages/Movie.styled';
-import ConfirmModal from '../components/movie/ConfirmModal';
+import ConfirmModal from '../components/share/ConfirmModal';
 import starIcon from '../assets/starIcon.png';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { MODAL_ROLE, modalAction } from '../redux/reducers/modal';
@@ -45,11 +45,11 @@ import ReviewList from '../components/share/ReviewList';
 import MovieInfo from '../components/movie/MovieInfo';
 import MyReview from '../components/movie/MyReview';
 import YouTube from 'react-youtube';
-import LoginForm from '../components/login/loginForm';
 import { WatchBookmark } from '../components/watch/WatchBookMark';
-import Empty from '../components/share/Empty';
+import EmptyMessage from '../components/share/EmptyMessage';
 import TabCard from '../components/main/tabmovie/TabCard';
 import Error from './Error';
+import LoginForm from '../components/account/loginForm';
 
 export default function Movie() {
   const [movieInfo, setMovieInfo] = useState<IMovieResponse | null>(null);
@@ -192,7 +192,7 @@ export default function Movie() {
             <MovieReviews>
               <SectionTitle>영화 리뷰</SectionTitle>
               {movieInfo.reviews.length === 0 ? (
-                <Empty message="리뷰가 없습니다. 첫 리뷰를 남겨보세요!" />
+                <EmptyMessage message="리뷰가 없습니다. 첫 리뷰를 남겨보세요!" />
               ) : (
                 <ReviewList reviewList={movieInfo.reviews} />
               )}

@@ -12,7 +12,7 @@ import {
   ConfirmCheckboxText,
   ConfirmCheckboxInput,
   Background,
-} from '../../styles/components/movie/ConfirmModal.styled';
+} from '../../styles/components/share/ConfirmModal.styled';
 
 interface IConfirmModal {
   message: string;

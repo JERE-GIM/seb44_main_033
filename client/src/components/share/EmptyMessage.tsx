@@ -5,11 +5,11 @@ import {
 } from '../../styles/components/share/Empty.styled';
 import errorIcon from '../../assets/errorIcon.svg';
 
-interface IEmptyProps {
+interface IEmptyMessageProps {
   message: string;
 }
 
-function Empty({ message }: IEmptyProps) {
+function EmptyMessage({ message }: IEmptyMessageProps) {
   return (
     <Wrapper>
       <Icon src={errorIcon} alt="error-icon" />
@@ -18,4 +18,4 @@ function Empty({ message }: IEmptyProps) {
   );
 }
 
-export default Empty;
+export default EmptyMessage;
