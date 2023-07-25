@@ -65,6 +65,7 @@ function PasswordEditForm() {
           type="password"
           id="currentPassword"
           name="currentPassword"
+          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리 입력해주세요."
           value={editPassword.currentPassword}
           onChange={handleChangePassword}
         />
@@ -75,6 +76,7 @@ function PasswordEditForm() {
           type="password"
           id="newPassword"
           name="newPassword"
+          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리 입력해주세요."
           value={editPassword.newPassword}
           onChange={handleChangePassword}
         />
@@ -87,6 +89,7 @@ function PasswordEditForm() {
           type="password"
           id="newPasswordConfirm"
           name="newPasswordConfirm"
+          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리 입력해주세요."
           value={editPassword.newPasswordConfirm}
           onChange={handleChangePassword}
         />

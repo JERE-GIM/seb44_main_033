@@ -82,6 +82,10 @@ export const TextInput = styled.input`
   padding: 0 10px;
   background-color: var(--gray);
   font-size: 16px;
+
+  &::placeholder {
+    font-size: 10px;
+  }
 `;
 
 export const InputContainer = styled.div`
