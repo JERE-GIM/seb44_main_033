@@ -70,7 +70,7 @@ export const Profile = styled.img`
 
 export const FileInputLabel = styled.label`
   cursor: pointer;
-  width: 100px;
+  width: fit-content;
   height: 30px;
 
   display: flex;

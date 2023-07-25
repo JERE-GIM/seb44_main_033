@@ -34,3 +34,7 @@ export const PasswordEditContainer = styled.div`
 export const PasswordInput = styled(TextInput)`
   width: 200px;
 `;
+
+export const EditCompleteButton = styled(PasswordButton)`
+  margin-left: 10px;
+`;

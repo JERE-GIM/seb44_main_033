@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import {
-  PasswordButton,
+  EditCompleteButton,
   PasswordEditContainer,
   PasswordInput,
 } from '../styles/PasswordEditForm.styled';
@@ -93,10 +93,10 @@ function PasswordEditForm() {
           value={editPassword.newPasswordConfirm}
           onChange={handleChangePassword}
         />
+        <EditCompleteButton type="button" onClick={handleCompleteEditPassword}>
+          변경 완료
+        </EditCompleteButton>
       </TextInputContainer>
-      <PasswordButton type="button" onClick={handleCompleteEditPassword}>
-        변경 완료
-      </PasswordButton>
     </PasswordEditContainer>
   );
 }
