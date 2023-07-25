@@ -2,9 +2,9 @@ import React, { useCallback, useState } from 'react';
 import {
   PasswordButton,
   PasswordEditContainer,
+  PasswordInput,
 } from '../styles/PasswordEditForm.styled';
 import {
-  TextInput,
   TextInputContainer,
   TextInputLabel,
 } from '../styles/UserInfoEditModal.styled';
@@ -61,22 +61,22 @@ function PasswordEditForm() {
     <PasswordEditContainer>
       <TextInputContainer>
         <TextInputLabel htmlFor="currentPassword">현재 비밀번호</TextInputLabel>
-        <TextInput
+        <PasswordInput
           type="password"
           id="currentPassword"
           name="currentPassword"
-          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리 입력해주세요."
+          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리"
           value={editPassword.currentPassword}
           onChange={handleChangePassword}
         />
       </TextInputContainer>
       <TextInputContainer>
         <TextInputLabel htmlFor="newPassword">새 비밀번호</TextInputLabel>
-        <TextInput
+        <PasswordInput
           type="password"
           id="newPassword"
           name="newPassword"
-          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리 입력해주세요."
+          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리"
           value={editPassword.newPassword}
           onChange={handleChangePassword}
         />
@@ -85,11 +85,11 @@ function PasswordEditForm() {
         <TextInputLabel htmlFor="newPasswordConfirm">
           새 비밀번호 확인
         </TextInputLabel>
-        <TextInput
+        <PasswordInput
           type="password"
           id="newPasswordConfirm"
           name="newPasswordConfirm"
-          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리 입력해주세요."
+          placeholder="숫자, 영문, 특수문자를 혼합하여 8-20자리"
           value={editPassword.newPasswordConfirm}
           onChange={handleChangePassword}
         />

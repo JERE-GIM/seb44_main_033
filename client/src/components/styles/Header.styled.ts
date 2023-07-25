@@ -9,7 +9,6 @@ export const HeaderContainer = styled.header<HeaderContainerProps>`
   justify-content: space-between;
   width: 100vw;
   height: 60px;
-  border-bottom: 3px solid #f1c6d4;
   position: fixed;
   z-index: var(--z-index-2); /* 변경된 부분 */
   top: 0;
