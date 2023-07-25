@@ -16,7 +16,13 @@ function MovieInfo({ movieInfo }: IMovieInfoProps) {
       <MovieInfoContainer>
         <MovieInfoText>
           <MovieInfoSpan>개봉</MovieInfoSpan>
-          <MovieInfoSpan>{movieInfo.releaseDate}</MovieInfoSpan>
+          <MovieInfoSpan>{`${movieInfo.releaseDate.slice(
+            0,
+            4,
+          )}년 ${movieInfo.releaseDate.slice(
+            5,
+            7,
+          )}월 ${movieInfo.releaseDate.slice(8, 10)}일`}</MovieInfoSpan>
         </MovieInfoText>
         <MovieInfoText>
           <MovieInfoSpan>장르</MovieInfoSpan>
@@ -26,7 +32,13 @@ function MovieInfo({ movieInfo }: IMovieInfoProps) {
         </MovieInfoText>
         <MovieInfoText>
           <MovieInfoSpan>등급</MovieInfoSpan>
-          <MovieInfoSpan>{movieInfo.certification}세</MovieInfoSpan>
+          <MovieInfoSpan>
+            {movieInfo.certification === ''
+              ? '미정'
+              : movieInfo.certification === 'All'
+              ? '전체'
+              : `${movieInfo.certification}세`}
+          </MovieInfoSpan>
         </MovieInfoText>
         <MovieInfoText>
           <MovieInfoSpan>러닝타임</MovieInfoSpan>

@@ -78,10 +78,15 @@ export const TextInput = styled.input`
   outline: none;
   border: none;
   border-radius: 5px;
+  width: 250px;
   height: 30px;
   padding: 0 10px;
   background-color: var(--gray);
   font-size: 16px;
+
+  &::placeholder {
+    font-size: 10px;
+  }
 `;
 
 export const InputContainer = styled.div`

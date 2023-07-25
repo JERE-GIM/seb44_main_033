@@ -14,7 +14,7 @@ export interface IMovieProvider {
   providerId: number;
   providerName: string;
   logoPath: string;
-  url: string;
+  link: string;
 }
 
 export interface IMovieVote {
@@ -51,7 +51,7 @@ export interface IMovieInfo {
   backdropPath: string;
   posterPath: string;
   videoPath: string;
-  releaseDate: number;
+  releaseDate: string;
   genres: Array<IGenre>;
   certification: string;
   runtime: number;

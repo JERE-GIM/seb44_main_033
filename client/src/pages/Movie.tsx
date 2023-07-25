@@ -206,7 +206,7 @@ export default function Movie() {
                       src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${provider.logoPath}`}
                     />
                     <OTTText
-                      to={provider.url}
+                      to={provider.link}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

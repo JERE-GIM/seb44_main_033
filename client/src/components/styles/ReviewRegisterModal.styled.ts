@@ -79,7 +79,8 @@ export const CommentTextarea = styled.textarea`
 
 export const Controller = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const SubmitButton = styled.button`
@@ -93,4 +94,13 @@ export const SubmitButton = styled.button`
   font-size: 15px;
   background-color: var(--purple);
   color: white;
+`;
+
+export const InvalidMessage = styled.p`
+  font-size: 15px;
+  color: var(--red);
+`;
+
+export const TextLength = styled.p`
+  color: var(--gray-dark);
 `;

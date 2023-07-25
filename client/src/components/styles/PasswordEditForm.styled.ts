@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { TextInput } from './UserInfoEditModal.styled';
 
 export const PasswordButton = styled.button`
   height: 30px;
@@ -28,4 +29,12 @@ export const PasswordEditContainer = styled.div`
     bottom: 20px;
     right: -80px;
   }
+`;
+
+export const PasswordInput = styled(TextInput)`
+  width: 200px;
+`;
+
+export const EditCompleteButton = styled(PasswordButton)`
+  margin-left: 10px;
 `;

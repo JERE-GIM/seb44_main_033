@@ -26,10 +26,13 @@ export const WatchBookmark: React.FC<BookmarkButtonProps> = ({
   const handleBookmarkClick = () => {
     if (!isLogin.status) return dispatch(modalAction.open(MODAL_ROLE.LOGIN));
     if (!isBookmarked)
-      fetchAddToWatchlist(movieId).catch((err) => console.log(err));
-    else fetchDeleteInWatchlist(movieId).catch((err) => console.log(err));
-
-    setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked);
+      fetchAddToWatchlist(movieId)
+        .then(() => setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked))
+        .catch((err) => console.log(err));
+    else
+      fetchDeleteInWatchlist(movieId)
+        .then(() => setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked))
+        .catch((err) => console.log(err));
   };
 
   return (

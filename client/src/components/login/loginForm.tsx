@@ -47,7 +47,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             localStorage.removeItem('accessToken');
           } else {
             // 유효하면 추가?
-            config.headers.Authorization = `Bearer ${token}`;
+            config.headers.Authorization = `${token}`;
           }
         }
         return config;
