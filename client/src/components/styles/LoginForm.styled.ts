@@ -58,6 +58,9 @@ export const EmailInput = styled.input`
   &:focus {
     outline: none;
   }
+  &::placeholder {
+    font-size: 14px;
+  }
 `;
 export const PasswordBox = styled.div`
   border: 1px solid #f5f5f5;
@@ -74,6 +77,9 @@ export const PasswordInput = styled.input`
   border: white;
   &:focus {
     outline: none;
+  }
+  &::placeholder {
+    font-size: 14px;
   }
 `;
 export const LoginButton = styled.button`
@@ -106,6 +112,7 @@ export const Signuplink = styled.div`
   margin-top: 30px;
   margin-right: 20px;
   color: #9933ff;
+  cursor: pointer;
 `;
 export const OAuthbox = styled.div`
   margin-top: 20px;
@@ -115,15 +122,18 @@ export const KakaoLogo = styled.img`
   width: 60px;
   height: 60px;
   margin-right: 50px;
+  cursor: pointer;
 `;
 export const NaverLogo = styled.img`
   border-radius: 50%;
   width: 60px;
   height: 60px;
+  cursor: pointer;
 `;
 export const GoogleLogo = styled.img`
   border-radius: 50%;
   width: 60px;
   height: 60px;
   margin-left: 50px;
+  cursor: pointer;
 `;

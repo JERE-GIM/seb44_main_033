@@ -190,14 +190,14 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <UserNameBox>
               <UserNameInput
                 value={username}
-                placeholder="username"
+                placeholder="공백은 사용할 수 없습니다"
                 onChange={handleusernameChange}
               />
             </UserNameBox>
             <EmailBox>
               <EmailInput
                 value={email}
-                placeholder="Email"
+                placeholder="abcde@email.com"
                 onChange={handleEmailChange}
               />
             </EmailBox>
@@ -205,7 +205,7 @@ const SignupForm1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <PasswordInput
                 value={password}
                 type="password"
-                placeholder="Password"
+                placeholder="영문, 숫자, 특수문자를 각 1자씩 포함한 8-20글자"
                 onChange={handlePasswordChange}
               />
             </PasswordBox>

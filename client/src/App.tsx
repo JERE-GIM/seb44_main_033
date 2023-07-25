@@ -25,13 +25,14 @@ const router = createBrowserRouter([
       { path: 'statistics', element: <Statistics /> },
       { path: 'statistics/genre', element: <YearlyGenres /> },
       { path: 'statistics/users', element: <Statisticsusers /> },
-      { path: 'login/oauth2/code/kakao', element: <OAuthHandler /> }, // 수현님과 상의 필요 리다이렉트url 수정
+      { path: 'login/oauth2/code/kakao', element: <OAuthHandler /> },
       { path: 'login/oauth2/code/naver', element: <OAuthHandler /> },
       { path: 'login/oauth2/code/google', element: <OAuthHandler /> },
     ],
   },
 ]);
-
+// 주소/login/oauth2/code/google의 경우 쿼리파람을 가져오지않으니까 OauthHandler가 실행이 안됨.
+// 쿼리파람을 유지하면서 리다이렉트 x > 리다이렉트 url 변경 or 억세스토큰을 헤더에서 추출(x)
 function App() {
   return <RouterProvider router={router} />;
 }

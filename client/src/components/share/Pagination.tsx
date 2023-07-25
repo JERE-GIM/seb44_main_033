@@ -41,7 +41,7 @@ export const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
   padding: 1em 0;
-  margin: 30px 10px 0px 0px;
+  margin: 30px 0px 0px 0px;
 `;
 
 export const PageButton = styled.button`

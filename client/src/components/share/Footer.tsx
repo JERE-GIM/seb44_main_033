@@ -26,7 +26,6 @@ const FETeamContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  margin-left: -62px;
   font-size: 16px;
 `;
 const TeamName = styled.div`

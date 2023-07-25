@@ -130,14 +130,14 @@ export default function Statistics() {
               <FontAwesomeIcon icon={faHeart} size="9x" color="#2f88ff" />
             </ImageinBox>
             <ExplainBox>
-              <TitleBox>회원 유형별 선호 장르</TitleBox>
+              <TitleBox>회원 유형별 선호장르</TitleBox>
               <ExplaininBox>
                 성별, 나이를 기준으로, Cinema Princess 사용자 여러분이 선호하는
                 영화의 장르와 순위를 조회할 수 있습니다.
               </ExplaininBox>
-              <Link to="/statistics/users" onClick={blockUnloggedInUser}>
-                <BoxButton>자세히 보기</BoxButton>
-              </Link>
+              {/* <Link to="/statistics/users" onClick={blockUnloggedInUser}> */}
+              <BoxButton>🔨준비중</BoxButton>
+              {/* </Link> */}
             </ExplainBox>
           </BoxContainer>
           <BoxContainer>

@@ -14,6 +14,7 @@ const Searchbar: React.FC = () => {
 
   const handleSearch = () => {
     navigate('/search', { state: { searchTerm } });
+    setSearchTerm('');
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -25,6 +26,7 @@ const Searchbar: React.FC = () => {
       <SearchInput
         type="text"
         placeholder="영화와 관련된 검색어를 입력해주세요."
+        value={searchTerm}
         onChange={handleInputChange}
       />
       <SearchButton onClick={handleSearch}>

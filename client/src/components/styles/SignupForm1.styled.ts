@@ -58,6 +58,9 @@ export const UserNameInput = styled.input`
   &:focus {
     outline: none;
   }
+  &::placeholder {
+    font-size: 14px;
+  }
 `;
 export const EmailBox = styled.div`
   border: 1px solid #f5f5f5;
@@ -75,6 +78,9 @@ export const EmailInput = styled.input`
   &:focus {
     outline: none;
   }
+  &::placeholder {
+    font-size: 16px;
+  }
 `;
 export const PasswordBox = styled.div`
   border: 1px solid #f5f5f5;
@@ -88,9 +94,13 @@ export const PasswordInput = styled.input`
   background-color: #f5f5f5;
   margin: 15px 0px 0px 10px;
   font-size: 18px;
+  width: 340px;
   border: white;
   &:focus {
     outline: none;
+  }
+  &::placeholder {
+    font-size: 14px;
   }
 `;
 export const SignupButton = styled.button`
@@ -123,6 +133,7 @@ export const Loginlink = styled.div`
   margin-top: 30px;
   margin-right: 20px;
   color: #9933ff;
+  cursor: pointer;
 `;
 export const OAuthbox = styled.div`
   margin-top: 20px;
@@ -132,17 +143,20 @@ export const KakaoLogo = styled.img`
   width: 60px;
   height: 60px;
   margin-right: 50px;
+  cursor: pointer;
 `;
 export const NaverLogo = styled.img`
   border-radius: 50%;
   width: 60px;
   height: 60px;
+  cursor: pointer;
 `;
 export const GoogleLogo = styled.img`
   border-radius: 50%;
   width: 60px;
   height: 60px;
   margin-left: 50px;
+  cursor: pointer;
 `;
 //2페이지
 export const Container2page = styled.div`
