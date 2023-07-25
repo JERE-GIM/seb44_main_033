@@ -19,7 +19,7 @@ const SearchCard: React.FC<Props> = ({ movieId, posterPath, title }) => (
       <ImageWrapper>
         <Link to={`/movie/${movieId}`} key={movieId}>
           <Image
-            src={`https://image.tmdb.org/t/p/w200/${posterPath}`}
+            src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w500/${posterPath}`}
             alt="movie poster"
           />
         </Link>

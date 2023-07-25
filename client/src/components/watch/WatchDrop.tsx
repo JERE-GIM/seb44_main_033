@@ -107,7 +107,7 @@ export default function WatchDrop() {
             <MovieItem to={`/movie/${movie.movieId}`} key={movie.movieId}>
               <div style={{ position: 'relative' }}>
                 <MovieImage
-                  src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${movie.posterPath}`}
+                  src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w500/${movie.posterPath}`}
                   alt={movie.title}
                 />
                 <WatchBookmark

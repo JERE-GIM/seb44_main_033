@@ -15,7 +15,7 @@ const MonthCard: React.FC<Props> = ({ posterPath }) => (
     <Base>
       <ImageWrapper>
         <Image
-          src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w200/${posterPath}`}
+          src={`${process.env.REACT_APP_IMAGE_BASE_URL}/w500/${posterPath}`}
         />
       </ImageWrapper>
     </Base>
