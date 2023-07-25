@@ -11,6 +11,8 @@ import {
   Modal,
   MovieTitle,
   SubmitButton,
+  InvalidMessage,
+  TextLength,
 } from '../styles/ReviewRegisterModal.styled';
 import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
@@ -26,6 +28,8 @@ interface IReviewRegister {
   callback: () => void;
 }
 
+const MAX_CONTENT_LENGTH = 500;
+
 export default function ReviewRegister({
   movieTitle,
   movieId,
@@ -35,6 +39,7 @@ export default function ReviewRegister({
   callback,
 }: IReviewRegister) {
   const [content, setContent] = useState(myReview?.content || '');
+  const [invalidMessage, setInvalidMessage] = useState('');
   const dispatch = useAppDispatch();
 
   const handleFetchUpdateMyReview = (reviewId: number) => {
@@ -70,7 +75,9 @@ export default function ReviewRegister({
 
   const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!content) return;
+    if (!content) return setInvalidMessage('리뷰를 작성해주세요');
+    if (content.length >= MAX_CONTENT_LENGTH)
+      return setInvalidMessage('500자 이내로 작성해주세요');
     if (myReview) handleFetchUpdateMyReview(myReview.reviewId);
     else handleFetchCreateMyReview();
   };
@@ -78,6 +85,8 @@ export default function ReviewRegister({
   const handleChangeTextarea = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => setContent(event.target.value);
+
+  const handleFocusTextarea = () => setInvalidMessage('');
 
   return (
     <>
@@ -95,8 +104,11 @@ export default function ReviewRegister({
               placeholder="이 영화 어떠셨나요?"
               value={content}
               onChange={handleChangeTextarea}
+              onFocus={handleFocusTextarea}
             />
             <Controller>
+              <TextLength>{`${content.length}/500`}</TextLength>
+              <InvalidMessage>{invalidMessage}</InvalidMessage>
               <SubmitButton>저장</SubmitButton>
             </Controller>
           </Form>
