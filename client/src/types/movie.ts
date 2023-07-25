@@ -14,7 +14,7 @@ export interface IMovieProvider {
   providerId: number;
   providerName: string;
   logoPath: string;
-  url: string;
+  link: string;
 }
 
 export interface IMovieVote {
