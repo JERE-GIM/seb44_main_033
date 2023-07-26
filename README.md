@@ -53,7 +53,7 @@
 
 
 ### Doc
-[사용자 요구사항 정의서.pdf](https://github.com/codestates-seb/seb44_main_033/files/12167019/default.pdf) <br>
+[사용자 요구사항 정의서](https://github.com/codestates-seb/seb44_main_033/files/12167019/default.pdf) <br>
 [테이블 명세서](https://github.com/codestates-seb/seb44_main_033/files/12167010/_TEAM033.pdf) <br>
 [ERD](https://github.com/codestates-seb/seb44_main_033/assets/124702162/7287c96c-6905-4698-9f63-2b18c249c069) <br>
 [화면정의서](https://github.com/codestates-seb/seb44_main_033/files/12167021/default.pdf) <br>
