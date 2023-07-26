@@ -7,9 +7,9 @@ import Movie from './pages/Movie';
 import Search from './pages/Search';
 import Statistics from './pages/Statistics';
 import YearlyGenres from './pages/YearlyGenres';
-import OAuthHandler from './components/login/OauthHandler';
 import Statisticsusers from './pages/Statisticsusers';
 import Error from './pages/Error';
+import OAuthHandler from './components/account/OauthHandler';
 
 const router = createBrowserRouter([
   {

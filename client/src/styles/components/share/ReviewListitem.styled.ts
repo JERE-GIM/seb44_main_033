@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
-import ReviewStars from '../share/ReviewStars';
 import { Link } from 'react-router-dom';
+import ReviewStars from '../../../components/share/ReviewStars';
 
 export const Wrapper = styled.li`
   padding: 20px;

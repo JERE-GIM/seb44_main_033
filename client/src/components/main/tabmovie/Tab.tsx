@@ -10,7 +10,7 @@ import {
   TabMenuContainer,
   TabItem,
   TabContentContainer,
-} from '../../styles/tabmovie/Tab.styled';
+} from '../../../styles/components/main/tabmovie/Tab.styled';
 import { Link } from 'react-router-dom';
 
 export default function TabMenu() {

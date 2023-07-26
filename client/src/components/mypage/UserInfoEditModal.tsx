@@ -18,8 +18,8 @@ import {
   TextInput,
   TextInputContainer,
   TextInputLabel,
-} from '../styles/UserInfoEditModal.styled';
-import { PasswordButton } from '../styles/PasswordEditForm.styled';
+} from '../../styles/components/mypage/UserInfoEditModal.styled';
+import { PasswordButton } from '../../styles/components/mypage/PasswordEditForm.styled';
 import closeButton from '../../assets/closeButton.svg';
 import { useCallback, useEffect, useState } from 'react';
 import PasswordEditForm from './PasswordEditForm';

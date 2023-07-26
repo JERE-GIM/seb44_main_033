@@ -4,15 +4,15 @@ import {
   RadioButton,
   ReversedStar,
   Star,
-} from '../styles/ReviewStars.styled';
+} from '../../styles/components/share/ReviewStars.styled';
 import halfStarIcon from '../../assets/halfStarIcon.png';
-import { ratingValues } from './Rating';
+import { ratingValues } from '../movie/Rating';
 
-interface IStars {
+interface IReviewStarsProps {
   rating: number;
 }
 
-export default function ReviewStars({ rating }: IStars) {
+export default function ReviewStars({ rating }: IReviewStarsProps) {
   return (
     <Background>
       {ratingValues.map((ratingValue) => {

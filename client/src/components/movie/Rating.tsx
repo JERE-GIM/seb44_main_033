@@ -4,18 +4,18 @@ import {
   RadioButton,
   ReversedStar,
   Star,
-} from '../styles/Rating.styled';
+} from '../../styles/components/movie/Rating.styled';
 import halfStarIcon from '../../assets/halfStarIcon.png';
 import { useState } from 'react';
 
-interface IStars {
+interface IRatingProps {
   rating: number;
   setRating: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const ratingValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-export default function Stars({ rating, setRating }: IStars) {
+export default function Rating({ rating, setRating }: IRatingProps) {
   const [hoverValue, setHoverValue] = useState(0);
 
   return (

@@ -1,4 +1,4 @@
-import { Main, TopContainer, BotContainer } from '../pages/styles/Main.styled';
+import { Main, TopContainer, BotContainer } from '../styles/pages/Main.styled';
 import Topmovie from '../components/main/movierank/Topmovie';
 import BotMovieTab from '../components/main/tabmovie/Botmovietab';
 import MonthMovie from '../components/main/monthmovie/Monthmovie';

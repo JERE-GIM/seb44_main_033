@@ -11,8 +11,7 @@ import {
   Stars,
   Username,
   Wrapper,
-} from '../styles/ReviewListitem.styled';
-import profile from '../../assets/profile.png';
+} from '../../styles/components/share/ReviewListitem.styled';
 import thumbUp from '../../assets/thumb-up.svg';
 import { IReview } from '../../types/movie';
 import { fetchLikeReview, fetchUnlikeReview } from '../../api/movie';

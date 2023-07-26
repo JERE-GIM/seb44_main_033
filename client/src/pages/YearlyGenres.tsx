@@ -6,7 +6,7 @@ import {
   StatisticsHeader,
   StyledChart,
   Wrapper,
-} from './styles/YearlyGenres.styled';
+} from '../styles/pages/YearlyGenres.styled';
 import { fetchGetStatisticsYearlyGenres } from '../api/statistics';
 
 const CHART_FIELD = {

@@ -6,7 +6,7 @@ import {
   SearchbarContainer,
   SearchInput,
   SearchButton,
-} from '../styles/Searchbar.styled';
+} from '../../styles/components/share/Searchbar.styled';
 
 const Searchbar: React.FC = () => {
   const navigate = useNavigate();
