@@ -16,7 +16,7 @@
 
 ## 🌟 팀 소개
 
-| ![이정원](https://cdn.discordapp.com/attachments/1123485618928877589/1133592686255939675/image.png) | ![김형일](https://avatars.githubusercontent.com/u/124700383?v=4) | ![김종현](https://avatars.githubusercontent.com/u/124742974?v=4) | ![어수현](https://avatars.githubusercontent.com/u/124702162?v=4) | ![김휴](https://avatars.githubusercontent.com/u/124946199?v=4) | ![안형준](https://avatars.githubusercontent.com/u/121507312?v=4) | ![이하루](https://avatars.githubusercontent.com/u/79403962?v=4) |
+| ![이정원](https://cdn.discordapp.com/attachments/1123485618928877589/1133592686255939675/image.png) | ![김형일](https://avatars.githubusercontent.com/u/124700383?v=4) | ![김종현](https://avatars.githubusercontent.com/u/124742974?v=4) | <img width="420" alt="어수현" src="https://github.com/codestates-seb/seb44_main_033/assets/124702162/448b56f3-1800-44c2-bca8-3d253ed65ddd"> | ![김휴](https://avatars.githubusercontent.com/u/124946199?v=4) | ![안형준](https://avatars.githubusercontent.com/u/121507312?v=4) | ![이하루](https://avatars.githubusercontent.com/u/79403962?v=4) |
 | :-------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------------: | :------------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
 |           [이정원](https://github.com/hahagarden)            |              [김형일](https://github.com/hyeong-il)               |              [김종현](https://github.com/jonghyeon37)              |            [어수현](https://github.com/SuHyeonEo)             |               [김휴](https://github.com/KimHyu1)               |              [안형준](https://github.com/JERE-GIM)               |                [이하루](https://github.com/haruday97)               
 |                            FE 부팀장                            |                                FE                                |                                FE                                |                                BE 팀장                                |                              BE                               |                                  BE                                  |                               BE                                |
@@ -67,8 +67,23 @@
 
 **`어수현`**
 
+- 멤버쉽
+  - 멤버쉽 CRUD 구현
+  - 회원가입, 회원정보 수정 시 중복 검사 및 유효성 검증 구현
+  - 프로필 이미지 업로드 구현
 
+- 영화 찜 목록
+  - 영화 찜 목록 CRUD 구현
+
+- Spring Security
+  - JWT 토큰 인증 기반 로그인 구현
+  - OAuth 2.0 소셜 로그인 구현 (Google, Kakao, Naver)
+  - 회원별 역할 및 접근 권한 설정 구현
  
+- CI/CD
+  - CI/CD 환경 구축 및 백엔드 서버 배포 (Github Actions, AWS S3, AWS CodeDeploy, AWS EC2)
+  - AWS RDS 구축
+
  <br>
  
 **`김휴`**
