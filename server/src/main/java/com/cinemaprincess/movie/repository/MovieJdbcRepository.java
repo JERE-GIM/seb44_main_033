@@ -134,7 +134,7 @@ public class MovieJdbcRepository {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 MovieDetailWatchProvider movieDetailWatchProvider = movieDetailWatchProviders.get(i);
-                ps.setLong(1, movieDetailWatchProvider.getMovieDetail().getMovie().getMovieId());
+                ps.setLong(1, movieDetailWatchProvider.getMovieDetail().getId());
                 ps.setLong(2, movieDetailWatchProvider.getWatchProvider().getProviderId());
             }
 

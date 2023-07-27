@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { fetchYearly, Movie } from '../../../api/getMonthly';
-import { RightBase } from '../../styles/tabmovie/Botmovie.styled';
-import { Title } from '../../styles/monthmovie/Monthmovie';
+import { RightBase } from '../../../styles/components/main/tabmovie/Botmovie.styled';
+import { Title } from '../../../styles/components/main/monthmovie/Monthmovie';
 import MonthSlider from './Monthslider';
 import MonthCard from './Monthcard';
 import { Link } from 'react-router-dom';

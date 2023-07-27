@@ -1,15 +1,15 @@
 import React, { useCallback, useState } from 'react';
 import {
+  TextInputContainer,
+  TextInputLabel,
+} from '../../styles/components/mypage/UserInfoEditModal.styled';
+import { fetchUpdatePassword } from '../../api/userInfo';
+import { isPasswordValid } from '../account/SignupForm1';
+import {
   EditCompleteButton,
   PasswordEditContainer,
   PasswordInput,
-} from '../styles/PasswordEditForm.styled';
-import {
-  TextInputContainer,
-  TextInputLabel,
-} from '../styles/UserInfoEditModal.styled';
-import { fetchUpdatePassword } from '../../api/userInfo';
-import { isPasswordValid } from '../signup/SignupForm1';
+} from '../../styles/components/mypage/PasswordEditForm.styled';
 
 function PasswordEditForm() {
   const [editPassword, setEditPassword] = useState({

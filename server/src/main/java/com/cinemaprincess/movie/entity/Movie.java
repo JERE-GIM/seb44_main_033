@@ -1,12 +1,9 @@
 package com.cinemaprincess.movie.entity;
 
-import com.cinemaprincess.rank.MovieRank;
-import com.cinemaprincess.review.entity.Review;
 import com.cinemaprincess.watchlist.entity.WatchlistMovie;
 import lombok.*;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

@@ -10,7 +10,7 @@ import {
   ModalTitle,
   Profile,
   SubmitButton,
-} from '../styles/ProfileUploadModal.styled';
+} from '../../styles/components/mypage/ProfileUploadModal.styled';
 import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';

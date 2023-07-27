@@ -15,9 +15,9 @@ import {
   Button,
   MypageContainer,
   MyPageId,
-} from '../styles/Header.styled';
-import SignupForm1 from '../signup/SignupForm1'; // SignupForm1 컴포넌트 추가
-import LoginForm from '../login/loginForm'; // SignupForm1 컴포넌트 추가
+} from '../../styles/components/share/Header.styled';
+import SignupForm1 from '../account/SignupForm1'; // SignupForm1 컴포넌트 추가
+import LoginForm from '../account/loginForm';
 
 export default function Header() {
   const isLoggedIn = useAppSelector((state: RootState) => state.isLogin.status);
@@ -69,7 +69,7 @@ export default function Header() {
       <Link to="/">
         <HeaderTitle isMovieDetailPage={isMovieDetailPage && isAtTop}>
           <LogoImage
-            src={process.env.PUBLIC_URL + '/images/Cinemalogo.png'}
+            src={process.env.PUBLIC_URL + '/images/logo.png'}
             alt="Logo"
           />
           CINEMA PRINCESS

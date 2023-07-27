@@ -3,7 +3,10 @@ import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { fetchMovieRank, RankMovie } from '../../../api/getMovierank';
 import Slider from './Slider';
 import Card from './Card';
-import { Base, Title } from '../../styles/rankmovie/Topmovie.styled';
+import {
+  Base,
+  Title,
+} from '../../../styles/components/main/rankmovie/Topmovie.styled';
 // slide
 // import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';

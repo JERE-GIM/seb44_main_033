@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IReview } from '../../types/movie';
-import Rating from '../share/Rating';
+import Rating from './Rating';
 import {
   Background,
   CloseButton,
@@ -13,7 +13,7 @@ import {
   SubmitButton,
   InvalidMessage,
   TextLength,
-} from '../styles/ReviewRegisterModal.styled';
+} from '../../styles/components/movie/ReviewRegisterModal.styled';
 import closeButton from '../../assets/closeButton.svg';
 import { useAppDispatch } from '../../redux/store';
 import { modalAction } from '../../redux/reducers/modal';

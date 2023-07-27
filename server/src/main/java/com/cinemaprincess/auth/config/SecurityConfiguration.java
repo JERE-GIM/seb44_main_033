@@ -1,16 +1,12 @@
 package com.cinemaprincess.auth.config;
 
-import com.cinemaprincess.auth.jwt.JwtTokenProvider;
 import com.cinemaprincess.auth.filter.JwtAuthenticationFilter;
 import com.cinemaprincess.auth.filter.JwtVerificationFilter;
-import com.cinemaprincess.auth.handler.OAuth2AuthenticationSuccessHandler;
-import com.cinemaprincess.auth.handler.UserAuthenticationSuccessHandler;
-import com.cinemaprincess.auth.handler.UserAuthenticationFailureHandler;
-import com.cinemaprincess.auth.handler.UserAccessDeniedHandler;
-import com.cinemaprincess.auth.handler.UserAuthenticationEntryPoint;
+import com.cinemaprincess.auth.handler.*;
+import com.cinemaprincess.auth.jwt.JwtTokenProvider;
 import com.cinemaprincess.auth.userdetails.OAuth2UserDetailsService;
 import com.cinemaprincess.auth.utils.CustomAuthorityUtils;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,8 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -63,7 +57,8 @@ public class SecurityConfiguration {
                         .antMatchers("/", "/login/", "/login/**", "/signup", "/oauth2/**").permitAll()
                         .antMatchers(HttpMethod.GET, "/movies/**").permitAll()
                         .antMatchers(HttpMethod.GET, "/reviews/*").permitAll()
-                        .antMatchers(HttpMethod.POST, "/movies/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.POST, "/movies/init", "/movies/save").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.POST, "/genres/save", "/providers/save").hasRole("ADMIN")
                         .antMatchers(HttpMethod.GET, "/search", "/search/**").permitAll()
                         .antMatchers(HttpMethod.GET, "/movieRank", "/movieRank/**").permitAll()
                         .anyRequest().authenticated()

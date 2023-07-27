@@ -1,18 +1,15 @@
 package com.cinemaprincess.movie.mapper;
 
-import com.cinemaprincess.genre.GenreDto;
+import com.cinemaprincess.genre.dto.GenreDto;
 import com.cinemaprincess.movie.dto.MovieDetailResponseDto;
 import com.cinemaprincess.movie.dto.MovieDto;
 import com.cinemaprincess.movie.entity.Movie;
 import com.cinemaprincess.movie.entity.MovieDetail;
-import com.cinemaprincess.movie.entity.MovieDetailGenre;
-import com.cinemaprincess.movie.service.MovieService;
 import com.cinemaprincess.movie.vote.MovieVoteDto;
-import com.cinemaprincess.movie.watch_provider.WatchProviderDto;
+import com.cinemaprincess.movie.watch_provider.dto.WatchProviderDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,9 +80,9 @@ public interface MovieMapper {
     default MovieDto.Response movieToMovieResponseDto(Movie movie) {
         MovieDto.Response.ResponseBuilder response = MovieDto.Response.builder();
 
-        response.movieId( movie.getMovieId() );
-        response.posterPath( movie.getPosterPath() );
-        response.title( movie.getTitle() );
+        response.movieId(movie.getMovieId());
+        response.posterPath(movie.getPosterPath());
+        response.title(movie.getTitle());
         response.releaseDate(movie.getMovieDetail().getReleaseDate());
 
         return response.build();

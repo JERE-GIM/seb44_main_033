@@ -1,38 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-const FooterContainer = styled.footer`
-  background-color: #1a0033;
-  color: white;
-  font-size: 30px;
-  height: 100px;
-  width: 100vw;
-  padding: 20px;
-  text-align: center;
-  bottom: 0;
-  left: 0;
-  right: 0;
-`;
+import {
+  BETeamContainer,
+  FETeamContainer,
+  FooterContainer,
+  TeamName,
+} from '../../styles/components/share/Footer.styled';
 
-const BETeamContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  font-size: 16px;
-`;
-const FETeamContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  font-size: 16px;
-`;
-const TeamName = styled.div`
-  margin-left: 20px;
-  font-size: 16px;
-  color: #f7f7f7;
-`;
 const Footer: React.FC = () => {
   return (
     <FooterContainer>

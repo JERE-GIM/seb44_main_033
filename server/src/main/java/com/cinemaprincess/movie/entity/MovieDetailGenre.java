@@ -1,6 +1,6 @@
 package com.cinemaprincess.movie.entity;
 
-import com.cinemaprincess.genre.Genre;
+import com.cinemaprincess.genre.entity.Genre;
 import lombok.Data;
 
 import javax.persistence.*;

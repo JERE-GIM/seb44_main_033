@@ -1,23 +1,23 @@
 package com.cinemaprincess.movie.save;
 
-import com.cinemaprincess.genre.Genre;
-import com.cinemaprincess.genre.GenreCache;
+import com.cinemaprincess.genre.entity.Genre;
+import com.cinemaprincess.genre.entity.GenreMap;
 import com.cinemaprincess.movie.entity.MovieDetail;
-import com.cinemaprincess.movie.entity.MovieDetailCache;
 import com.cinemaprincess.movie.entity.MovieDetailGenre;
+import com.cinemaprincess.movie.entity.MovieDetailMap;
 import com.cinemaprincess.movie.entity.MovieDetailWatchProvider;
 import com.cinemaprincess.movie.repository.MovieDetailRepository;
-import com.cinemaprincess.movie.watch_provider.WatchProvider;
-import com.cinemaprincess.movie.watch_provider.WatchProviderCache;
+import com.cinemaprincess.movie.vote.MovieVote;
+import com.cinemaprincess.movie.watch_provider.entity.WatchProvider;
+import com.cinemaprincess.movie.watch_provider.entity.WatchProviderMap;
 import com.cinemaprincess.utils.RestTemplateConfig;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,12 +33,13 @@ import java.util.stream.StreamSupport;
 @Component
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SaveMovieDetail {
     private final MovieDetailRepository movieDetailRepository;
     private MovieDetail movieDetail;
-    private final GenreCache genreCache;
-    private final WatchProviderCache watchProviderCache;
-    private final MovieDetailCache movieDetailCache;
+    private final GenreMap genreMap;
+    private final WatchProviderMap watchProviderMap;
+    private final MovieDetailMap movieDetailMap;
     private final RestTemplateConfig restTemplateConfig;
 
     @Value("${tmdb.key}")
@@ -54,16 +55,16 @@ public class SaveMovieDetail {
     }
 
     public MovieDetail getMovieDetail(long movieId) {
-        MovieDetail movieDetail = movieDetailCache.getMovieDetailById(movieId);
+        MovieDetail movieDetail = movieDetailMap.getMovieDetailById(movieId);
         if (movieDetail == null) {
             try {
                 String url = buildMovieDetailUrl(movieId);
-                ResponseEntity<String> response = restTemplateConfig.restTemplate().exchange(url, HttpMethod.GET, null, String.class);
-                String responseBody = response.getBody();
-                movieDetail = parseMovieDetail(responseBody);
+                movieDetail = parseMovieDetail(restTemplateConfig.restTemplate(url));
+
+                movieDetail.getMovieVote().setMovieDetail(movieDetail);
 
                 // 캐시에 저장
-                movieDetailCache.addMovieDetail(movieDetail);
+                movieDetailMap.addMovieDetail(movieDetail);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -94,6 +95,14 @@ public class SaveMovieDetail {
 
         String releaseDate = parseReleaseDate(jsonObject);
 
+        float voteAverage = Math.round(jsonObject.get("vote_average").getAsFloat() * 10.0f) / 10.0f;
+
+        MovieVote movieVote = MovieVote.builder()
+                .id(jsonObject.get("id").getAsLong())
+                .voteAverage(voteAverage)
+                .voteCount(jsonObject.get("vote_count").getAsInt())
+                .build();
+
         return MovieDetail.builder()
                 .id(jsonObject.get("id").getAsLong())
                 .backdropPath(backdropPath)
@@ -106,6 +115,7 @@ public class SaveMovieDetail {
                 .movieDetailGenres(movieDetailGenreList)
                 .movieDetailWatchProviders(movieDetailWatchProviders)
                 .releaseDate(releaseDate)
+                .movieVote(movieVote)
                 .build();
     }
 
@@ -116,7 +126,7 @@ public class SaveMovieDetail {
                 .map(JsonElement::getAsJsonObject)
                 .map(genreObject -> {
                     long genreId = genreObject.get("id").getAsLong();
-                    Genre genre = genreCache.getGenreById(genreId);
+                    Genre genre = genreMap.getGenreById(genreId);
                     movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());
 
                     MovieDetailGenre movieDetailGenre = new MovieDetailGenre();
@@ -146,7 +156,7 @@ public class SaveMovieDetail {
             JsonObject ottObject = element.getAsJsonObject();
 
             long providerId = ottObject.get("provider_id").getAsLong();
-            WatchProvider watchProvider = watchProviderCache.getProviderById(providerId);
+            WatchProvider watchProvider = watchProviderMap.getProviderById(providerId);
 
             if (watchProvider != null) {
                 movieDetail = movieDetailRepository.getReferenceById(jsonObject.get("id").getAsLong());

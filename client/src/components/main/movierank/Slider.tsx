@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactSlider, { Settings } from 'react-slick';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
-import { PrevButton, NextButton } from '../../styles/rankmovie/Slider.styled';
+import {
+  PrevButton,
+  NextButton,
+} from '../../../styles/components/main/rankmovie/Slider.styled';
 
 const DEFAULT_SETTINGS: Settings = {
   dots: false,

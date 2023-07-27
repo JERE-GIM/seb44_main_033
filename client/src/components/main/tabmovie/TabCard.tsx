@@ -7,7 +7,7 @@ import {
   Info,
   Title,
   Keyword,
-} from '../../styles/tabmovie/Tabcard.styled';
+} from '../../../styles/components/main/tabmovie/Tabcard.styled';
 
 interface Props {
   posterPath: string;
