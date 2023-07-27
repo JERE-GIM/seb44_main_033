@@ -19,7 +19,7 @@ export const ImageWrapper = styled.div`
 `;
 
 export const Image = styled.img`
-  width: 100%;
+  width: 95%;
   height: 100%;
   object-fit: cover;
   border-radius: 4px;

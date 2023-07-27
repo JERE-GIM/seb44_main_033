@@ -16,7 +16,7 @@ export const Base = styled.div`
 export const ImageWrapper = styled.div`
   width: 200px;
   height: 300px;
-  margin-left: 50px;
+  margin-left: 40px;
   margin-top: 3px;
 `;
 

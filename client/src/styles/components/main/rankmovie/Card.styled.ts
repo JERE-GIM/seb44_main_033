@@ -23,13 +23,11 @@ export const Image = styled.img`
   height: 100%;
   object-fit: cover;
   border-radius: 4px;
-  margin-left: 10px;
 `;
 
 export const Info = styled.div`
   text-align: left;
   width: 100%;
-  margin-left: 10px;
 `;
 
 export const Title = styled.div`
