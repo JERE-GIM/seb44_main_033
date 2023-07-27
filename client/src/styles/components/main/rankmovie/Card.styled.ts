@@ -53,7 +53,7 @@ export const Keyword = styled.div`
 export const Ranking = styled.div`
   position: absolute;
   top: 7px;
-  left: 18px;
+  left: 30px;
   color: white;
   font-size: 20px;
   font-weight: 700;
