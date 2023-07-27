@@ -38,7 +38,7 @@ export default function WatchDrop() {
   //무한스크롤s
   const handleScroll = () => {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    if (scrollHeight - scrollTop === clientHeight) {
+    if (scrollHeight - scrollTop <= clientHeight) {
       setPage((prevPage) => prevPage + 1);
     }
   };
