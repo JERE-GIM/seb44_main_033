@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BookmarkButton } from '../../styles/components/watchlist/WatchBookMark.styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark as faBookmarkSolid } from '@fortawesome/free-solid-svg-icons';
@@ -34,6 +34,10 @@ export const WatchBookmark: React.FC<BookmarkButtonProps> = ({
         .then(() => setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked))
         .catch((err) => console.log(err));
   };
+
+  useEffect(() => {
+    setIsBookmarked(defaultStatus ? defaultStatus : false);
+  }, [movieId]);
 
   return (
     <BookmarkButton
