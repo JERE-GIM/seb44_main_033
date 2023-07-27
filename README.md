@@ -4,7 +4,7 @@
   <img width="40%" style="border-radius:20px;" src="https://github.com/codestates-seb/seb44_main_033/assets/124702162/6f37cd41-0951-41e0-80c3-f078fdd1fb14" alt="roobits">
 </div>
 
-</br>
+
 
 - **`팀 명` :**  소문난 칠공주
 - **`프로젝트 명` :** Cinema Princess
@@ -17,9 +17,9 @@
 ## 🌟 팀 소개
 
 | ![이정원](https://cdn.discordapp.com/attachments/1123485618928877589/1133592686255939675/image.png) | ![김형일](https://avatars.githubusercontent.com/u/124700383?v=4) | ![김종현](https://avatars.githubusercontent.com/u/124742974?v=4) | <img width="420" alt="어수현" src="https://github.com/codestates-seb/seb44_main_033/assets/124702162/448b56f3-1800-44c2-bca8-3d253ed65ddd"> | ![김휴](https://avatars.githubusercontent.com/u/124946199?v=4) | ![안형준](https://avatars.githubusercontent.com/u/121507312?v=4) | ![이하루](https://avatars.githubusercontent.com/u/79403962?v=4) |
-| :-------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------------: | :------------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
-|           [이정원](https://github.com/hahagarden)            |              [김형일](https://github.com/hyeong-il)               |              [김종현](https://github.com/jonghyeon37)              |            [어수현](https://github.com/SuHyeonEo)             |               [김휴](https://github.com/KimHyu1)               |              [안형준](https://github.com/JERE-GIM)               |                [이하루](https://github.com/haruday97)               
-|                            FE 부팀장                            |                                FE                                |                                FE                                |                                BE 팀장                                |                              BE                               |                                  BE                                  |                               BE                                |
+|:------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------:|:-------------------------------------------------------------:|:------------------------------------------------------------:|
+|                               [이정원](https://github.com/hahagarden)                               |              [김형일](https://github.com/hyeong-il)              |             [김종현](https://github.com/jonghyeon37)             |                                                   [어수현](https://github.com/SuHyeonEo)                                                    |               [김휴](https://github.com/KimHyu1)               |              [안형준](https://github.com/JERE-GIM)               |             [이하루](https://github.com/haruday97)              |
+|                                              FE 부팀장                                              |                              FE                               |                              FE                               |                                                                  BE 팀장                                                                   |                              BE                              |                              BE                               |                              BE                              |
 
 
 <details>
@@ -45,16 +45,16 @@
 
 **`김형일`**
 
-- 메인페이지 
+- 메인페이지
   - 박스오피스 순위 , 탭(신작,인기,개봉예정), 올해 추천작 구현
   - react-slick 라이브러리를 활용하여 슬라이더 구현
-  - 탭 기능 구현 
+  - 탭 기능 구현
 
-- 찜한 영화 페이지 
+- 찜한 영화 페이지
   - 무한스크롤 기능 구현
   - 필터기능 구현
   - 북마크 아이콘 클릭시 해당 영화 삭제기능 구현
- 
+
 <br>
 
 **`김종현`**
@@ -63,9 +63,9 @@
   - 회원가입 및 로그인 모달창 구현
   - 유효성검사 구현
 
-- 검색 페이지 
+- 검색 페이지
   - 헤더 상단 검색창을 통한 영화 검색기능 구현
- 
+
 <br>
 
 ### `BE`
@@ -85,13 +85,13 @@
   - JWT 토큰 인증 기반 로그인 구현
   - OAuth 2.0 소셜 로그인 구현 (Google, Kakao, Naver)
   - 회원별 역할 및 접근 권한 설정 구현
- 
+
 - CI/CD
   - CI/CD 환경 구축 및 백엔드 서버 배포 (Github Actions, AWS S3, AWS CodeDeploy, AWS EC2)
   - AWS RDS 구축
 
  <br>
- 
+
 **`김휴`**
 
 - 리뷰 CRUD
@@ -99,42 +99,42 @@
   - 리뷰에 대한 좋아요 추가, 취소
 - 메인페이지
   - 박스오피스 순위 조회
-  
-    
- 
+
+
+
  <br>
 
- **`안형준`**
- - tmdb api 사용
-   - 영화와 관련된 정보들을 외부 api인 tmdb api를 사용하여 DB에 저장 및 조회
+**`안형준`**
+- tmdb api 사용
+  - 영화와 관련된 정보들을 외부 api인 tmdb api를 사용하여 DB에 저장 및 조회
 
- - 메인페이지
-   - 인기작, 신작, 개봉예정작 목록 조회
-   - 올해의 추천 영화 목록 조회
-     
- - 영화 상세페이지
-   - tmdb api를 통해 영화 정보(평균 평점, 영화 포스터, 상세 정보, 예고편, OTT제공 정보, 개요 등) 조회
-   - 장르 리스트를 통해 조회하는 영화와 똑같은 장르의 다른 영화들을 추천 
-     
- - 장르 리스트, ott 목록 tmdb api에서 가져와서 DB에 저장
+- 메인페이지
+  - 인기작, 신작, 개봉예정작 목록 조회
+  - 올해의 추천 영화 목록 조회
 
- - 약 8.5만 개의 영화 목록을 DB에 저장
-   - jdbc의 batchupdate와 future api 를 사용하여 저장 속도 향상
+- 영화 상세페이지
+  - tmdb api를 통해 영화 정보(평균 평점, 영화 포스터, 상세 정보, 예고편, OTT제공 정보, 개요 등) 조회
+  - 장르 리스트를 통해 조회하는 영화와 똑같은 장르의 다른 영화들을 추천
 
-  
+- 장르 리스트, ott 목록 tmdb api에서 가져와서 DB에 저장
+
+- 약 8.5만 개의 영화 목록을 DB에 저장
+  - jdbc의 batchupdate와 future api 를 사용하여 저장 속도 향상
+
+
  <br>
 
- **`이하루`**
+**`이하루`**
 
 - 통계페이지
   - 연도별 개봉장르 통계
   - 유저 유형별 선호장르 통계
 - 검색페이지
   - 영화 제목 검색
- 
+
  <br>
 
-</div>
+
 </details>
 
 <br/>
@@ -151,9 +151,9 @@
 ### <span style=""> 🖥 **Front-end** </span>
 
 
-|                         Html                         |                         CSS                          |                                                                          JavaScript                                                                           |                                                                              React                                                                               |                                                                                                              TypeScript                                                                                                              |                    redux-toolkit                    |                  styled-components                  
-| :--------------------------------------------------: | :--------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------: | :-------------------------------------------------: |
-|<img src="https://github.com/codestates-seb/seb44_main_033/assets/88613455/f0e21992-0fde-4d09-a335-ac3d18346789" width='65' height='65' />| <img src="https://github.com/codestates-seb/seb44_main_033/assets/88613455/e22a55e1-e558-4bcb-b7f9-bb63df47b22d" width="65" height="65" /> | <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="75" height="75" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/react-icon.svg" alt="icon" width="65" height="65" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/1024px-Typescript_logo_2020.svg.png?20221110153201" width="60" height="60"/></div> | <img src="https://github.com/codestates-seb/seb44_main_033/assets/88613455/64aea8e1-48b2-4058-baa4-e8f60504189d" width="60px" height="60px" /> | <img src="https://github.com/codestates-seb/seb44_main_033/assets/88613455/0115946a-754b-497b-b45f-c86ebaf6c10f" width="60px" height="60px" /> |
+|                                                                    Html                                                                    |                                                                    CSS                                                                     |                                                                          JavaScript                                                                           |                                                                              React                                                                               |                                                                                                              TypeScript                                                                                                              |                                                                 redux-toolkit                                                                  |                                                               styled-components                                                                |
+|:------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------:|
+| <img src="https://github.com/codestates-seb/seb44_main_033/assets/88613455/f0e21992-0fde-4d09-a335-ac3d18346789" width='65' height='65' /> | <img src="https://github.com/codestates-seb/seb44_main_033/assets/88613455/e22a55e1-e558-4bcb-b7f9-bb63df47b22d" width="65" height="65" /> | <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="75" height="75" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/react-icon.svg" alt="icon" width="65" height="65" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/1024px-Typescript_logo_2020.svg.png?20221110153201" width="60" height="60"/></div> | <img src="https://github.com/codestates-seb/seb44_main_033/assets/88613455/64aea8e1-48b2-4058-baa4-e8f60504189d" width="60px" height="60px" /> | <img src="https://github.com/codestates-seb/seb44_main_033/assets/88613455/0115946a-754b-497b-b45f-c86ebaf6c10f" width="60px" height="60px" /> |
 
 
 
@@ -162,9 +162,9 @@
 
 
 ### <span style="">🔒  **Back-end** </span>
-| Java | MySQL | Tomcat | AWS | Spring Boot | Spring Boot JPA | JWT |Spring Security
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/java-icon.svg" alt="icon" width="65" height="65" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="icon" width="65" height="65" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Apache_Tomcat_logo.svg/1024px-Apache_Tomcat_logo.svg.png?20210416065343" alt="icon" width="65" height="65" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/aws-icon.svg" alt="icon" width="65" height="65" /></div> | <img alt="spring logo" src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" height="50" width="50" > | <img alt="spring-boot logo" src="https://t1.daumcdn.net/cfile/tistory/27034D4F58E660F616" width="65" height="65" > | <img alt="spring-boot logo" src="https://play-lh.googleusercontent.com/3C-hB-KWoyWzZjUnRsXUPu-bqB3HUHARMLjUe9OmPoHa6dQdtJNW30VrvwQ1m7Pln3A" width="65" height="65" >| <img alt="spring-boot logo" src="https://blog.kakaocdn.net/dn/dIQDQP/btqZ09ESd8T/0ibqtotW52OaJS8HznXDQK/img.png" width="65" height="65" >|
+|                                                                              Java                                                                               |                                                                              MySQL                                                                               |                                                                                                                    Tomcat                                                                                                                    |                                                                              AWS                                                                               |                                                    Spring Boot                                                     |                                                  Spring Boot JPA                                                   |                                                                                 JWT                                                                                  |                                                              Spring Security                                                              |
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------:|
+| <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/java-icon.svg" alt="icon" width="65" height="65" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="icon" width="65" height="65" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Apache_Tomcat_logo.svg/1024px-Apache_Tomcat_logo.svg.png?20210416065343" alt="icon" width="65" height="65" /></div> | <div style="display: flex; align-items: flex-start;"><img src="https://techstack-generator.vercel.app/aws-icon.svg" alt="icon" width="65" height="65" /></div> | <img alt="spring logo" src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" height="50" width="50" > | <img alt="spring-boot logo" src="https://t1.daumcdn.net/cfile/tistory/27034D4F58E660F616" width="65" height="65" > | <img alt="spring-boot logo" src="https://play-lh.googleusercontent.com/3C-hB-KWoyWzZjUnRsXUPu-bqB3HUHARMLjUe9OmPoHa6dQdtJNW30VrvwQ1m7Pln3A" width="65" height="65" > | <img alt="spring-boot logo" src="https://blog.kakaocdn.net/dn/dIQDQP/btqZ09ESd8T/0ibqtotW52OaJS8HznXDQK/img.png" width="65" height="65" > |
 
 
 <br/>
