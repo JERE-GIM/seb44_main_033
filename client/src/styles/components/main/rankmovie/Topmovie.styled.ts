@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 
 export const Base = styled.div`
   margin-bottom: 42px;
+  width: 100%;
 `;
 
 export const Title = styled.div`
