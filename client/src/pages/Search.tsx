@@ -14,7 +14,7 @@ const SearchPage: React.FC = () => {
   const searchResult = useAppSelector((state) => state.search.data);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const moviesPerPage = 16;
+  const moviesPerPage = 200; //데모데이용
   const totalPages = Math.ceil(searchResult.length / moviesPerPage);
 
   useEffect(() => {
@@ -26,8 +26,6 @@ const SearchPage: React.FC = () => {
           size: moviesPerPage,
         }),
       );
-    } else {
-      navigate('/');
     }
   }, [dispatch, navigate, searchTerm, currentPage, moviesPerPage]);
 
@@ -40,27 +38,23 @@ const SearchPage: React.FC = () => {
 
   const handlePrevClick = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      dispatch(
-        fetchSearch({
-          keyword: searchTerm,
-          page: currentPage - 1,
-          size: moviesPerPage,
-        }),
-      );
+      setCurrentPage((prev) => prev - 1);
     }
   };
 
   const handleNextClick = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      dispatch(
-        fetchSearch({
-          keyword: searchTerm,
-          page: currentPage + 1,
-          size: moviesPerPage,
-        }),
-      );
+      setCurrentPage((prev) => {
+        const newPage = prev + 1;
+        dispatch(
+          fetchSearch({
+            keyword: searchTerm,
+            page: newPage,
+            size: moviesPerPage,
+          }),
+        );
+        return newPage;
+      });
     }
   };
 
